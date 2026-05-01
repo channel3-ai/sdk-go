@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-package publicsdk_test
+package channel3go_test
 
 import (
 	"context"
@@ -22,13 +22,13 @@ func TestBrandGet(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := publicsdk.NewClient(
+	client := channel3go.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Brands.Get(context.TODO(), "brand_id")
 	if err != nil {
-		var apierr *publicsdk.Error
+		var apierr *channel3go.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -45,16 +45,16 @@ func TestBrandListWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := publicsdk.NewClient(
+	client := channel3go.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Brands.List(context.TODO(), publicsdk.BrandListParams{
-		Cursor: publicsdk.String("cursor"),
-		Limit:  publicsdk.Int(1),
+	_, err := client.Brands.List(context.TODO(), channel3go.BrandListParams{
+		Cursor: channel3go.String("cursor"),
+		Limit:  channel3go.Int(1),
 	})
 	if err != nil {
-		var apierr *publicsdk.Error
+		var apierr *channel3go.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -71,15 +71,15 @@ func TestBrandFind(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := publicsdk.NewClient(
+	client := channel3go.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Brands.Find(context.TODO(), publicsdk.BrandFindParams{
+	_, err := client.Brands.Find(context.TODO(), channel3go.BrandFindParams{
 		Query: "query",
 	})
 	if err != nil {
-		var apierr *publicsdk.Error
+		var apierr *channel3go.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -96,16 +96,16 @@ func TestBrandSearchWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := publicsdk.NewClient(
+	client := channel3go.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Brands.Search(context.TODO(), publicsdk.BrandSearchParams{
+	_, err := client.Brands.Search(context.TODO(), channel3go.BrandSearchParams{
 		Query: "x",
-		Limit: publicsdk.Int(1),
+		Limit: channel3go.Int(1),
 	})
 	if err != nil {
-		var apierr *publicsdk.Error
+		var apierr *channel3go.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}

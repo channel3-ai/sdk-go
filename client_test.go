@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-package publicsdk_test
+package channel3go_test
 
 import (
 	"context"
@@ -25,7 +25,7 @@ func (t *closureTransport) RoundTrip(req *http.Request) (*http.Response, error) 
 
 func TestUserAgentHeader(t *testing.T) {
 	var userAgent string
-	client := publicsdk.NewClient(
+	client := channel3go.NewClient(
 		option.WithAPIKey("My API Key"),
 		option.WithHTTPClient(&http.Client{
 			Transport: &closureTransport{
@@ -38,8 +38,8 @@ func TestUserAgentHeader(t *testing.T) {
 			},
 		}),
 	)
-	_, _ = client.Products.Search(context.Background(), publicsdk.ProductSearchParams{
-		SearchRequest: publicsdk.SearchRequestParam{},
+	_, _ = client.Products.Search(context.Background(), channel3go.ProductSearchParams{
+		SearchRequest: channel3go.SearchRequestParam{},
 	})
 	if userAgent != fmt.Sprintf("Channel3/Go %s", internal.PackageVersion) {
 		t.Errorf("Expected User-Agent to be correct, but got: %#v", userAgent)
@@ -48,7 +48,7 @@ func TestUserAgentHeader(t *testing.T) {
 
 func TestRetryAfter(t *testing.T) {
 	retryCountHeaders := make([]string, 0)
-	client := publicsdk.NewClient(
+	client := channel3go.NewClient(
 		option.WithAPIKey("My API Key"),
 		option.WithHTTPClient(&http.Client{
 			Transport: &closureTransport{
@@ -64,8 +64,8 @@ func TestRetryAfter(t *testing.T) {
 			},
 		}),
 	)
-	_, err := client.Products.Search(context.Background(), publicsdk.ProductSearchParams{
-		SearchRequest: publicsdk.SearchRequestParam{},
+	_, err := client.Products.Search(context.Background(), channel3go.ProductSearchParams{
+		SearchRequest: channel3go.SearchRequestParam{},
 	})
 	if err == nil {
 		t.Error("Expected there to be a cancel error")
@@ -84,7 +84,7 @@ func TestRetryAfter(t *testing.T) {
 
 func TestDeleteRetryCountHeader(t *testing.T) {
 	retryCountHeaders := make([]string, 0)
-	client := publicsdk.NewClient(
+	client := channel3go.NewClient(
 		option.WithAPIKey("My API Key"),
 		option.WithHTTPClient(&http.Client{
 			Transport: &closureTransport{
@@ -101,8 +101,8 @@ func TestDeleteRetryCountHeader(t *testing.T) {
 		}),
 		option.WithHeaderDel("X-Stainless-Retry-Count"),
 	)
-	_, err := client.Products.Search(context.Background(), publicsdk.ProductSearchParams{
-		SearchRequest: publicsdk.SearchRequestParam{},
+	_, err := client.Products.Search(context.Background(), channel3go.ProductSearchParams{
+		SearchRequest: channel3go.SearchRequestParam{},
 	})
 	if err == nil {
 		t.Error("Expected there to be a cancel error")
@@ -116,7 +116,7 @@ func TestDeleteRetryCountHeader(t *testing.T) {
 
 func TestOverwriteRetryCountHeader(t *testing.T) {
 	retryCountHeaders := make([]string, 0)
-	client := publicsdk.NewClient(
+	client := channel3go.NewClient(
 		option.WithAPIKey("My API Key"),
 		option.WithHTTPClient(&http.Client{
 			Transport: &closureTransport{
@@ -133,8 +133,8 @@ func TestOverwriteRetryCountHeader(t *testing.T) {
 		}),
 		option.WithHeader("X-Stainless-Retry-Count", "42"),
 	)
-	_, err := client.Products.Search(context.Background(), publicsdk.ProductSearchParams{
-		SearchRequest: publicsdk.SearchRequestParam{},
+	_, err := client.Products.Search(context.Background(), channel3go.ProductSearchParams{
+		SearchRequest: channel3go.SearchRequestParam{},
 	})
 	if err == nil {
 		t.Error("Expected there to be a cancel error")
@@ -148,7 +148,7 @@ func TestOverwriteRetryCountHeader(t *testing.T) {
 
 func TestRetryAfterMs(t *testing.T) {
 	attempts := 0
-	client := publicsdk.NewClient(
+	client := channel3go.NewClient(
 		option.WithAPIKey("My API Key"),
 		option.WithHTTPClient(&http.Client{
 			Transport: &closureTransport{
@@ -164,8 +164,8 @@ func TestRetryAfterMs(t *testing.T) {
 			},
 		}),
 	)
-	_, err := client.Products.Search(context.Background(), publicsdk.ProductSearchParams{
-		SearchRequest: publicsdk.SearchRequestParam{},
+	_, err := client.Products.Search(context.Background(), channel3go.ProductSearchParams{
+		SearchRequest: channel3go.SearchRequestParam{},
 	})
 	if err == nil {
 		t.Error("Expected there to be a cancel error")
@@ -176,7 +176,7 @@ func TestRetryAfterMs(t *testing.T) {
 }
 
 func TestContextCancel(t *testing.T) {
-	client := publicsdk.NewClient(
+	client := channel3go.NewClient(
 		option.WithAPIKey("My API Key"),
 		option.WithHTTPClient(&http.Client{
 			Transport: &closureTransport{
@@ -189,8 +189,8 @@ func TestContextCancel(t *testing.T) {
 	)
 	cancelCtx, cancel := context.WithCancel(context.Background())
 	cancel()
-	_, err := client.Products.Search(cancelCtx, publicsdk.ProductSearchParams{
-		SearchRequest: publicsdk.SearchRequestParam{},
+	_, err := client.Products.Search(cancelCtx, channel3go.ProductSearchParams{
+		SearchRequest: channel3go.SearchRequestParam{},
 	})
 	if err == nil {
 		t.Error("Expected there to be a cancel error")
@@ -198,7 +198,7 @@ func TestContextCancel(t *testing.T) {
 }
 
 func TestContextCancelDelay(t *testing.T) {
-	client := publicsdk.NewClient(
+	client := channel3go.NewClient(
 		option.WithAPIKey("My API Key"),
 		option.WithHTTPClient(&http.Client{
 			Transport: &closureTransport{
@@ -211,8 +211,8 @@ func TestContextCancelDelay(t *testing.T) {
 	)
 	cancelCtx, cancel := context.WithTimeout(context.Background(), 2*time.Millisecond)
 	defer cancel()
-	_, err := client.Products.Search(cancelCtx, publicsdk.ProductSearchParams{
-		SearchRequest: publicsdk.SearchRequestParam{},
+	_, err := client.Products.Search(cancelCtx, channel3go.ProductSearchParams{
+		SearchRequest: channel3go.SearchRequestParam{},
 	})
 	if err == nil {
 		t.Error("expected there to be a cancel error")
@@ -228,7 +228,7 @@ func TestContextDeadline(t *testing.T) {
 	defer cancel()
 
 	go func() {
-		client := publicsdk.NewClient(
+		client := channel3go.NewClient(
 			option.WithAPIKey("My API Key"),
 			option.WithHTTPClient(&http.Client{
 				Transport: &closureTransport{
@@ -239,8 +239,8 @@ func TestContextDeadline(t *testing.T) {
 				},
 			}),
 		)
-		_, err := client.Products.Search(deadlineCtx, publicsdk.ProductSearchParams{
-			SearchRequest: publicsdk.SearchRequestParam{},
+		_, err := client.Products.Search(deadlineCtx, channel3go.ProductSearchParams{
+			SearchRequest: channel3go.SearchRequestParam{},
 		})
 		if err == nil {
 			t.Error("expected there to be a deadline error")

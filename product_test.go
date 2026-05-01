@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-package publicsdk_test
+package channel3go_test
 
 import (
 	"context"
@@ -22,22 +22,22 @@ func TestProductGetWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := publicsdk.NewClient(
+	client := channel3go.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Products.Get(
 		context.TODO(),
 		"product_id",
-		publicsdk.ProductGetParams{
-			Country:    publicsdk.ProductGetParamsCountryUs,
-			Currency:   publicsdk.ProductGetParamsCurrencyUsd,
-			Language:   publicsdk.ProductGetParamsLanguageEn,
+		channel3go.ProductGetParams{
+			Country:    channel3go.ProductGetParamsCountryUs,
+			Currency:   channel3go.ProductGetParamsCurrencyUsd,
+			Language:   channel3go.ProductGetParamsLanguageEn,
 			WebsiteIDs: []string{"string"},
 		},
 	)
 	if err != nil {
-		var apierr *publicsdk.Error
+		var apierr *channel3go.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -54,40 +54,40 @@ func TestProductFindSimilarWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := publicsdk.NewClient(
+	client := channel3go.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Products.FindSimilar(context.TODO(), publicsdk.ProductFindSimilarParams{
-		SimilarProductsRequest: publicsdk.SimilarProductsRequestParam{
+	_, err := client.Products.FindSimilar(context.TODO(), channel3go.ProductFindSimilarParams{
+		SimilarProductsRequest: channel3go.SimilarProductsRequestParam{
 			ProductID: "product_id",
-			Config: publicsdk.LocaleConfigParam{
-				Country:  publicsdk.LocaleConfigCountryUs,
-				Currency: publicsdk.LocaleConfigCurrencyUsd,
-				Language: publicsdk.LocaleConfigLanguageEn,
+			Config: channel3go.LocaleConfigParam{
+				Country:  channel3go.LocaleConfigCountryUs,
+				Currency: channel3go.LocaleConfigCurrencyUsd,
+				Language: channel3go.LocaleConfigLanguageEn,
 			},
-			Filters: publicsdk.SearchFiltersParam{
+			Filters: channel3go.SearchFiltersParam{
 				Age:                []string{"newborn"},
-				Availability:       []publicsdk.AvailabilityStatus{publicsdk.AvailabilityStatusInStock},
+				Availability:       []channel3go.AvailabilityStatus{channel3go.AvailabilityStatusInStock},
 				BrandIDs:           []string{"string"},
 				CategoryIDs:        []string{"string"},
-				Condition:          publicsdk.SearchFiltersConditionNew,
+				Condition:          channel3go.SearchFiltersConditionNew,
 				ExcludeBrandIDs:    []string{"string"},
 				ExcludeCategoryIDs: []string{"string"},
 				ExcludeWebsiteIDs:  []string{"string"},
-				Gender:             publicsdk.SearchFiltersGenderMale,
-				Price: publicsdk.SearchFilterPriceParam{
-					MaxPrice: publicsdk.Float(0),
-					MinPrice: publicsdk.Float(0),
+				Gender:             channel3go.SearchFiltersGenderMale,
+				Price: channel3go.SearchFilterPriceParam{
+					MaxPrice: channel3go.Float(0),
+					MinPrice: channel3go.Float(0),
 				},
 				WebsiteIDs: []string{"string"},
 			},
-			Limit:     publicsdk.Int(1),
-			PageToken: publicsdk.String("page_token"),
+			Limit:     channel3go.Int(1),
+			PageToken: channel3go.String("page_token"),
 		},
 	})
 	if err != nil {
-		var apierr *publicsdk.Error
+		var apierr *channel3go.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -104,18 +104,18 @@ func TestProductLookupWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := publicsdk.NewClient(
+	client := channel3go.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Products.Lookup(context.TODO(), publicsdk.ProductLookupParams{
-		LookupRequest: publicsdk.LookupRequestParam{
+	_, err := client.Products.Lookup(context.TODO(), channel3go.ProductLookupParams{
+		LookupRequest: channel3go.LookupRequestParam{
 			URL:               "url",
-			MaxStalenessHours: publicsdk.Int(1),
+			MaxStalenessHours: channel3go.Int(1),
 		},
 	})
 	if err != nil {
-		var apierr *publicsdk.Error
+		var apierr *channel3go.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -132,43 +132,43 @@ func TestProductSearchWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := publicsdk.NewClient(
+	client := channel3go.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Products.Search(context.TODO(), publicsdk.ProductSearchParams{
-		SearchRequest: publicsdk.SearchRequestParam{
-			Base64Image: publicsdk.String("base64_image"),
-			Config: publicsdk.SearchConfigParam{
-				Country:           publicsdk.SearchConfigCountryUs,
-				Currency:          publicsdk.SearchConfigCurrencyUsd,
-				KeywordSearchOnly: publicsdk.Bool(true),
-				Language:          publicsdk.SearchConfigLanguageEn,
+	_, err := client.Products.Search(context.TODO(), channel3go.ProductSearchParams{
+		SearchRequest: channel3go.SearchRequestParam{
+			Base64Image: channel3go.String("base64_image"),
+			Config: channel3go.SearchConfigParam{
+				Country:           channel3go.SearchConfigCountryUs,
+				Currency:          channel3go.SearchConfigCurrencyUsd,
+				KeywordSearchOnly: channel3go.Bool(true),
+				Language:          channel3go.SearchConfigLanguageEn,
 			},
-			Filters: publicsdk.SearchFiltersParam{
+			Filters: channel3go.SearchFiltersParam{
 				Age:                []string{"newborn"},
-				Availability:       []publicsdk.AvailabilityStatus{publicsdk.AvailabilityStatusInStock},
+				Availability:       []channel3go.AvailabilityStatus{channel3go.AvailabilityStatusInStock},
 				BrandIDs:           []string{"string"},
 				CategoryIDs:        []string{"string"},
-				Condition:          publicsdk.SearchFiltersConditionNew,
+				Condition:          channel3go.SearchFiltersConditionNew,
 				ExcludeBrandIDs:    []string{"string"},
 				ExcludeCategoryIDs: []string{"string"},
 				ExcludeWebsiteIDs:  []string{"string"},
-				Gender:             publicsdk.SearchFiltersGenderMale,
-				Price: publicsdk.SearchFilterPriceParam{
-					MaxPrice: publicsdk.Float(0),
-					MinPrice: publicsdk.Float(0),
+				Gender:             channel3go.SearchFiltersGenderMale,
+				Price: channel3go.SearchFilterPriceParam{
+					MaxPrice: channel3go.Float(0),
+					MinPrice: channel3go.Float(0),
 				},
 				WebsiteIDs: []string{"string"},
 			},
-			ImageURL:  publicsdk.String("image_url"),
-			Limit:     publicsdk.Int(1),
-			PageToken: publicsdk.String("page_token"),
-			Query:     publicsdk.String("query"),
+			ImageURL:  channel3go.String("image_url"),
+			Limit:     channel3go.Int(1),
+			PageToken: channel3go.String("page_token"),
+			Query:     channel3go.String("query"),
 		},
 	})
 	if err != nil {
-		var apierr *publicsdk.Error
+		var apierr *channel3go.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -185,41 +185,41 @@ func TestProductSearchByImageWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := publicsdk.NewClient(
+	client := channel3go.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Products.SearchByImage(context.TODO(), publicsdk.ProductSearchByImageParams{
-		ImageSearchRequest: publicsdk.ImageSearchRequestParam{
-			Base64Image: publicsdk.String("base64_image"),
-			Config: publicsdk.LocaleConfigParam{
-				Country:  publicsdk.LocaleConfigCountryUs,
-				Currency: publicsdk.LocaleConfigCurrencyUsd,
-				Language: publicsdk.LocaleConfigLanguageEn,
+	_, err := client.Products.SearchByImage(context.TODO(), channel3go.ProductSearchByImageParams{
+		ImageSearchRequest: channel3go.ImageSearchRequestParam{
+			Base64Image: channel3go.String("base64_image"),
+			Config: channel3go.LocaleConfigParam{
+				Country:  channel3go.LocaleConfigCountryUs,
+				Currency: channel3go.LocaleConfigCurrencyUsd,
+				Language: channel3go.LocaleConfigLanguageEn,
 			},
-			Filters: publicsdk.SearchFiltersParam{
+			Filters: channel3go.SearchFiltersParam{
 				Age:                []string{"newborn"},
-				Availability:       []publicsdk.AvailabilityStatus{publicsdk.AvailabilityStatusInStock},
+				Availability:       []channel3go.AvailabilityStatus{channel3go.AvailabilityStatusInStock},
 				BrandIDs:           []string{"string"},
 				CategoryIDs:        []string{"string"},
-				Condition:          publicsdk.SearchFiltersConditionNew,
+				Condition:          channel3go.SearchFiltersConditionNew,
 				ExcludeBrandIDs:    []string{"string"},
 				ExcludeCategoryIDs: []string{"string"},
 				ExcludeWebsiteIDs:  []string{"string"},
-				Gender:             publicsdk.SearchFiltersGenderMale,
-				Price: publicsdk.SearchFilterPriceParam{
-					MaxPrice: publicsdk.Float(0),
-					MinPrice: publicsdk.Float(0),
+				Gender:             channel3go.SearchFiltersGenderMale,
+				Price: channel3go.SearchFilterPriceParam{
+					MaxPrice: channel3go.Float(0),
+					MinPrice: channel3go.Float(0),
 				},
 				WebsiteIDs: []string{"string"},
 			},
-			ImageURL:  publicsdk.String("image_url"),
-			Limit:     publicsdk.Int(1),
-			PageToken: publicsdk.String("page_token"),
+			ImageURL:  channel3go.String("image_url"),
+			Limit:     channel3go.Int(1),
+			PageToken: channel3go.String("page_token"),
 		},
 	})
 	if err != nil {
-		var apierr *publicsdk.Error
+		var apierr *channel3go.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}

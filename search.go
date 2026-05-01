@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-package publicsdk
+package channel3go
 
 import (
 	"context"
@@ -180,11 +180,13 @@ type SearchFiltersParam struct {
 	// If provided, products in these categories (or their descendants) will be
 	// excluded from the results. Accepts category slugs.
 	ExcludeCategoryIDs []string `json:"exclude_category_ids,omitzero"`
-	// If provided, products from these websites will be excluded from the results
+	// If provided, products from these websites will be excluded from the results.
+	// Accepts website IDs or domains (e.g. "nike.com").
 	ExcludeWebsiteIDs []string `json:"exclude_website_ids,omitzero"`
-	// Any of "male", "female", "unisex".
+	// Any of "male", "female".
 	Gender SearchFiltersGender `json:"gender,omitzero"`
-	// If provided, only products from these websites will be returned
+	// If provided, only products from these websites will be returned. Accepts website
+	// IDs or domains (e.g. "nike.com").
 	WebsiteIDs []string `json:"website_ids,omitzero"`
 	// Price filter for search. Values are inclusive.
 	Price SearchFilterPriceParam `json:"price,omitzero"`
@@ -215,7 +217,6 @@ type SearchFiltersGender string
 const (
 	SearchFiltersGenderMale   SearchFiltersGender = "male"
 	SearchFiltersGenderFemale SearchFiltersGender = "female"
-	SearchFiltersGenderUnisex SearchFiltersGender = "unisex"
 )
 
 // Search request with pagination support.

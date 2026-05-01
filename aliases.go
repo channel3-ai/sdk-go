@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-package publicsdk
+package channel3go
 
 import (
 	"github.com/stainless-sdks/public-sdk-go/internal/apierror"

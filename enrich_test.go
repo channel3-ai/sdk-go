@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-package publicsdk_test
+package channel3go_test
 
 import (
 	"context"
@@ -22,17 +22,17 @@ func TestEnrichEnrichURL(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := publicsdk.NewClient(
+	client := channel3go.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Enrich.EnrichURL(context.TODO(), publicsdk.EnrichEnrichURLParams{
-		EnrichRequest: publicsdk.EnrichRequestParam{
+	_, err := client.Enrich.EnrichURL(context.TODO(), channel3go.EnrichEnrichURLParams{
+		EnrichRequest: channel3go.EnrichRequestParam{
 			URL: "url",
 		},
 	})
 	if err != nil {
-		var apierr *publicsdk.Error
+		var apierr *channel3go.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
