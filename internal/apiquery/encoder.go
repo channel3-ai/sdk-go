@@ -9,7 +9,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/stainless-sdks/public-sdk-go/packages/param"
+	"github.com/channel3-ai/sdk-go/packages/param"
 )
 
 var encoders sync.Map // map[reflect.Type]encoderFunc

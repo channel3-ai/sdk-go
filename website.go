@@ -8,11 +8,11 @@ import (
 	"net/url"
 	"slices"
 
-	"github.com/stainless-sdks/public-sdk-go/internal/apijson"
-	"github.com/stainless-sdks/public-sdk-go/internal/apiquery"
-	"github.com/stainless-sdks/public-sdk-go/internal/requestconfig"
-	"github.com/stainless-sdks/public-sdk-go/option"
-	"github.com/stainless-sdks/public-sdk-go/packages/respjson"
+	"github.com/channel3-ai/sdk-go/internal/apijson"
+	"github.com/channel3-ai/sdk-go/internal/apiquery"
+	"github.com/channel3-ai/sdk-go/internal/requestconfig"
+	"github.com/channel3-ai/sdk-go/option"
+	"github.com/channel3-ai/sdk-go/packages/respjson"
 )
 
 // WebsiteService contains methods and other services that help with interacting

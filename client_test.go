@@ -10,9 +10,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/stainless-sdks/public-sdk-go"
-	"github.com/stainless-sdks/public-sdk-go/internal"
-	"github.com/stainless-sdks/public-sdk-go/option"
+	"github.com/channel3-ai/sdk-go"
+	"github.com/channel3-ai/sdk-go/internal"
+	"github.com/channel3-ai/sdk-go/option"
 )
 
 type closureTransport struct {

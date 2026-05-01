@@ -7,11 +7,11 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/stainless-sdks/public-sdk-go/internal/apijson"
-	"github.com/stainless-sdks/public-sdk-go/internal/requestconfig"
-	"github.com/stainless-sdks/public-sdk-go/option"
-	"github.com/stainless-sdks/public-sdk-go/packages/param"
-	"github.com/stainless-sdks/public-sdk-go/packages/respjson"
+	"github.com/channel3-ai/sdk-go/internal/apijson"
+	"github.com/channel3-ai/sdk-go/internal/requestconfig"
+	"github.com/channel3-ai/sdk-go/option"
+	"github.com/channel3-ai/sdk-go/packages/param"
+	"github.com/channel3-ai/sdk-go/packages/respjson"
 )
 
 // aliased to make [param.APIUnion] private when embedding
