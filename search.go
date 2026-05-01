@@ -7,12 +7,12 @@ import (
 	"net/http"
 	"slices"
 
-	"github.com/stainless-sdks/public-sdk-go/internal/apijson"
-	shimjson "github.com/stainless-sdks/public-sdk-go/internal/encoding/json"
-	"github.com/stainless-sdks/public-sdk-go/internal/requestconfig"
-	"github.com/stainless-sdks/public-sdk-go/option"
-	"github.com/stainless-sdks/public-sdk-go/packages/param"
-	"github.com/stainless-sdks/public-sdk-go/packages/respjson"
+	"github.com/channel3-ai/sdk-go/internal/apijson"
+	shimjson "github.com/channel3-ai/sdk-go/internal/encoding/json"
+	"github.com/channel3-ai/sdk-go/internal/requestconfig"
+	"github.com/channel3-ai/sdk-go/option"
+	"github.com/channel3-ai/sdk-go/packages/param"
+	"github.com/channel3-ai/sdk-go/packages/respjson"
 )
 
 // SearchService contains methods and other services that help with interacting

@@ -8,9 +8,9 @@ import (
 	"os"
 	"testing"
 
-	"github.com/stainless-sdks/public-sdk-go"
-	"github.com/stainless-sdks/public-sdk-go/internal/testutil"
-	"github.com/stainless-sdks/public-sdk-go/option"
+	"github.com/channel3-ai/sdk-go"
+	"github.com/channel3-ai/sdk-go/internal/testutil"
+	"github.com/channel3-ai/sdk-go/option"
 )
 
 func TestBrandGet(t *testing.T) {

@@ -3,7 +3,7 @@
 package shared
 
 import (
-	"github.com/stainless-sdks/public-sdk-go/packages/param"
+	"github.com/channel3-ai/sdk-go/packages/param"
 )
 
 // aliased to make [param.APIUnion] private when embedding

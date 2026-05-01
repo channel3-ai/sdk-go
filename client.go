@@ -9,8 +9,8 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/stainless-sdks/public-sdk-go/internal/requestconfig"
-	"github.com/stainless-sdks/public-sdk-go/option"
+	"github.com/channel3-ai/sdk-go/internal/requestconfig"
+	"github.com/channel3-ai/sdk-go/option"
 )
 
 // Client creates a struct with services and top level methods that help with

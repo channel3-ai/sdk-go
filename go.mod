@@ -1,4 +1,4 @@
-module github.com/stainless-sdks/public-sdk-go
+module github.com/channel3-ai/sdk-go
 
 go 1.22
 
