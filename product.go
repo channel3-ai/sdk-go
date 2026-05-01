@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-package publicsdk
+package channel3go
 
 import (
 	"context"
@@ -542,7 +542,7 @@ type ProductGetParams struct {
 	// Any of "en", "de", "fr", "it", "es", "nl", "sv", "fi", "pt", "cs".
 	Language ProductGetParamsLanguage `query:"language,omitzero" json:"-"`
 	// Optional list of website IDs to constrain the buy URL to, relevant if multiple
-	// merchants exist
+	// merchants exist. Accepts website IDs or domains (e.g. "nike.com").
 	WebsiteIDs []string `query:"website_ids,omitzero" json:"-"`
 	paramObj
 }

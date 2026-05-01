@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-package publicsdk_test
+package channel3go_test
 
 import (
 	"context"
@@ -22,19 +22,19 @@ func TestPriceTrackingGetHistoryWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := publicsdk.NewClient(
+	client := channel3go.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.PriceTracking.GetHistory(
 		context.TODO(),
 		"canonical_product_id",
-		publicsdk.PriceTrackingGetHistoryParams{
-			Days: publicsdk.Int(1),
+		channel3go.PriceTrackingGetHistoryParams{
+			Days: channel3go.Int(1),
 		},
 	)
 	if err != nil {
-		var apierr *publicsdk.Error
+		var apierr *channel3go.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -51,16 +51,16 @@ func TestPriceTrackingListSubscriptionsWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := publicsdk.NewClient(
+	client := channel3go.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.PriceTracking.ListSubscriptions(context.TODO(), publicsdk.PriceTrackingListSubscriptionsParams{
-		Cursor: publicsdk.String("cursor"),
-		Limit:  publicsdk.Int(1),
+	_, err := client.PriceTracking.ListSubscriptions(context.TODO(), channel3go.PriceTrackingListSubscriptionsParams{
+		Cursor: channel3go.String("cursor"),
+		Limit:  channel3go.Int(1),
 	})
 	if err != nil {
-		var apierr *publicsdk.Error
+		var apierr *channel3go.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -77,19 +77,19 @@ func TestPriceTrackingGetHistoryWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := publicsdk.NewClient(
+	client := channel3go.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.PriceTracking.GetHistory(
 		context.TODO(),
 		"canonical_product_id",
-		publicsdk.PriceTrackingGetHistoryParams{
-			Days: publicsdk.Int(1),
+		channel3go.PriceTrackingGetHistoryParams{
+			Days: channel3go.Int(1),
 		},
 	)
 	if err != nil {
-		var apierr *publicsdk.Error
+		var apierr *channel3go.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -106,17 +106,17 @@ func TestPriceTrackingStart(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := publicsdk.NewClient(
+	client := channel3go.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.PriceTracking.Start(context.TODO(), publicsdk.PriceTrackingStartParams{
-		StartTrackingRequest: publicsdk.StartTrackingRequestParam{
+	_, err := client.PriceTracking.Start(context.TODO(), channel3go.PriceTrackingStartParams{
+		StartTrackingRequest: channel3go.StartTrackingRequestParam{
 			CanonicalProductID: "canonical_product_id",
 		},
 	})
 	if err != nil {
-		var apierr *publicsdk.Error
+		var apierr *channel3go.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -133,17 +133,17 @@ func TestPriceTrackingStop(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := publicsdk.NewClient(
+	client := channel3go.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.PriceTracking.Stop(context.TODO(), publicsdk.PriceTrackingStopParams{
-		StopTrackingRequest: publicsdk.StopTrackingRequestParam{
+	_, err := client.PriceTracking.Stop(context.TODO(), channel3go.PriceTrackingStopParams{
+		StopTrackingRequest: channel3go.StopTrackingRequestParam{
 			CanonicalProductID: "canonical_product_id",
 		},
 	})
 	if err != nil {
-		var apierr *publicsdk.Error
+		var apierr *channel3go.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}

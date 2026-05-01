@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-package publicsdk_test
+package channel3go_test
 
 import (
 	"context"
@@ -22,43 +22,43 @@ func TestSearchPerformWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := publicsdk.NewClient(
+	client := channel3go.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Search.Perform(context.TODO(), publicsdk.SearchPerformParams{
-		SearchRequest: publicsdk.SearchRequestParam{
-			Base64Image: publicsdk.String("base64_image"),
-			Config: publicsdk.SearchConfigParam{
-				Country:           publicsdk.SearchConfigCountryUs,
-				Currency:          publicsdk.SearchConfigCurrencyUsd,
-				KeywordSearchOnly: publicsdk.Bool(true),
-				Language:          publicsdk.SearchConfigLanguageEn,
+	_, err := client.Search.Perform(context.TODO(), channel3go.SearchPerformParams{
+		SearchRequest: channel3go.SearchRequestParam{
+			Base64Image: channel3go.String("base64_image"),
+			Config: channel3go.SearchConfigParam{
+				Country:           channel3go.SearchConfigCountryUs,
+				Currency:          channel3go.SearchConfigCurrencyUsd,
+				KeywordSearchOnly: channel3go.Bool(true),
+				Language:          channel3go.SearchConfigLanguageEn,
 			},
-			Filters: publicsdk.SearchFiltersParam{
+			Filters: channel3go.SearchFiltersParam{
 				Age:                []string{"newborn"},
-				Availability:       []publicsdk.AvailabilityStatus{publicsdk.AvailabilityStatusInStock},
+				Availability:       []channel3go.AvailabilityStatus{channel3go.AvailabilityStatusInStock},
 				BrandIDs:           []string{"string"},
 				CategoryIDs:        []string{"string"},
-				Condition:          publicsdk.SearchFiltersConditionNew,
+				Condition:          channel3go.SearchFiltersConditionNew,
 				ExcludeBrandIDs:    []string{"string"},
 				ExcludeCategoryIDs: []string{"string"},
 				ExcludeWebsiteIDs:  []string{"string"},
-				Gender:             publicsdk.SearchFiltersGenderMale,
-				Price: publicsdk.SearchFilterPriceParam{
-					MaxPrice: publicsdk.Float(0),
-					MinPrice: publicsdk.Float(0),
+				Gender:             channel3go.SearchFiltersGenderMale,
+				Price: channel3go.SearchFilterPriceParam{
+					MaxPrice: channel3go.Float(0),
+					MinPrice: channel3go.Float(0),
 				},
 				WebsiteIDs: []string{"string"},
 			},
-			ImageURL:  publicsdk.String("image_url"),
-			Limit:     publicsdk.Int(1),
-			PageToken: publicsdk.String("page_token"),
-			Query:     publicsdk.String("query"),
+			ImageURL:  channel3go.String("image_url"),
+			Limit:     channel3go.Int(1),
+			PageToken: channel3go.String("page_token"),
+			Query:     channel3go.String("query"),
 		},
 	})
 	if err != nil {
-		var apierr *publicsdk.Error
+		var apierr *channel3go.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}

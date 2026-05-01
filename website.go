@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-package publicsdk
+package channel3go
 
 import (
 	"context"
@@ -34,7 +34,9 @@ func NewWebsiteService(opts ...option.RequestOption) (r WebsiteService) {
 	return
 }
 
-// Find a website by URL.
+// Resolve a website URL to its ID and best_commission_rate. Tip: website_ids
+// filters accept domains directly, so this lookup is most useful for retrieving
+// commission rates.
 func (r *WebsiteService) Get(ctx context.Context, query WebsiteGetParams, opts ...option.RequestOption) (res *Website, err error) {
 	opts = slices.Concat(r.options, opts)
 	path := "v0/websites"
@@ -42,7 +44,9 @@ func (r *WebsiteService) Get(ctx context.Context, query WebsiteGetParams, opts .
 	return res, err
 }
 
-// Find a website by URL.
+// Resolve a website URL to its ID and best_commission_rate. Tip: website_ids
+// filters accept domains directly, so this lookup is most useful for retrieving
+// commission rates.
 //
 // Deprecated: use `retrieve` instead; will be removed in the next major version
 func (r *WebsiteService) Find(ctx context.Context, body WebsiteFindParams, opts ...option.RequestOption) (res *Website, err error) {

@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-package publicsdk_test
+package channel3go_test
 
 import (
 	"context"
@@ -22,13 +22,13 @@ func TestCategoryGet(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := publicsdk.NewClient(
+	client := channel3go.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Categories.Get(context.TODO(), "slug")
 	if err != nil {
-		var apierr *publicsdk.Error
+		var apierr *channel3go.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -45,17 +45,17 @@ func TestCategoryListWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := publicsdk.NewClient(
+	client := channel3go.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Categories.List(context.TODO(), publicsdk.CategoryListParams{
-		Page:      publicsdk.Int(1),
-		PageSize:  publicsdk.Int(1),
-		RootsOnly: publicsdk.Bool(true),
+	_, err := client.Categories.List(context.TODO(), channel3go.CategoryListParams{
+		Page:      channel3go.Int(1),
+		PageSize:  channel3go.Int(1),
+		RootsOnly: channel3go.Bool(true),
 	})
 	if err != nil {
-		var apierr *publicsdk.Error
+		var apierr *channel3go.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -72,16 +72,16 @@ func TestCategorySearchWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := publicsdk.NewClient(
+	client := channel3go.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Categories.Search(context.TODO(), publicsdk.CategorySearchParams{
+	_, err := client.Categories.Search(context.TODO(), channel3go.CategorySearchParams{
 		Query: "x",
-		Limit: publicsdk.Int(1),
+		Limit: channel3go.Int(1),
 	})
 	if err != nil {
-		var apierr *publicsdk.Error
+		var apierr *channel3go.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}

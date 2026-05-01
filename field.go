@@ -1,4 +1,4 @@
-package publicsdk
+package channel3go
 
 import (
 	"github.com/stainless-sdks/public-sdk-go/packages/param"

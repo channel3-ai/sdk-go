@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-package publicsdk_test
+package channel3go_test
 
 import (
 	"context"
@@ -21,12 +21,12 @@ func TestAutoPagination(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := publicsdk.NewClient(
+	client := channel3go.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	iter := client.Products.SearchAutoPaging(context.TODO(), publicsdk.ProductSearchParams{
-		SearchRequest: publicsdk.SearchRequestParam{},
+	iter := client.Products.SearchAutoPaging(context.TODO(), channel3go.ProductSearchParams{
+		SearchRequest: channel3go.SearchRequestParam{},
 	})
 	// The mock server isn't going to give us real pagination
 	for i := 0; i < 3 && iter.Next(); i++ {
