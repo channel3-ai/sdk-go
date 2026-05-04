@@ -40,21 +40,6 @@ func NewPriceTrackingService(opts ...option.RequestOption) (r PriceTrackingServi
 	return
 }
 
-// Get price history for a canonical product.
-//
-// Deprecated: use `retrieve_history` instead; will be removed in the next major
-// version
-func (r *PriceTrackingService) GetHistory(ctx context.Context, canonicalProductID string, body PriceTrackingGetHistoryParams, opts ...option.RequestOption) (res *PriceHistory, err error) {
-	opts = slices.Concat(r.options, opts)
-	if canonicalProductID == "" {
-		err = errors.New("missing required canonical_product_id parameter")
-		return nil, err
-	}
-	path := fmt.Sprintf("v0/price-tracking/history/%s", url.PathEscape(canonicalProductID))
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, body, &res, opts...)
-	return res, err
-}
-
 // List your active price tracking subscriptions.
 func (r *PriceTrackingService) ListSubscriptions(ctx context.Context, query PriceTrackingListSubscriptionsParams, opts ...option.RequestOption) (res *pagination.CursorPage[Subscription], err error) {
 	var raw *http.Response
@@ -258,21 +243,6 @@ const (
 	SubscriptionSubscriptionStatusActive    SubscriptionSubscriptionStatus = "active"
 	SubscriptionSubscriptionStatusCancelled SubscriptionSubscriptionStatus = "cancelled"
 )
-
-type PriceTrackingGetHistoryParams struct {
-	// Number of days of history to fetch (max 30)
-	Days param.Opt[int64] `query:"days,omitzero" json:"-"`
-	paramObj
-}
-
-// URLQuery serializes [PriceTrackingGetHistoryParams]'s query parameters as
-// `url.Values`.
-func (r PriceTrackingGetHistoryParams) URLQuery() (v url.Values, err error) {
-	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
-		ArrayFormat:  apiquery.ArrayQueryFormatComma,
-		NestedFormat: apiquery.NestedQueryFormatBrackets,
-	})
-}
 
 type PriceTrackingListSubscriptionsParams struct {
 	// Pagination cursor
