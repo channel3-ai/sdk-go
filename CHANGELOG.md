@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.1 (2026-05-04)
+
+Full Changelog: [v0.1.0...v0.1.1](https://github.com/channel3-ai/sdk-go/compare/v0.1.0...v0.1.1)
+
+### Chores
+
+* **internal:** codegen related update ([9250531](https://github.com/channel3-ai/sdk-go/commit/925053187d5702998de2716ef86a2bbf043f0160))
+
 ## 0.1.0 (2026-05-01)
 
 Full Changelog: [v0.0.1...v0.1.0](https://github.com/channel3-ai/sdk-go/compare/v0.0.1...v0.1.0)
