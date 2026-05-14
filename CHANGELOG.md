@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.2.0 (2026-05-14)
+
+Full Changelog: [v0.1.0...v0.2.0](https://github.com/channel3-ai/sdk-go/compare/v0.1.0...v0.2.0)
+
+### Features
+
+* **client:** optimize json encoder for internal types ([cd657ce](https://github.com/channel3-ai/sdk-go/commit/cd657ceee39301275170581546a5c1a494df2b6b))
+
+
+### Bug Fixes
+
+* **go:** avoid panic when http.DefaultTransport is wrapped ([9ea7571](https://github.com/channel3-ai/sdk-go/commit/9ea7571d3ca916faa15cf869824c785586f96278))
+
+
+### Chores
+
+* **internal:** codegen related update ([9250531](https://github.com/channel3-ai/sdk-go/commit/925053187d5702998de2716ef86a2bbf043f0160))
+* redact api-key headers in debug logs ([1868003](https://github.com/channel3-ai/sdk-go/commit/18680038957f3ac1e9d67dcb25d2dbf44a25f7e6))
+
 ## 0.1.0 (2026-05-01)
 
 Full Changelog: [v0.0.1...v0.1.0](https://github.com/channel3-ai/sdk-go/compare/v0.0.1...v0.1.0)
