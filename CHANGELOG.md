@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.3.0 (2026-05-21)
+
+Full Changelog: [v0.2.0...v0.3.0](https://github.com/channel3-ai/sdk-go/compare/v0.2.0...v0.3.0)
+
+### Features
+
+* **api:** add attributes filter, extracted_attributes to enrich/product responses ([0e47ba6](https://github.com/channel3-ai/sdk-go/commit/0e47ba6c7e1290dbc82e829fef4362d7dd4bd18c))
+* **api:** add variants to product/enrich responses and AvailabilityStatus type ([35c1904](https://github.com/channel3-ai/sdk-go/commit/35c19045aac97f92b251774609d213676a6a1cf8))
+
 ## 0.2.0 (2026-05-14)
 
 Full Changelog: [v0.1.0...v0.2.0](https://github.com/channel3-ai/sdk-go/compare/v0.1.0...v0.2.0)
