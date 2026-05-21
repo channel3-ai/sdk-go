@@ -111,32 +111,37 @@ type EnrichEnrichURLResponse struct {
 	Materials   []string                       `json:"materials" api:"nullable"`
 	// All merchant offers for this product in the requested locale.
 	Offers []ProductOffer `json:"offers"`
+	// Structured attributes extracted for this product, keyed by attribute handle
+	// (e.g. 'color', 'material'). Values are the canonical allowed values for that
+	// handle.
+	StructuredAttributes map[string][]string `json:"structured_attributes"`
 	// Legacy variant list, always empty. Use v1 API for variant dimensions.
 	//
 	// Deprecated: deprecated
 	Variants []EnrichEnrichURLResponseVariant `json:"variants"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
-		ID           respjson.Field
-		Availability respjson.Field
-		Price        respjson.Field
-		Title        respjson.Field
-		URL          respjson.Field
-		Age          respjson.Field
-		BrandID      respjson.Field
-		BrandName    respjson.Field
-		Brands       respjson.Field
-		Categories   respjson.Field
-		Description  respjson.Field
-		Gender       respjson.Field
-		ImageURLs    respjson.Field
-		Images       respjson.Field
-		KeyFeatures  respjson.Field
-		Materials    respjson.Field
-		Offers       respjson.Field
-		Variants     respjson.Field
-		ExtraFields  map[string]respjson.Field
-		raw          string
+		ID                   respjson.Field
+		Availability         respjson.Field
+		Price                respjson.Field
+		Title                respjson.Field
+		URL                  respjson.Field
+		Age                  respjson.Field
+		BrandID              respjson.Field
+		BrandName            respjson.Field
+		Brands               respjson.Field
+		Categories           respjson.Field
+		Description          respjson.Field
+		Gender               respjson.Field
+		ImageURLs            respjson.Field
+		Images               respjson.Field
+		KeyFeatures          respjson.Field
+		Materials            respjson.Field
+		Offers               respjson.Field
+		StructuredAttributes respjson.Field
+		Variants             respjson.Field
+		ExtraFields          map[string]respjson.Field
+		raw                  string
 	} `json:"-"`
 }
 
