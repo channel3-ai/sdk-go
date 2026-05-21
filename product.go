@@ -383,6 +383,12 @@ type ProductDetail struct {
 	// (e.g. 'color', 'material'). Values are the canonical allowed values for that
 	// handle.
 	StructuredAttributes map[string][]string `json:"structured_attributes"`
+	// Wrapper for variant-interaction state on a Product.
+	//
+	// Holds `options` and `selected`. `options` represent all of the configuration
+	// options for the product. `selected` represents the currently selected option
+	// values.
+	Variants ProductDetailVariants `json:"variants" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		ID                   respjson.Field
@@ -397,6 +403,7 @@ type ProductDetail struct {
 		Materials            respjson.Field
 		Offers               respjson.Field
 		StructuredAttributes respjson.Field
+		Variants             respjson.Field
 		ExtraFields          map[string]respjson.Field
 		raw                  string
 	} `json:"-"`
@@ -426,6 +433,111 @@ const (
 	ProductDetailGenderFemale ProductDetailGender = "female"
 	ProductDetailGenderUnisex ProductDetailGender = "unisex"
 )
+
+// Wrapper for variant-interaction state on a Product.
+//
+// Holds `options` and `selected`. `options` represent all of the configuration
+// options for the product. `selected` represents the currently selected option
+// values.
+type ProductDetailVariants struct {
+	Options  []ProductDetailVariantsOption   `json:"options" api:"required"`
+	Selected []ProductDetailVariantsSelected `json:"selected" api:"required"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Options     respjson.Field
+		Selected    respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r ProductDetailVariants) RawJSON() string { return r.JSON.raw }
+func (r *ProductDetailVariants) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// One dimension of a product family (e.g. 'Color', 'Size').
+type ProductDetailVariantsOption struct {
+	// The name of the option (e.g. 'Color', 'Size')
+	Name string `json:"name" api:"required"`
+	// The values of the option (e.g. ['Blue', 'Red', 'Green'])
+	Values []ProductDetailVariantsOptionValue `json:"values" api:"required"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Name        respjson.Field
+		Values      respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r ProductDetailVariantsOption) RawJSON() string { return r.JSON.raw }
+func (r *ProductDetailVariantsOption) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// One value of one variant option (e.g. 'Blue' under 'Color')
+type ProductDetailVariantsOptionValue struct {
+	// Whether the option value exists on the product, or is a configuration only
+	// present on another variant of the same product. For example, a shirt that comes
+	// in multiple colors, but only one color is available in Size XL.
+	Exists bool `json:"exists" api:"required"`
+	// The display value of the option value (e.g. 'Blue')
+	Label string `json:"label" api:"required"`
+	// The availability status of the option value. None when returned on search
+	// results, hydrated only on get product detail requests.
+	//
+	// Any of "InStock", "LimitedAvailability", "PreOrder", "BackOrder", "SoldOut",
+	// "OutOfStock", "Discontinued", "Unknown".
+	Available AvailabilityStatus `json:"available" api:"nullable"`
+	// The product id that represents this value. Variants that point to different
+	// products will have this field set, as well as thumbnail_url for displaying
+	// selector icons.
+	ProductID string `json:"product_id" api:"nullable"`
+	// For options that reference different products, this is the URL of the thumbnail
+	// image for the option value. E.g., a shoe that comes in multiple colors will have
+	// an OptionValue for each color with a thumbnail_url set.
+	ThumbnailURL string `json:"thumbnail_url" api:"nullable"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Exists       respjson.Field
+		Label        respjson.Field
+		Available    respjson.Field
+		ProductID    respjson.Field
+		ThumbnailURL respjson.Field
+		ExtraFields  map[string]respjson.Field
+		raw          string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r ProductDetailVariantsOptionValue) RawJSON() string { return r.JSON.raw }
+func (r *ProductDetailVariantsOptionValue) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// One effective selection on a product, post server-side relaxation.
+type ProductDetailVariantsSelected struct {
+	// The display value of the selected option (e.g. 'Blue', 'XL')
+	Label string `json:"label" api:"required"`
+	// The name of the selected option (e.g. 'Color', 'Size')
+	Name string `json:"name" api:"required"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Label       respjson.Field
+		Name        respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r ProductDetailVariantsSelected) RawJSON() string { return r.JSON.raw }
+func (r *ProductDetailVariantsSelected) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
 
 // Product image with metadata.
 type ProductImage struct {
