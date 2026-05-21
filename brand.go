@@ -50,7 +50,7 @@ func (r *BrandService) Get(ctx context.Context, brandID string, opts ...option.R
 	return res, err
 }
 
-// Paginated list of brands.
+// Paginated list of brands, capped at the top 5,000.
 func (r *BrandService) List(ctx context.Context, query BrandListParams, opts ...option.RequestOption) (res *pagination.CursorPage[Brand], err error) {
 	var raw *http.Response
 	opts = slices.Concat(r.options, opts)
@@ -68,7 +68,7 @@ func (r *BrandService) List(ctx context.Context, query BrandListParams, opts ...
 	return res, nil
 }
 
-// Paginated list of brands.
+// Paginated list of brands, capped at the top 5,000.
 func (r *BrandService) ListAutoPaging(ctx context.Context, query BrandListParams, opts ...option.RequestOption) *pagination.CursorPageAutoPager[Brand] {
 	return pagination.NewCursorPageAutoPager(r.List(ctx, query, opts...))
 }

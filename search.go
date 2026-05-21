@@ -61,17 +61,17 @@ type SearchConfigParam struct {
 	// `currency=EUR` with no specific country).
 	//
 	// Any of "US", "GB", "EU", "AU", "CA", "IE", "DE", "AT", "FR", "BE", "IT", "ES",
-	// "NL", "SE", "FI", "PT", "CZ".
+	// "NL", "SE", "FI", "PT", "CZ", "GR", "RO".
 	Country SearchConfigCountry `json:"country,omitzero"`
 	// ISO 4217 currency code. When unset, inferred from `country` (e.g. `GB` → `GBP`),
 	// defaulting to `USD`.
 	//
-	// Any of "USD", "CAD", "AUD", "GBP", "EUR", "SEK", "CZK".
+	// Any of "USD", "CAD", "AUD", "GBP", "EUR", "SEK", "CZK", "RON".
 	Currency SearchConfigCurrency `json:"currency,omitzero"`
 	// ISO 639-1 language code. When unset, inferred from `country` (preferred) then
 	// `currency`, defaulting to `en`.
 	//
-	// Any of "en", "de", "fr", "it", "es", "nl", "sv", "fi", "pt", "cs".
+	// Any of "en", "de", "fr", "it", "es", "nl", "sv", "fi", "pt", "cs", "el", "ro".
 	Language SearchConfigLanguage `json:"language,omitzero"`
 	paramObj
 }
@@ -106,6 +106,8 @@ const (
 	SearchConfigCountryFi SearchConfigCountry = "FI"
 	SearchConfigCountryPt SearchConfigCountry = "PT"
 	SearchConfigCountryCz SearchConfigCountry = "CZ"
+	SearchConfigCountryGr SearchConfigCountry = "GR"
+	SearchConfigCountryRo SearchConfigCountry = "RO"
 )
 
 // ISO 4217 currency code. When unset, inferred from `country` (e.g. `GB` → `GBP`),
@@ -120,6 +122,7 @@ const (
 	SearchConfigCurrencyEur SearchConfigCurrency = "EUR"
 	SearchConfigCurrencySek SearchConfigCurrency = "SEK"
 	SearchConfigCurrencyCzk SearchConfigCurrency = "CZK"
+	SearchConfigCurrencyRon SearchConfigCurrency = "RON"
 )
 
 // ISO 639-1 language code. When unset, inferred from `country` (preferred) then
@@ -137,6 +140,8 @@ const (
 	SearchConfigLanguageFi SearchConfigLanguage = "fi"
 	SearchConfigLanguagePt SearchConfigLanguage = "pt"
 	SearchConfigLanguageCs SearchConfigLanguage = "cs"
+	SearchConfigLanguageEl SearchConfigLanguage = "el"
+	SearchConfigLanguageRo SearchConfigLanguage = "ro"
 )
 
 // Price filter for search. Values are inclusive.
@@ -162,6 +167,13 @@ type SearchFiltersParam struct {
 	//
 	// Any of "newborn", "infant", "toddler", "kids", "adult".
 	Age []string `json:"age,omitzero"`
+	// If provided, only products whose extracted attributes match these key/value
+	// constraints will be returned. Keys are attribute handles (e.g. 'color',
+	// 'material') and values are lists of allowed values (OR within a key, AND across
+	// keys). When a category filter is also supplied, all keys must be valid
+	// attributes of at least one of the requested categories. See
+	// `Category.attributes` for the valid keys/values per category.
+	Attributes map[string][]string `json:"attributes,omitzero"`
 	// If provided, only products with these availability statuses will be returned
 	Availability []AvailabilityStatus `json:"availability,omitzero"`
 	// If provided, only products from these brands will be returned
@@ -169,6 +181,9 @@ type SearchFiltersParam struct {
 	// If provided, only products from these categories will be returned. Accepts
 	// category slugs.
 	CategoryIDs []string `json:"category_ids,omitzero"`
+	// [Beta] Color filter wrapper. Holds the list of required colors today; reserved
+	// for future filter-level options (e.g. match modes, tolerance overrides).
+	Colors SearchFiltersColorsParam `json:"colors,omitzero"`
 	// Filter by product condition. Incubating: condition data is currently incomplete;
 	// products without condition data will be included in all condition filter
 	// results.
@@ -198,6 +213,43 @@ func (r SearchFiltersParam) MarshalJSON() (data []byte, err error) {
 	return param.MarshalObject(r, (*shadow)(&r))
 }
 func (r *SearchFiltersParam) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// [Beta] Color filter wrapper. Holds the list of required colors today; reserved
+// for future filter-level options (e.g. match modes, tolerance overrides).
+//
+// The property Palette is required.
+type SearchFiltersColorsParam struct {
+	// Colors required in matching products. Treated as an AND condition.
+	Palette []SearchFiltersColorsPaletteParam `json:"palette,omitzero" api:"required"`
+	paramObj
+}
+
+func (r SearchFiltersColorsParam) MarshalJSON() (data []byte, err error) {
+	type shadow SearchFiltersColorsParam
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SearchFiltersColorsParam) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// A single color requirement for the color filter.
+//
+// The property Hex is required.
+type SearchFiltersColorsPaletteParam struct {
+	// sRGB hex string, e.g. '#a1b2c3'
+	Hex string `json:"hex" api:"required"`
+	// Percentage of color, where 1.0 is 100%
+	Percentage param.Opt[float64] `json:"percentage,omitzero"`
+	paramObj
+}
+
+func (r SearchFiltersColorsPaletteParam) MarshalJSON() (data []byte, err error) {
+	type shadow SearchFiltersColorsPaletteParam
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SearchFiltersColorsPaletteParam) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 

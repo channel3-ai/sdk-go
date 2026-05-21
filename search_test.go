@@ -36,10 +36,19 @@ func TestSearchPerformWithOptionalParams(t *testing.T) {
 				Language:          channel3go.SearchConfigLanguageEn,
 			},
 			Filters: channel3go.SearchFiltersParam{
-				Age:                []string{"newborn"},
-				Availability:       []channel3go.AvailabilityStatus{channel3go.AvailabilityStatusInStock},
-				BrandIDs:           []string{"string"},
-				CategoryIDs:        []string{"string"},
+				Age: []string{"newborn"},
+				Attributes: map[string][]string{
+					"foo": {"string"},
+				},
+				Availability: []channel3go.AvailabilityStatus{channel3go.AvailabilityStatusInStock},
+				BrandIDs:     []string{"string"},
+				CategoryIDs:  []string{"string"},
+				Colors: channel3go.SearchFiltersColorsParam{
+					Palette: []channel3go.SearchFiltersColorsPaletteParam{{
+						Hex:        "hex",
+						Percentage: channel3go.Float(0),
+					}},
+				},
 				Condition:          channel3go.SearchFiltersConditionNew,
 				ExcludeBrandIDs:    []string{"string"},
 				ExcludeCategoryIDs: []string{"string"},

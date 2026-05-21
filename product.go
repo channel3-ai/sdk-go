@@ -200,17 +200,17 @@ type LocaleConfigParam struct {
 	// `currency=EUR` with no specific country).
 	//
 	// Any of "US", "GB", "EU", "AU", "CA", "IE", "DE", "AT", "FR", "BE", "IT", "ES",
-	// "NL", "SE", "FI", "PT", "CZ".
+	// "NL", "SE", "FI", "PT", "CZ", "GR", "RO".
 	Country LocaleConfigCountry `json:"country,omitzero"`
 	// ISO 4217 currency code. When unset, inferred from `country` (e.g. `GB` → `GBP`),
 	// defaulting to `USD`.
 	//
-	// Any of "USD", "CAD", "AUD", "GBP", "EUR", "SEK", "CZK".
+	// Any of "USD", "CAD", "AUD", "GBP", "EUR", "SEK", "CZK", "RON".
 	Currency LocaleConfigCurrency `json:"currency,omitzero"`
 	// ISO 639-1 language code. When unset, inferred from `country` (preferred) then
 	// `currency`, defaulting to `en`.
 	//
-	// Any of "en", "de", "fr", "it", "es", "nl", "sv", "fi", "pt", "cs".
+	// Any of "en", "de", "fr", "it", "es", "nl", "sv", "fi", "pt", "cs", "el", "ro".
 	Language LocaleConfigLanguage `json:"language,omitzero"`
 	paramObj
 }
@@ -245,6 +245,8 @@ const (
 	LocaleConfigCountryFi LocaleConfigCountry = "FI"
 	LocaleConfigCountryPt LocaleConfigCountry = "PT"
 	LocaleConfigCountryCz LocaleConfigCountry = "CZ"
+	LocaleConfigCountryGr LocaleConfigCountry = "GR"
+	LocaleConfigCountryRo LocaleConfigCountry = "RO"
 )
 
 // ISO 4217 currency code. When unset, inferred from `country` (e.g. `GB` → `GBP`),
@@ -259,6 +261,7 @@ const (
 	LocaleConfigCurrencyEur LocaleConfigCurrency = "EUR"
 	LocaleConfigCurrencySek LocaleConfigCurrency = "SEK"
 	LocaleConfigCurrencyCzk LocaleConfigCurrency = "CZK"
+	LocaleConfigCurrencyRon LocaleConfigCurrency = "RON"
 )
 
 // ISO 639-1 language code. When unset, inferred from `country` (preferred) then
@@ -276,6 +279,8 @@ const (
 	LocaleConfigLanguageFi LocaleConfigLanguage = "fi"
 	LocaleConfigLanguagePt LocaleConfigLanguage = "pt"
 	LocaleConfigLanguageCs LocaleConfigLanguage = "cs"
+	LocaleConfigLanguageEl LocaleConfigLanguage = "el"
+	LocaleConfigLanguageRo LocaleConfigLanguage = "ro"
 )
 
 // The property URL is required.
@@ -374,21 +379,26 @@ type ProductDetail struct {
 	Materials   []string            `json:"materials" api:"nullable"`
 	// All merchant offers for this product in the requested locale.
 	Offers []ProductOffer `json:"offers"`
+	// Structured attributes extracted for this product, keyed by attribute handle
+	// (e.g. 'color', 'material'). Values are the canonical allowed values for that
+	// handle.
+	StructuredAttributes map[string][]string `json:"structured_attributes"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
-		ID          respjson.Field
-		Title       respjson.Field
-		Age         respjson.Field
-		Brands      respjson.Field
-		Categories  respjson.Field
-		Description respjson.Field
-		Gender      respjson.Field
-		Images      respjson.Field
-		KeyFeatures respjson.Field
-		Materials   respjson.Field
-		Offers      respjson.Field
-		ExtraFields map[string]respjson.Field
-		raw         string
+		ID                   respjson.Field
+		Title                respjson.Field
+		Age                  respjson.Field
+		Brands               respjson.Field
+		Categories           respjson.Field
+		Description          respjson.Field
+		Gender               respjson.Field
+		Images               respjson.Field
+		KeyFeatures          respjson.Field
+		Materials            respjson.Field
+		Offers               respjson.Field
+		StructuredAttributes respjson.Field
+		ExtraFields          map[string]respjson.Field
+		raw                  string
 	} `json:"-"`
 }
 
@@ -529,17 +539,17 @@ type ProductGetParams struct {
 	// 'US' only when language and currency are also unset.
 	//
 	// Any of "US", "GB", "EU", "AU", "CA", "IE", "DE", "AT", "FR", "BE", "IT", "ES",
-	// "NL", "SE", "FI", "PT", "CZ".
+	// "NL", "SE", "FI", "PT", "CZ", "GR", "RO".
 	Country ProductGetParamsCountry `query:"country,omitzero" json:"-"`
 	// ISO 4217 currency code. When unset, inferred from `country` (e.g. GB -> GBP);
 	// falls back to 'USD' only when all three locale fields are unset.
 	//
-	// Any of "USD", "CAD", "AUD", "GBP", "EUR", "SEK", "CZK".
+	// Any of "USD", "CAD", "AUD", "GBP", "EUR", "SEK", "CZK", "RON".
 	Currency ProductGetParamsCurrency `query:"currency,omitzero" json:"-"`
 	// ISO 639-1 language code. Matches any language when unset; defaults to 'en' only
 	// when country and currency are also unset.
 	//
-	// Any of "en", "de", "fr", "it", "es", "nl", "sv", "fi", "pt", "cs".
+	// Any of "en", "de", "fr", "it", "es", "nl", "sv", "fi", "pt", "cs", "el", "ro".
 	Language ProductGetParamsLanguage `query:"language,omitzero" json:"-"`
 	// Optional list of website IDs to constrain the buy URL to, relevant if multiple
 	// merchants exist. Accepts website IDs or domains (e.g. "nike.com").
@@ -577,6 +587,8 @@ const (
 	ProductGetParamsCountryFi ProductGetParamsCountry = "FI"
 	ProductGetParamsCountryPt ProductGetParamsCountry = "PT"
 	ProductGetParamsCountryCz ProductGetParamsCountry = "CZ"
+	ProductGetParamsCountryGr ProductGetParamsCountry = "GR"
+	ProductGetParamsCountryRo ProductGetParamsCountry = "RO"
 )
 
 // ISO 4217 currency code. When unset, inferred from `country` (e.g. GB -> GBP);
@@ -591,6 +603,7 @@ const (
 	ProductGetParamsCurrencyEur ProductGetParamsCurrency = "EUR"
 	ProductGetParamsCurrencySek ProductGetParamsCurrency = "SEK"
 	ProductGetParamsCurrencyCzk ProductGetParamsCurrency = "CZK"
+	ProductGetParamsCurrencyRon ProductGetParamsCurrency = "RON"
 )
 
 // ISO 639-1 language code. Matches any language when unset; defaults to 'en' only
@@ -608,6 +621,8 @@ const (
 	ProductGetParamsLanguageFi ProductGetParamsLanguage = "fi"
 	ProductGetParamsLanguagePt ProductGetParamsLanguage = "pt"
 	ProductGetParamsLanguageCs ProductGetParamsLanguage = "cs"
+	ProductGetParamsLanguageEl ProductGetParamsLanguage = "el"
+	ProductGetParamsLanguageRo ProductGetParamsLanguage = "ro"
 )
 
 type ProductFindSimilarParams struct {
