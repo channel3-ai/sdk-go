@@ -89,7 +89,8 @@ type Category struct {
 	Slug string `json:"slug" api:"required"`
 	// Human-readable category title
 	Title string `json:"title" api:"required"`
-	// Structured attributes applicable to this category
+	// Structured attributes applicable to this category, with their allowed values.
+	// Usable as keys in `SearchFilters.attributes`.
 	Attributes []CategoryAttribute `json:"attributes"`
 	// Direct subcategories only (one level)
 	Children []CategoryRef `json:"children"`
