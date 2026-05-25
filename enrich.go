@@ -186,9 +186,13 @@ const (
 
 // v0 product image with deprecated photo_quality field.
 type EnrichEnrichURLResponseImage struct {
-	URL         string `json:"url" api:"required"`
-	AltText     string `json:"alt_text" api:"nullable"`
-	IsMainImage bool   `json:"is_main_image"`
+	URL     string `json:"url" api:"required"`
+	AltText string `json:"alt_text" api:"nullable"`
+	// True if this URL points to a cleaned image. A cleaned image has a square aspect
+	// ratio and a uniform, monochromatic background. Cleaned images are best displayed
+	// in a product grid.
+	IsCleanedImage bool `json:"is_cleaned_image"`
+	IsMainImage    bool `json:"is_main_image"`
 	// Photo quality classification for API responses.
 	//
 	// Any of "professional", "ugc", "poor".
@@ -203,13 +207,14 @@ type EnrichEnrichURLResponseImage struct {
 	ShotType string `json:"shot_type" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
-		URL          respjson.Field
-		AltText      respjson.Field
-		IsMainImage  respjson.Field
-		PhotoQuality respjson.Field
-		ShotType     respjson.Field
-		ExtraFields  map[string]respjson.Field
-		raw          string
+		URL            respjson.Field
+		AltText        respjson.Field
+		IsCleanedImage respjson.Field
+		IsMainImage    respjson.Field
+		PhotoQuality   respjson.Field
+		ShotType       respjson.Field
+		ExtraFields    map[string]respjson.Field
+		raw            string
 	} `json:"-"`
 }
 
