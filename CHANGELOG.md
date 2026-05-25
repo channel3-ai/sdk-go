@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.4.0 (2026-05-25)
+
+Full Changelog: [v0.3.0...v0.4.0](https://github.com/channel3-ai/sdk-go/compare/v0.3.0...v0.4.0)
+
+### Features
+
+* **api:** add Category field, deprecate Categories in enrich/product responses ([0a919b8](https://github.com/channel3-ai/sdk-go/commit/0a919b822ad841452f59a5adde414edf6d2938d3))
+
+
+### Documentation
+
+* **types:** expand is_cleaned_image description in enrich and product models ([7e367af](https://github.com/channel3-ai/sdk-go/commit/7e367afda0694632cb351baf9ae1595e0df5fd51))
+
 ## 0.3.0 (2026-05-21)
 
 Full Changelog: [v0.2.0...v0.3.0](https://github.com/channel3-ai/sdk-go/compare/v0.2.0...v0.3.0)
