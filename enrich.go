@@ -97,9 +97,12 @@ type EnrichEnrichURLResponse struct {
 	// Deprecated: deprecated
 	BrandName string `json:"brand_name" api:"nullable"`
 	// Ordered list of brands.
-	Brands      []ProductBrand `json:"brands"`
-	Categories  []string       `json:"categories"`
-	Description string         `json:"description" api:"nullable"`
+	Brands []ProductBrand `json:"brands"`
+	// Deprecated: deprecated
+	Categories []string `json:"categories"`
+	// Lean category representation used in search hits and list rows.
+	Category    CategorySummary `json:"category" api:"nullable"`
+	Description string          `json:"description" api:"nullable"`
 	// Any of "male", "female", "unisex".
 	Gender EnrichEnrichURLResponseGender `json:"gender" api:"nullable"`
 	// List of image URLs (deprecated, use images field)
@@ -133,6 +136,7 @@ type EnrichEnrichURLResponse struct {
 		BrandName            respjson.Field
 		Brands               respjson.Field
 		Categories           respjson.Field
+		Category             respjson.Field
 		Description          respjson.Field
 		Gender               respjson.Field
 		ImageURLs            respjson.Field

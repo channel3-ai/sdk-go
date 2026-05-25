@@ -369,9 +369,12 @@ type ProductDetail struct {
 	// Any of "newborn", "infant", "toddler", "kids", "adult".
 	Age ProductDetailAge `json:"age" api:"nullable"`
 	// Ordered list of brands.
-	Brands      []ProductBrand `json:"brands"`
-	Categories  []string       `json:"categories"`
-	Description string         `json:"description" api:"nullable"`
+	Brands []ProductBrand `json:"brands"`
+	// Deprecated: deprecated
+	Categories []string `json:"categories"`
+	// Lean category representation used in search hits and list rows.
+	Category    CategorySummary `json:"category" api:"nullable"`
+	Description string          `json:"description" api:"nullable"`
 	// Any of "male", "female", "unisex".
 	Gender      ProductDetailGender `json:"gender" api:"nullable"`
 	Images      []ProductImage      `json:"images"`
@@ -396,6 +399,7 @@ type ProductDetail struct {
 		Age                  respjson.Field
 		Brands               respjson.Field
 		Categories           respjson.Field
+		Category             respjson.Field
 		Description          respjson.Field
 		Gender               respjson.Field
 		Images               respjson.Field
