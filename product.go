@@ -545,9 +545,13 @@ func (r *ProductDetailVariantsSelected) UnmarshalJSON(data []byte) error {
 
 // Product image with metadata.
 type ProductImage struct {
-	URL         string `json:"url" api:"required"`
-	AltText     string `json:"alt_text" api:"nullable"`
-	IsMainImage bool   `json:"is_main_image"`
+	URL     string `json:"url" api:"required"`
+	AltText string `json:"alt_text" api:"nullable"`
+	// True if this URL points to a cleaned image. A cleaned image has a square aspect
+	// ratio and a uniform, monochromatic background. Cleaned images are best displayed
+	// in a product grid.
+	IsCleanedImage bool `json:"is_cleaned_image"`
+	IsMainImage    bool `json:"is_main_image"`
 	// Product image type classification for API responses.
 	//
 	// Any of "hero", "lifestyle", "on_model", "detail", "scale_reference",
@@ -556,12 +560,13 @@ type ProductImage struct {
 	ShotType ProductImageShotType `json:"shot_type" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
-		URL         respjson.Field
-		AltText     respjson.Field
-		IsMainImage respjson.Field
-		ShotType    respjson.Field
-		ExtraFields map[string]respjson.Field
-		raw         string
+		URL            respjson.Field
+		AltText        respjson.Field
+		IsCleanedImage respjson.Field
+		IsMainImage    respjson.Field
+		ShotType       respjson.Field
+		ExtraFields    map[string]respjson.Field
+		raw            string
 	} `json:"-"`
 }
 
