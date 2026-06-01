@@ -40,8 +40,8 @@ func NewSearchService(opts ...option.RequestOption) (r SearchService) {
 
 // Search for products with pagination support.
 //
-// At least one of `query`, `image_url`, or `base64_image` must be provided;
-// requests with none of these will return 422.
+// At least one of `query`, `image_url`, `base64_image`, or `page_token` must be
+// provided; requests with none of these will return 422.
 //
 // Deprecated: use `products.search` instead, which auto-paginates; will be removed
 // in the next major version
@@ -273,18 +273,18 @@ const (
 
 // Search request with pagination support.
 type SearchRequestParam struct {
-	// Base64 encoded image. At least one of `query`, `image_url`, or `base64_image`
-	// must be provided.
+	// Base64 encoded image. At least one of `query`, `image_url`, `base64_image`, or
+	// `page_token` must be provided.
 	Base64Image param.Opt[string] `json:"base64_image,omitzero"`
-	// Image URL. At least one of `query`, `image_url`, or `base64_image` must be
-	// provided.
+	// Image URL. At least one of `query`, `image_url`, `base64_image`, or `page_token`
+	// must be provided.
 	ImageURL param.Opt[string] `json:"image_url,omitzero"`
 	// Optional limit on the number of results. Default is 20, max is 30.
 	Limit param.Opt[int64] `json:"limit,omitzero"`
 	// Opaque token from a previous search response to fetch the next page of results.
 	PageToken param.Opt[string] `json:"page_token,omitzero"`
-	// Search query. At least one of `query`, `image_url`, or `base64_image` must be
-	// provided.
+	// Search query. At least one of `query`, `image_url`, `base64_image`, or
+	// `page_token` must be provided.
 	Query param.Opt[string] `json:"query,omitzero"`
 	// Optional configuration
 	Config SearchConfigParam `json:"config,omitzero"`

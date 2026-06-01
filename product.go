@@ -95,8 +95,8 @@ func (r *ProductService) Lookup(ctx context.Context, body ProductLookupParams, o
 
 // Search for products with pagination support.
 //
-// At least one of `query`, `image_url`, or `base64_image` must be provided;
-// requests with none of these will return 422.
+// At least one of `query`, `image_url`, `base64_image`, or `page_token` must be
+// provided; requests with none of these will return 422.
 func (r *ProductService) Search(ctx context.Context, body ProductSearchParams, opts ...option.RequestOption) (res *pagination.SearchPage[ProductDetail], err error) {
 	var raw *http.Response
 	opts = slices.Concat(r.options, opts)
@@ -116,8 +116,8 @@ func (r *ProductService) Search(ctx context.Context, body ProductSearchParams, o
 
 // Search for products with pagination support.
 //
-// At least one of `query`, `image_url`, or `base64_image` must be provided;
-// requests with none of these will return 422.
+// At least one of `query`, `image_url`, `base64_image`, or `page_token` must be
+// provided; requests with none of these will return 422.
 func (r *ProductService) SearchAutoPaging(ctx context.Context, body ProductSearchParams, opts ...option.RequestOption) *pagination.SearchPageAutoPager[ProductDetail] {
 	return pagination.NewSearchPageAutoPager(r.Search(ctx, body, opts...))
 }
