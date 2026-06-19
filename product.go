@@ -600,6 +600,11 @@ type ProductOffer struct {
 	Domain       string                   `json:"domain" api:"required"`
 	Price        Price                    `json:"price" api:"required"`
 	URL          string                   `json:"url" api:"required"`
+	// Condition of this merchant offer (new, used, or refurbished). Null when
+	// condition is unknown.
+	//
+	// Any of "new", "refurbished", "used".
+	Condition ProductOfferCondition `json:"condition" api:"nullable"`
 	// The maximum commission rate for the merchant, as a percentage. 0 is no
 	// commission. 0.5 is 50% commission. 'Max' because the actual commission rate may
 	// be lower due to vendor-specific affiliate rules.
@@ -610,6 +615,7 @@ type ProductOffer struct {
 		Domain            respjson.Field
 		Price             respjson.Field
 		URL               respjson.Field
+		Condition         respjson.Field
 		MaxCommissionRate respjson.Field
 		ExtraFields       map[string]respjson.Field
 		raw               string
@@ -627,6 +633,16 @@ type ProductOfferAvailability string
 const (
 	ProductOfferAvailabilityInStock    ProductOfferAvailability = "InStock"
 	ProductOfferAvailabilityOutOfStock ProductOfferAvailability = "OutOfStock"
+)
+
+// Condition of this merchant offer (new, used, or refurbished). Null when
+// condition is unknown.
+type ProductOfferCondition string
+
+const (
+	ProductOfferConditionNew         ProductOfferCondition = "new"
+	ProductOfferConditionRefurbished ProductOfferCondition = "refurbished"
+	ProductOfferConditionUsed        ProductOfferCondition = "used"
 )
 
 // Find products similar to a given product.

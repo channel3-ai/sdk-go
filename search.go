@@ -184,9 +184,9 @@ type SearchFiltersParam struct {
 	// [Beta] Color filter wrapper. Holds the list of required colors today; reserved
 	// for future filter-level options (e.g. match modes, tolerance overrides).
 	Colors SearchFiltersColorsParam `json:"colors,omitzero"`
-	// Filter by product condition. Incubating: condition data is currently incomplete;
-	// products without condition data will be included in all condition filter
-	// results.
+	// Filter by offer condition. Requires at least one offer matching the requested
+	// condition, locale, and any price filter. Offers without condition data are
+	// indexed as new.
 	//
 	// Any of "new", "refurbished", "used".
 	Condition SearchFiltersCondition `json:"condition,omitzero"`
@@ -253,9 +253,9 @@ func (r *SearchFiltersColorsPaletteParam) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-// Filter by product condition. Incubating: condition data is currently incomplete;
-// products without condition data will be included in all condition filter
-// results.
+// Filter by offer condition. Requires at least one offer matching the requested
+// condition, locale, and any price filter. Offers without condition data are
+// indexed as new.
 type SearchFiltersCondition string
 
 const (
