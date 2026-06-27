@@ -200,6 +200,11 @@ type SearchFiltersParam struct {
 	ExcludeWebsiteIDs []string `json:"exclude_website_ids,omitzero"`
 	// Any of "male", "female".
 	Gender SearchFiltersGender `json:"gender,omitzero"`
+	// If 'on_sale', only products with at least one on-sale offer (priced below its
+	// compare-at price) for the requested locale are returned. If omitted, no filter.
+	//
+	// Any of "on_sale".
+	Sale SearchFiltersSale `json:"sale,omitzero"`
 	// If provided, only products from these websites will be returned. Accepts website
 	// IDs or domains (e.g. "nike.com").
 	WebsiteIDs []string `json:"website_ids,omitzero"`
@@ -269,6 +274,14 @@ type SearchFiltersGender string
 const (
 	SearchFiltersGenderMale   SearchFiltersGender = "male"
 	SearchFiltersGenderFemale SearchFiltersGender = "female"
+)
+
+// If 'on_sale', only products with at least one on-sale offer (priced below its
+// compare-at price) for the requested locale are returned. If omitted, no filter.
+type SearchFiltersSale string
+
+const (
+	SearchFiltersSaleOnSale SearchFiltersSale = "on_sale"
 )
 
 // Search request with pagination support.

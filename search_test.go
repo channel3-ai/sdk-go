@@ -58,6 +58,7 @@ func TestSearchPerformWithOptionalParams(t *testing.T) {
 					MaxPrice: channel3go.Float(0),
 					MinPrice: channel3go.Float(0),
 				},
+				Sale:       channel3go.SearchFiltersSaleOnSale,
 				WebsiteIDs: []string{"string"},
 			},
 			ImageURL:  channel3go.String("image_url"),
