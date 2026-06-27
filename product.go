@@ -175,6 +175,10 @@ type ImageSearchRequestParam struct {
 	// Opaque token from a previous image-search response to fetch the next page of
 	// results.
 	PageToken param.Opt[string] `json:"page_token,omitzero"`
+	// Image segmentation mode. None (default) disables segmentation. "AUTO" segments
+	// and crops the main product automatically. A custom string (e.g. "shoe", "mug")
+	// segments the specified object.
+	Segment param.Opt[string] `json:"segment,omitzero"`
 	// Optional locale configuration.
 	Config LocaleConfigParam `json:"config,omitzero"`
 	// Optional filters. Search will only consider products that match all of the
