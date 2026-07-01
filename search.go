@@ -54,8 +54,9 @@ func (r *SearchService) Perform(ctx context.Context, body SearchPerformParams, o
 
 // Search and locale options for a search request.
 type SearchConfigParam struct {
-	// If True, search will only use keyword search and not vector search. Keyword-only
-	// search is not supported with image input.
+	// Deprecated: use `mode`. `true` is equivalent to `mode=keyword`.
+	//
+	// Deprecated: deprecated
 	KeywordSearchOnly param.Opt[bool] `json:"keyword_search_only,omitzero"`
 	// ISO 3166-1 alpha-2 country code. May stay unset for pan-region storefronts (e.g.
 	// `currency=EUR` with no specific country).
@@ -73,6 +74,14 @@ type SearchConfigParam struct {
 	//
 	// Any of "en", "de", "fr", "it", "es", "nl", "sv", "fi", "pt", "cs", "el", "ro".
 	Language SearchConfigLanguage `json:"language,omitzero"`
+	// Search strategy. `default` (recommended) combines lexical + semantic search and
+	// is right for most use cases. `keyword` is lexical only — use it for real-time,
+	// low-latency needs like ad targeting. `agentic` uses an LLM to plan multiple
+	// structured sub-searches for complex queries, with higher latency than the other
+	// modes.
+	//
+	// Any of "keyword", "default", "agentic".
+	Mode SearchConfigMode `json:"mode,omitzero"`
 	paramObj
 }
 
@@ -142,6 +151,19 @@ const (
 	SearchConfigLanguageCs SearchConfigLanguage = "cs"
 	SearchConfigLanguageEl SearchConfigLanguage = "el"
 	SearchConfigLanguageRo SearchConfigLanguage = "ro"
+)
+
+// Search strategy. `default` (recommended) combines lexical + semantic search and
+// is right for most use cases. `keyword` is lexical only — use it for real-time,
+// low-latency needs like ad targeting. `agentic` uses an LLM to plan multiple
+// structured sub-searches for complex queries, with higher latency than the other
+// modes.
+type SearchConfigMode string
+
+const (
+	SearchConfigModeKeyword SearchConfigMode = "keyword"
+	SearchConfigModeDefault SearchConfigMode = "default"
+	SearchConfigModeAgentic SearchConfigMode = "agentic"
 )
 
 // Price filter for search. Values are inclusive.
