@@ -34,6 +34,7 @@ func TestSearchPerformWithOptionalParams(t *testing.T) {
 				Currency:          channel3go.SearchConfigCurrencyUsd,
 				KeywordSearchOnly: channel3go.Bool(true),
 				Language:          channel3go.SearchConfigLanguageEn,
+				Mode:              channel3go.SearchConfigModeKeyword,
 			},
 			Filters: channel3go.SearchFiltersParam{
 				Age: []string{"newborn"},
