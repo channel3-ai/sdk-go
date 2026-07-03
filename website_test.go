@@ -13,7 +13,7 @@ import (
 	"github.com/channel3-ai/sdk-go/option"
 )
 
-func TestWebsiteGet(t *testing.T) {
+func TestWebsiteGetWithOptionalParams(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
@@ -27,7 +27,8 @@ func TestWebsiteGet(t *testing.T) {
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Websites.Get(context.TODO(), channel3go.WebsiteGetParams{
-		Query: "query",
+		Query:   "query",
+		Country: channel3go.WebsiteGetParamsCountryUs,
 	})
 	if err != nil {
 		var apierr *channel3go.Error
@@ -38,7 +39,7 @@ func TestWebsiteGet(t *testing.T) {
 	}
 }
 
-func TestWebsiteFind(t *testing.T) {
+func TestWebsiteFindWithOptionalParams(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
@@ -52,7 +53,8 @@ func TestWebsiteFind(t *testing.T) {
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Websites.Find(context.TODO(), channel3go.WebsiteFindParams{
-		Query: "query",
+		Query:   "query",
+		Country: channel3go.WebsiteFindParamsCountryUs,
 	})
 	if err != nil {
 		var apierr *channel3go.Error

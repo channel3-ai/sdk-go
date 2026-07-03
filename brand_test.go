@@ -13,7 +13,7 @@ import (
 	"github.com/channel3-ai/sdk-go/option"
 )
 
-func TestBrandGet(t *testing.T) {
+func TestBrandGetWithOptionalParams(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
@@ -26,7 +26,13 @@ func TestBrandGet(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Brands.Get(context.TODO(), "brand_id")
+	_, err := client.Brands.Get(
+		context.TODO(),
+		"brand_id",
+		channel3go.BrandGetParams{
+			Country: channel3go.BrandGetParamsCountryUs,
+		},
+	)
 	if err != nil {
 		var apierr *channel3go.Error
 		if errors.As(err, &apierr) {
@@ -50,8 +56,9 @@ func TestBrandListWithOptionalParams(t *testing.T) {
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Brands.List(context.TODO(), channel3go.BrandListParams{
-		Cursor: channel3go.String("cursor"),
-		Limit:  channel3go.Int(1),
+		Country: channel3go.BrandListParamsCountryUs,
+		Cursor:  channel3go.String("cursor"),
+		Limit:   channel3go.Int(1),
 	})
 	if err != nil {
 		var apierr *channel3go.Error
@@ -101,8 +108,9 @@ func TestBrandSearchWithOptionalParams(t *testing.T) {
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Brands.Search(context.TODO(), channel3go.BrandSearchParams{
-		Query: "x",
-		Limit: channel3go.Int(1),
+		Query:   "x",
+		Country: channel3go.BrandSearchParamsCountryUs,
+		Limit:   channel3go.Int(1),
 	})
 	if err != nil {
 		var apierr *channel3go.Error

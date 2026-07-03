@@ -59,7 +59,8 @@ func (r *WebsiteService) Find(ctx context.Context, body WebsiteFindParams, opts 
 type Website struct {
 	ID  string `json:"id" api:"required"`
 	URL string `json:"url" api:"required"`
-	// The maximum commission rate for the website, as a percentage
+	// The maximum commission rate for the website in the requested country (default
+	// 'US'), as a percentage
 	BestCommissionRate float64 `json:"best_commission_rate"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
@@ -79,6 +80,12 @@ func (r *Website) UnmarshalJSON(data []byte) error {
 
 type WebsiteGetParams struct {
 	Query string `query:"query" api:"required" json:"-"`
+	// ISO 3166-1 alpha-2 country code that `best_commission_rate` is scoped to.
+	// Defaults to 'US' when unset.
+	//
+	// Any of "US", "GB", "EU", "AU", "CA", "IE", "DE", "AT", "FR", "BE", "IT", "ES",
+	// "NL", "SE", "FI", "PT", "CZ", "GR", "RO".
+	Country WebsiteGetParamsCountry `query:"country,omitzero" json:"-"`
 	paramObj
 }
 
@@ -90,8 +97,40 @@ func (r WebsiteGetParams) URLQuery() (v url.Values, err error) {
 	})
 }
 
+// ISO 3166-1 alpha-2 country code that `best_commission_rate` is scoped to.
+// Defaults to 'US' when unset.
+type WebsiteGetParamsCountry string
+
+const (
+	WebsiteGetParamsCountryUs WebsiteGetParamsCountry = "US"
+	WebsiteGetParamsCountryGB WebsiteGetParamsCountry = "GB"
+	WebsiteGetParamsCountryEu WebsiteGetParamsCountry = "EU"
+	WebsiteGetParamsCountryAu WebsiteGetParamsCountry = "AU"
+	WebsiteGetParamsCountryCa WebsiteGetParamsCountry = "CA"
+	WebsiteGetParamsCountryIe WebsiteGetParamsCountry = "IE"
+	WebsiteGetParamsCountryDe WebsiteGetParamsCountry = "DE"
+	WebsiteGetParamsCountryAt WebsiteGetParamsCountry = "AT"
+	WebsiteGetParamsCountryFr WebsiteGetParamsCountry = "FR"
+	WebsiteGetParamsCountryBe WebsiteGetParamsCountry = "BE"
+	WebsiteGetParamsCountryIt WebsiteGetParamsCountry = "IT"
+	WebsiteGetParamsCountryEs WebsiteGetParamsCountry = "ES"
+	WebsiteGetParamsCountryNl WebsiteGetParamsCountry = "NL"
+	WebsiteGetParamsCountrySe WebsiteGetParamsCountry = "SE"
+	WebsiteGetParamsCountryFi WebsiteGetParamsCountry = "FI"
+	WebsiteGetParamsCountryPt WebsiteGetParamsCountry = "PT"
+	WebsiteGetParamsCountryCz WebsiteGetParamsCountry = "CZ"
+	WebsiteGetParamsCountryGr WebsiteGetParamsCountry = "GR"
+	WebsiteGetParamsCountryRo WebsiteGetParamsCountry = "RO"
+)
+
 type WebsiteFindParams struct {
 	Query string `query:"query" api:"required" json:"-"`
+	// ISO 3166-1 alpha-2 country code that `best_commission_rate` is scoped to.
+	// Defaults to 'US' when unset.
+	//
+	// Any of "US", "GB", "EU", "AU", "CA", "IE", "DE", "AT", "FR", "BE", "IT", "ES",
+	// "NL", "SE", "FI", "PT", "CZ", "GR", "RO".
+	Country WebsiteFindParamsCountry `query:"country,omitzero" json:"-"`
 	paramObj
 }
 
@@ -102,3 +141,29 @@ func (r WebsiteFindParams) URLQuery() (v url.Values, err error) {
 		NestedFormat: apiquery.NestedQueryFormatBrackets,
 	})
 }
+
+// ISO 3166-1 alpha-2 country code that `best_commission_rate` is scoped to.
+// Defaults to 'US' when unset.
+type WebsiteFindParamsCountry string
+
+const (
+	WebsiteFindParamsCountryUs WebsiteFindParamsCountry = "US"
+	WebsiteFindParamsCountryGB WebsiteFindParamsCountry = "GB"
+	WebsiteFindParamsCountryEu WebsiteFindParamsCountry = "EU"
+	WebsiteFindParamsCountryAu WebsiteFindParamsCountry = "AU"
+	WebsiteFindParamsCountryCa WebsiteFindParamsCountry = "CA"
+	WebsiteFindParamsCountryIe WebsiteFindParamsCountry = "IE"
+	WebsiteFindParamsCountryDe WebsiteFindParamsCountry = "DE"
+	WebsiteFindParamsCountryAt WebsiteFindParamsCountry = "AT"
+	WebsiteFindParamsCountryFr WebsiteFindParamsCountry = "FR"
+	WebsiteFindParamsCountryBe WebsiteFindParamsCountry = "BE"
+	WebsiteFindParamsCountryIt WebsiteFindParamsCountry = "IT"
+	WebsiteFindParamsCountryEs WebsiteFindParamsCountry = "ES"
+	WebsiteFindParamsCountryNl WebsiteFindParamsCountry = "NL"
+	WebsiteFindParamsCountrySe WebsiteFindParamsCountry = "SE"
+	WebsiteFindParamsCountryFi WebsiteFindParamsCountry = "FI"
+	WebsiteFindParamsCountryPt WebsiteFindParamsCountry = "PT"
+	WebsiteFindParamsCountryCz WebsiteFindParamsCountry = "CZ"
+	WebsiteFindParamsCountryGr WebsiteFindParamsCountry = "GR"
+	WebsiteFindParamsCountryRo WebsiteFindParamsCountry = "RO"
+)
