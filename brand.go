@@ -39,14 +39,14 @@ func NewBrandService(opts ...option.RequestOption) (r BrandService) {
 }
 
 // Get detailed information about a specific brand by its ID.
-func (r *BrandService) Get(ctx context.Context, brandID string, opts ...option.RequestOption) (res *Brand, err error) {
+func (r *BrandService) Get(ctx context.Context, brandID string, query BrandGetParams, opts ...option.RequestOption) (res *Brand, err error) {
 	opts = slices.Concat(r.options, opts)
 	if brandID == "" {
 		err = errors.New("missing required brand_id parameter")
 		return nil, err
 	}
 	path := fmt.Sprintf("v1/brands/%s", url.PathEscape(brandID))
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, nil, &res, opts...)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, query, &res, opts...)
 	return res, err
 }
 
@@ -95,7 +95,8 @@ func (r *BrandService) Search(ctx context.Context, query BrandSearchParams, opts
 type Brand struct {
 	ID   string `json:"id" api:"required"`
 	Name string `json:"name" api:"required"`
-	// The maximum commission rate for the brand, as a percentage
+	// The maximum commission rate for the brand in the requested country (default
+	// 'US'), as a percentage
 	BestCommissionRate float64 `json:"best_commission_rate"`
 	Description        string  `json:"description" api:"nullable"`
 	LogoURL            string  `json:"logo_url" api:"nullable"`
@@ -134,11 +135,61 @@ func (r *SearchBrandsResponse) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
+type BrandGetParams struct {
+	// ISO 3166-1 alpha-2 country code that `best_commission_rate` is scoped to.
+	// Defaults to 'US' when unset.
+	//
+	// Any of "US", "GB", "EU", "AU", "CA", "IE", "DE", "AT", "FR", "BE", "IT", "ES",
+	// "NL", "SE", "FI", "PT", "CZ", "GR", "RO".
+	Country BrandGetParamsCountry `query:"country,omitzero" json:"-"`
+	paramObj
+}
+
+// URLQuery serializes [BrandGetParams]'s query parameters as `url.Values`.
+func (r BrandGetParams) URLQuery() (v url.Values, err error) {
+	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
+		ArrayFormat:  apiquery.ArrayQueryFormatComma,
+		NestedFormat: apiquery.NestedQueryFormatBrackets,
+	})
+}
+
+// ISO 3166-1 alpha-2 country code that `best_commission_rate` is scoped to.
+// Defaults to 'US' when unset.
+type BrandGetParamsCountry string
+
+const (
+	BrandGetParamsCountryUs BrandGetParamsCountry = "US"
+	BrandGetParamsCountryGB BrandGetParamsCountry = "GB"
+	BrandGetParamsCountryEu BrandGetParamsCountry = "EU"
+	BrandGetParamsCountryAu BrandGetParamsCountry = "AU"
+	BrandGetParamsCountryCa BrandGetParamsCountry = "CA"
+	BrandGetParamsCountryIe BrandGetParamsCountry = "IE"
+	BrandGetParamsCountryDe BrandGetParamsCountry = "DE"
+	BrandGetParamsCountryAt BrandGetParamsCountry = "AT"
+	BrandGetParamsCountryFr BrandGetParamsCountry = "FR"
+	BrandGetParamsCountryBe BrandGetParamsCountry = "BE"
+	BrandGetParamsCountryIt BrandGetParamsCountry = "IT"
+	BrandGetParamsCountryEs BrandGetParamsCountry = "ES"
+	BrandGetParamsCountryNl BrandGetParamsCountry = "NL"
+	BrandGetParamsCountrySe BrandGetParamsCountry = "SE"
+	BrandGetParamsCountryFi BrandGetParamsCountry = "FI"
+	BrandGetParamsCountryPt BrandGetParamsCountry = "PT"
+	BrandGetParamsCountryCz BrandGetParamsCountry = "CZ"
+	BrandGetParamsCountryGr BrandGetParamsCountry = "GR"
+	BrandGetParamsCountryRo BrandGetParamsCountry = "RO"
+)
+
 type BrandListParams struct {
 	// Pagination cursor returned by a prior call. Omit for the first page.
 	Cursor param.Opt[string] `query:"cursor,omitzero" json:"-"`
 	// Max items per page (1-100).
 	Limit param.Opt[int64] `query:"limit,omitzero" json:"-"`
+	// ISO 3166-1 alpha-2 country code that `best_commission_rate` is scoped to.
+	// Defaults to 'US' when unset.
+	//
+	// Any of "US", "GB", "EU", "AU", "CA", "IE", "DE", "AT", "FR", "BE", "IT", "ES",
+	// "NL", "SE", "FI", "PT", "CZ", "GR", "RO".
+	Country BrandListParamsCountry `query:"country,omitzero" json:"-"`
 	paramObj
 }
 
@@ -149,6 +200,32 @@ func (r BrandListParams) URLQuery() (v url.Values, err error) {
 		NestedFormat: apiquery.NestedQueryFormatBrackets,
 	})
 }
+
+// ISO 3166-1 alpha-2 country code that `best_commission_rate` is scoped to.
+// Defaults to 'US' when unset.
+type BrandListParamsCountry string
+
+const (
+	BrandListParamsCountryUs BrandListParamsCountry = "US"
+	BrandListParamsCountryGB BrandListParamsCountry = "GB"
+	BrandListParamsCountryEu BrandListParamsCountry = "EU"
+	BrandListParamsCountryAu BrandListParamsCountry = "AU"
+	BrandListParamsCountryCa BrandListParamsCountry = "CA"
+	BrandListParamsCountryIe BrandListParamsCountry = "IE"
+	BrandListParamsCountryDe BrandListParamsCountry = "DE"
+	BrandListParamsCountryAt BrandListParamsCountry = "AT"
+	BrandListParamsCountryFr BrandListParamsCountry = "FR"
+	BrandListParamsCountryBe BrandListParamsCountry = "BE"
+	BrandListParamsCountryIt BrandListParamsCountry = "IT"
+	BrandListParamsCountryEs BrandListParamsCountry = "ES"
+	BrandListParamsCountryNl BrandListParamsCountry = "NL"
+	BrandListParamsCountrySe BrandListParamsCountry = "SE"
+	BrandListParamsCountryFi BrandListParamsCountry = "FI"
+	BrandListParamsCountryPt BrandListParamsCountry = "PT"
+	BrandListParamsCountryCz BrandListParamsCountry = "CZ"
+	BrandListParamsCountryGr BrandListParamsCountry = "GR"
+	BrandListParamsCountryRo BrandListParamsCountry = "RO"
+)
 
 type BrandFindParams struct {
 	Query string `query:"query" api:"required" json:"-"`
@@ -168,6 +245,12 @@ type BrandSearchParams struct {
 	Query string `query:"query" api:"required" json:"-"`
 	// Maximum number of brands to return.
 	Limit param.Opt[int64] `query:"limit,omitzero" json:"-"`
+	// ISO 3166-1 alpha-2 country code that `best_commission_rate` is scoped to.
+	// Defaults to 'US' when unset.
+	//
+	// Any of "US", "GB", "EU", "AU", "CA", "IE", "DE", "AT", "FR", "BE", "IT", "ES",
+	// "NL", "SE", "FI", "PT", "CZ", "GR", "RO".
+	Country BrandSearchParamsCountry `query:"country,omitzero" json:"-"`
 	paramObj
 }
 
@@ -178,3 +261,29 @@ func (r BrandSearchParams) URLQuery() (v url.Values, err error) {
 		NestedFormat: apiquery.NestedQueryFormatBrackets,
 	})
 }
+
+// ISO 3166-1 alpha-2 country code that `best_commission_rate` is scoped to.
+// Defaults to 'US' when unset.
+type BrandSearchParamsCountry string
+
+const (
+	BrandSearchParamsCountryUs BrandSearchParamsCountry = "US"
+	BrandSearchParamsCountryGB BrandSearchParamsCountry = "GB"
+	BrandSearchParamsCountryEu BrandSearchParamsCountry = "EU"
+	BrandSearchParamsCountryAu BrandSearchParamsCountry = "AU"
+	BrandSearchParamsCountryCa BrandSearchParamsCountry = "CA"
+	BrandSearchParamsCountryIe BrandSearchParamsCountry = "IE"
+	BrandSearchParamsCountryDe BrandSearchParamsCountry = "DE"
+	BrandSearchParamsCountryAt BrandSearchParamsCountry = "AT"
+	BrandSearchParamsCountryFr BrandSearchParamsCountry = "FR"
+	BrandSearchParamsCountryBe BrandSearchParamsCountry = "BE"
+	BrandSearchParamsCountryIt BrandSearchParamsCountry = "IT"
+	BrandSearchParamsCountryEs BrandSearchParamsCountry = "ES"
+	BrandSearchParamsCountryNl BrandSearchParamsCountry = "NL"
+	BrandSearchParamsCountrySe BrandSearchParamsCountry = "SE"
+	BrandSearchParamsCountryFi BrandSearchParamsCountry = "FI"
+	BrandSearchParamsCountryPt BrandSearchParamsCountry = "PT"
+	BrandSearchParamsCountryCz BrandSearchParamsCountry = "CZ"
+	BrandSearchParamsCountryGr BrandSearchParamsCountry = "GR"
+	BrandSearchParamsCountryRo BrandSearchParamsCountry = "RO"
+)
