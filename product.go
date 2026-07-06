@@ -51,6 +51,45 @@ func (r *ProductService) Get(ctx context.Context, productID string, query Produc
 	return res, err
 }
 
+// List and page through products for a set of filters.
+//
+// Useful for a static, grid view of products for a brand, website, or category.
+//
+// At least one of `filters.brand_ids`, `filters.category_ids`, or
+// `filters.website_ids` must be provided.
+//
+// Access to this endpoint is restricted. If you think your use-case requires it,
+// please contact us.
+func (r *ProductService) Browse(ctx context.Context, body ProductBrowseParams, opts ...option.RequestOption) (res *pagination.SearchPage[ProductDetail], err error) {
+	var raw *http.Response
+	opts = slices.Concat(r.options, opts)
+	opts = append([]option.RequestOption{option.WithResponseInto(&raw)}, opts...)
+	path := "v1/browse"
+	cfg, err := requestconfig.NewRequestConfig(ctx, http.MethodPost, path, body, &res, opts...)
+	if err != nil {
+		return nil, err
+	}
+	err = cfg.Execute()
+	if err != nil {
+		return nil, err
+	}
+	res.SetPageConfig(cfg, raw)
+	return res, nil
+}
+
+// List and page through products for a set of filters.
+//
+// Useful for a static, grid view of products for a brand, website, or category.
+//
+// At least one of `filters.brand_ids`, `filters.category_ids`, or
+// `filters.website_ids` must be provided.
+//
+// Access to this endpoint is restricted. If you think your use-case requires it,
+// please contact us.
+func (r *ProductService) BrowseAutoPaging(ctx context.Context, body ProductBrowseParams, opts ...option.RequestOption) *pagination.SearchPageAutoPager[ProductDetail] {
+	return pagination.NewSearchPageAutoPager(r.Browse(ctx, body, opts...))
+}
+
 // Find products similar to a given product.
 //
 // Consider setting `filters` to narrow results to the same gender, brand,
@@ -163,6 +202,26 @@ const (
 	AvailabilityStatusDiscontinued        AvailabilityStatus = "Discontinued"
 	AvailabilityStatusUnknown             AvailabilityStatus = "Unknown"
 )
+
+// Filter-driven product listing with pagination (no free-text query).
+type BrowseRequestParam struct {
+	// Optional limit on the number of results. Default is 20, max is 30.
+	Limit param.Opt[int64] `json:"limit,omitzero"`
+	// Opaque token from a previous browse response to fetch the next page.
+	PageToken param.Opt[string] `json:"page_token,omitzero"`
+	// Filters to browse by. At least one of `brand_ids`, `category_ids`, or
+	// `website_ids` must be provided.
+	Filters SearchFiltersParam `json:"filters,omitzero"`
+	paramObj
+}
+
+func (r BrowseRequestParam) MarshalJSON() (data []byte, err error) {
+	type shadow BrowseRequestParam
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *BrowseRequestParam) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
 
 // Image-only search request.
 type ImageSearchRequestParam struct {
@@ -765,6 +824,19 @@ const (
 	ProductGetParamsLanguageEl ProductGetParamsLanguage = "el"
 	ProductGetParamsLanguageRo ProductGetParamsLanguage = "ro"
 )
+
+type ProductBrowseParams struct {
+	// Filter-driven product listing with pagination (no free-text query).
+	BrowseRequest BrowseRequestParam
+	paramObj
+}
+
+func (r ProductBrowseParams) MarshalJSON() (data []byte, err error) {
+	return shimjson.Marshal(r.BrowseRequest)
+}
+func (r *ProductBrowseParams) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
 
 type ProductFindSimilarParams struct {
 	// Find products similar to a given product.

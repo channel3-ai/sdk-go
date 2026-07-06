@@ -45,6 +45,60 @@ func TestProductGetWithOptionalParams(t *testing.T) {
 	}
 }
 
+func TestProductBrowseWithOptionalParams(t *testing.T) {
+	t.Skip("Mock server tests are disabled")
+	baseURL := "http://localhost:4010"
+	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
+		baseURL = envURL
+	}
+	if !testutil.CheckTestServer(t, baseURL) {
+		return
+	}
+	client := channel3go.NewClient(
+		option.WithBaseURL(baseURL),
+		option.WithAPIKey("My API Key"),
+	)
+	_, err := client.Products.Browse(context.TODO(), channel3go.ProductBrowseParams{
+		BrowseRequest: channel3go.BrowseRequestParam{
+			Filters: channel3go.SearchFiltersParam{
+				Age: []string{"newborn"},
+				Attributes: map[string][]string{
+					"foo": {"string"},
+				},
+				Availability: []channel3go.AvailabilityStatus{channel3go.AvailabilityStatusInStock},
+				BrandIDs:     []string{"string"},
+				CategoryIDs:  []string{"string"},
+				Colors: channel3go.SearchFiltersColorsParam{
+					Palette: []channel3go.SearchFiltersColorsPaletteParam{{
+						Hex:        "hex",
+						Percentage: channel3go.Float(0),
+					}},
+				},
+				Condition:          channel3go.SearchFiltersConditionNew,
+				ExcludeBrandIDs:    []string{"string"},
+				ExcludeCategoryIDs: []string{"string"},
+				ExcludeWebsiteIDs:  []string{"string"},
+				Gender:             channel3go.SearchFiltersGenderMale,
+				Price: channel3go.SearchFilterPriceParam{
+					MaxPrice: channel3go.Float(0),
+					MinPrice: channel3go.Float(0),
+				},
+				Sale:       channel3go.SearchFiltersSaleOnSale,
+				WebsiteIDs: []string{"string"},
+			},
+			Limit:     channel3go.Int(1),
+			PageToken: channel3go.String("page_token"),
+		},
+	})
+	if err != nil {
+		var apierr *channel3go.Error
+		if errors.As(err, &apierr) {
+			t.Log(string(apierr.DumpRequest(true)))
+		}
+		t.Fatalf("err should be nil: %s", err.Error())
+	}
+}
+
 func TestProductFindSimilarWithOptionalParams(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	baseURL := "http://localhost:4010"
