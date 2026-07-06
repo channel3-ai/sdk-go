@@ -132,6 +132,18 @@ func (r *ProductService) Lookup(ctx context.Context, body ProductLookupParams, o
 	return res, err
 }
 
+// Return monetizable offers (with max commission rate) for a product URL.
+//
+// Access to this endpoint is restricted. If you think your use-case requires it,
+// please contact us. Usually, developers actually want search. This is helpful for
+// migrating to Channel3.
+func (r *ProductService) Monetize(ctx context.Context, body ProductMonetizeParams, opts ...option.RequestOption) (res *MonetizeResponse, err error) {
+	opts = slices.Concat(r.options, opts)
+	path := "v1/monetize"
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, body, &res, opts...)
+	return res, err
+}
+
 // Search for products with pagination support.
 //
 // At least one of `query`, `image_url`, `base64_image`, or `page_token` must be
@@ -379,6 +391,64 @@ type LookupResponse struct {
 // Returns the unmodified JSON received from the API
 func (r LookupResponse) RawJSON() string { return r.JSON.raw }
 func (r *LookupResponse) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+type MonetizeOffer struct {
+	// Merchant domain, e.g. nordstrom.com
+	Domain string `json:"domain" api:"required"`
+	// buy.trychannel3.com deeplink. Clicks are tracked and routed through the
+	// highest-paying affiliate network for the merchant.
+	URL string `json:"url" api:"required"`
+	// Maximum post-take-rate commission for the merchant, as a decimal (0.05 = 5%).
+	// 'Max' because the realized rate may be lower.
+	MaxCommissionRate float64 `json:"max_commission_rate"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Domain            respjson.Field
+		URL               respjson.Field
+		MaxCommissionRate respjson.Field
+		ExtraFields       map[string]respjson.Field
+		raw               string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r MonetizeOffer) RawJSON() string { return r.JSON.raw }
+func (r *MonetizeOffer) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// The property URL is required.
+type MonetizeRequestParam struct {
+	// The URL of the product to monetize
+	URL string `json:"url" api:"required"`
+	paramObj
+}
+
+func (r MonetizeRequestParam) MarshalJSON() (data []byte, err error) {
+	type shadow MonetizeRequestParam
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *MonetizeRequestParam) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Response from the /v1/monetize endpoint — just the list of offers.
+type MonetizeResponse struct {
+	// Monetizable offers, sorted by max_commission_rate descending.
+	Offers []MonetizeOffer `json:"offers"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Offers      respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r MonetizeResponse) RawJSON() string { return r.JSON.raw }
+func (r *MonetizeResponse) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
@@ -860,6 +930,18 @@ func (r ProductLookupParams) MarshalJSON() (data []byte, err error) {
 	return shimjson.Marshal(r.LookupRequest)
 }
 func (r *ProductLookupParams) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+type ProductMonetizeParams struct {
+	MonetizeRequest MonetizeRequestParam
+	paramObj
+}
+
+func (r ProductMonetizeParams) MarshalJSON() (data []byte, err error) {
+	return shimjson.Marshal(r.MonetizeRequest)
+}
+func (r *ProductMonetizeParams) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
