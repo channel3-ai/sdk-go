@@ -292,13 +292,13 @@ type LocaleConfigParam struct {
 	// set, the merchant's stated unit is returned.
 	//
 	// Any of "mm", "cm", "m", "in", "ft".
-	PreferredLengthUnit LocaleConfigPreferredLengthUnit `json:"preferred_length_unit,omitzero"`
+	LengthUnit LocaleConfigLengthUnit `json:"length_unit,omitzero"`
 	// Preferred unit for weight dimensions in responses. A request dimension filter's
 	// weight unit takes precedence; when neither is set, the merchant's stated unit is
 	// returned.
 	//
 	// Any of "mg", "g", "kg", "oz", "lb".
-	PreferredWeightUnit LocaleConfigPreferredWeightUnit `json:"preferred_weight_unit,omitzero"`
+	WeightUnit LocaleConfigWeightUnit `json:"weight_unit,omitzero"`
 	paramObj
 }
 
@@ -373,27 +373,27 @@ const (
 // Preferred unit for length dimensions (length/width/height) in responses. A
 // request dimension filter's unit for the field takes precedence; when neither is
 // set, the merchant's stated unit is returned.
-type LocaleConfigPreferredLengthUnit string
+type LocaleConfigLengthUnit string
 
 const (
-	LocaleConfigPreferredLengthUnitMm LocaleConfigPreferredLengthUnit = "mm"
-	LocaleConfigPreferredLengthUnitCm LocaleConfigPreferredLengthUnit = "cm"
-	LocaleConfigPreferredLengthUnitM  LocaleConfigPreferredLengthUnit = "m"
-	LocaleConfigPreferredLengthUnitIn LocaleConfigPreferredLengthUnit = "in"
-	LocaleConfigPreferredLengthUnitFt LocaleConfigPreferredLengthUnit = "ft"
+	LocaleConfigLengthUnitMm LocaleConfigLengthUnit = "mm"
+	LocaleConfigLengthUnitCm LocaleConfigLengthUnit = "cm"
+	LocaleConfigLengthUnitM  LocaleConfigLengthUnit = "m"
+	LocaleConfigLengthUnitIn LocaleConfigLengthUnit = "in"
+	LocaleConfigLengthUnitFt LocaleConfigLengthUnit = "ft"
 )
 
 // Preferred unit for weight dimensions in responses. A request dimension filter's
 // weight unit takes precedence; when neither is set, the merchant's stated unit is
 // returned.
-type LocaleConfigPreferredWeightUnit string
+type LocaleConfigWeightUnit string
 
 const (
-	LocaleConfigPreferredWeightUnitMg LocaleConfigPreferredWeightUnit = "mg"
-	LocaleConfigPreferredWeightUnitG  LocaleConfigPreferredWeightUnit = "g"
-	LocaleConfigPreferredWeightUnitKg LocaleConfigPreferredWeightUnit = "kg"
-	LocaleConfigPreferredWeightUnitOz LocaleConfigPreferredWeightUnit = "oz"
-	LocaleConfigPreferredWeightUnitLb LocaleConfigPreferredWeightUnit = "lb"
+	LocaleConfigWeightUnitMg LocaleConfigWeightUnit = "mg"
+	LocaleConfigWeightUnitG  LocaleConfigWeightUnit = "g"
+	LocaleConfigWeightUnitKg LocaleConfigWeightUnit = "kg"
+	LocaleConfigWeightUnitOz LocaleConfigWeightUnit = "oz"
+	LocaleConfigWeightUnitLb LocaleConfigWeightUnit = "lb"
 )
 
 // The property URL is required.
@@ -991,15 +991,15 @@ type ProductGetParams struct {
 	// dimensions are returned in the unit the merchant stated.
 	//
 	// Any of "mm", "cm", "m", "in", "ft".
-	PreferredLengthUnit ProductGetParamsPreferredLengthUnit `query:"preferred_length_unit,omitzero" json:"-"`
+	LengthUnit ProductGetParamsLengthUnit `query:"length_unit,omitzero" json:"-"`
+	// Optional list of website IDs to constrain the buy URL to, relevant if multiple
+	// merchants exist. Accepts website IDs or domains (e.g. "nike.com").
+	WebsiteIDs []string `query:"website_ids,omitzero" json:"-"`
 	// Preferred unit for weight dimensions. When unset, weight is returned in the unit
 	// the merchant stated.
 	//
 	// Any of "mg", "g", "kg", "oz", "lb".
-	PreferredWeightUnit ProductGetParamsPreferredWeightUnit `query:"preferred_weight_unit,omitzero" json:"-"`
-	// Optional list of website IDs to constrain the buy URL to, relevant if multiple
-	// merchants exist. Accepts website IDs or domains (e.g. "nike.com").
-	WebsiteIDs []string `query:"website_ids,omitzero" json:"-"`
+	WeightUnit ProductGetParamsWeightUnit `query:"weight_unit,omitzero" json:"-"`
 	paramObj
 }
 
@@ -1073,26 +1073,26 @@ const (
 
 // Preferred unit for length dimensions (length/width/height). When unset,
 // dimensions are returned in the unit the merchant stated.
-type ProductGetParamsPreferredLengthUnit string
+type ProductGetParamsLengthUnit string
 
 const (
-	ProductGetParamsPreferredLengthUnitMm ProductGetParamsPreferredLengthUnit = "mm"
-	ProductGetParamsPreferredLengthUnitCm ProductGetParamsPreferredLengthUnit = "cm"
-	ProductGetParamsPreferredLengthUnitM  ProductGetParamsPreferredLengthUnit = "m"
-	ProductGetParamsPreferredLengthUnitIn ProductGetParamsPreferredLengthUnit = "in"
-	ProductGetParamsPreferredLengthUnitFt ProductGetParamsPreferredLengthUnit = "ft"
+	ProductGetParamsLengthUnitMm ProductGetParamsLengthUnit = "mm"
+	ProductGetParamsLengthUnitCm ProductGetParamsLengthUnit = "cm"
+	ProductGetParamsLengthUnitM  ProductGetParamsLengthUnit = "m"
+	ProductGetParamsLengthUnitIn ProductGetParamsLengthUnit = "in"
+	ProductGetParamsLengthUnitFt ProductGetParamsLengthUnit = "ft"
 )
 
 // Preferred unit for weight dimensions. When unset, weight is returned in the unit
 // the merchant stated.
-type ProductGetParamsPreferredWeightUnit string
+type ProductGetParamsWeightUnit string
 
 const (
-	ProductGetParamsPreferredWeightUnitMg ProductGetParamsPreferredWeightUnit = "mg"
-	ProductGetParamsPreferredWeightUnitG  ProductGetParamsPreferredWeightUnit = "g"
-	ProductGetParamsPreferredWeightUnitKg ProductGetParamsPreferredWeightUnit = "kg"
-	ProductGetParamsPreferredWeightUnitOz ProductGetParamsPreferredWeightUnit = "oz"
-	ProductGetParamsPreferredWeightUnitLb ProductGetParamsPreferredWeightUnit = "lb"
+	ProductGetParamsWeightUnitMg ProductGetParamsWeightUnit = "mg"
+	ProductGetParamsWeightUnitG  ProductGetParamsWeightUnit = "g"
+	ProductGetParamsWeightUnitKg ProductGetParamsWeightUnit = "kg"
+	ProductGetParamsWeightUnitOz ProductGetParamsWeightUnit = "oz"
+	ProductGetParamsWeightUnitLb ProductGetParamsWeightUnit = "lb"
 )
 
 type ProductBrowseParams struct {

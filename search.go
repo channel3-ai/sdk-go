@@ -79,13 +79,13 @@ type SearchConfigParam struct {
 	// set, the merchant's stated unit is returned.
 	//
 	// Any of "mm", "cm", "m", "in", "ft".
-	PreferredLengthUnit SearchConfigPreferredLengthUnit `json:"preferred_length_unit,omitzero"`
+	LengthUnit SearchConfigLengthUnit `json:"length_unit,omitzero"`
 	// Preferred unit for weight dimensions in responses. A request dimension filter's
 	// weight unit takes precedence; when neither is set, the merchant's stated unit is
 	// returned.
 	//
 	// Any of "mg", "g", "kg", "oz", "lb".
-	PreferredWeightUnit SearchConfigPreferredWeightUnit `json:"preferred_weight_unit,omitzero"`
+	WeightUnit SearchConfigWeightUnit `json:"weight_unit,omitzero"`
 	// Search strategy. `default` (recommended) combines lexical + semantic search and
 	// is right for most use cases. `keyword` is lexical only — use it for real-time,
 	// low-latency needs like ad targeting. `agentic` uses an LLM to plan multiple
@@ -165,6 +165,19 @@ const (
 	SearchConfigLanguageRo SearchConfigLanguage = "ro"
 )
 
+// Preferred unit for length dimensions (length/width/height) in responses. A
+// request dimension filter's unit for the field takes precedence; when neither is
+// set, the merchant's stated unit is returned.
+type SearchConfigLengthUnit string
+
+const (
+	SearchConfigLengthUnitMm SearchConfigLengthUnit = "mm"
+	SearchConfigLengthUnitCm SearchConfigLengthUnit = "cm"
+	SearchConfigLengthUnitM  SearchConfigLengthUnit = "m"
+	SearchConfigLengthUnitIn SearchConfigLengthUnit = "in"
+	SearchConfigLengthUnitFt SearchConfigLengthUnit = "ft"
+)
+
 // Search strategy. `default` (recommended) combines lexical + semantic search and
 // is right for most use cases. `keyword` is lexical only — use it for real-time,
 // low-latency needs like ad targeting. `agentic` uses an LLM to plan multiple
@@ -178,30 +191,17 @@ const (
 	SearchConfigModeAgentic SearchConfigMode = "agentic"
 )
 
-// Preferred unit for length dimensions (length/width/height) in responses. A
-// request dimension filter's unit for the field takes precedence; when neither is
-// set, the merchant's stated unit is returned.
-type SearchConfigPreferredLengthUnit string
-
-const (
-	SearchConfigPreferredLengthUnitMm SearchConfigPreferredLengthUnit = "mm"
-	SearchConfigPreferredLengthUnitCm SearchConfigPreferredLengthUnit = "cm"
-	SearchConfigPreferredLengthUnitM  SearchConfigPreferredLengthUnit = "m"
-	SearchConfigPreferredLengthUnitIn SearchConfigPreferredLengthUnit = "in"
-	SearchConfigPreferredLengthUnitFt SearchConfigPreferredLengthUnit = "ft"
-)
-
 // Preferred unit for weight dimensions in responses. A request dimension filter's
 // weight unit takes precedence; when neither is set, the merchant's stated unit is
 // returned.
-type SearchConfigPreferredWeightUnit string
+type SearchConfigWeightUnit string
 
 const (
-	SearchConfigPreferredWeightUnitMg SearchConfigPreferredWeightUnit = "mg"
-	SearchConfigPreferredWeightUnitG  SearchConfigPreferredWeightUnit = "g"
-	SearchConfigPreferredWeightUnitKg SearchConfigPreferredWeightUnit = "kg"
-	SearchConfigPreferredWeightUnitOz SearchConfigPreferredWeightUnit = "oz"
-	SearchConfigPreferredWeightUnitLb SearchConfigPreferredWeightUnit = "lb"
+	SearchConfigWeightUnitMg SearchConfigWeightUnit = "mg"
+	SearchConfigWeightUnitG  SearchConfigWeightUnit = "g"
+	SearchConfigWeightUnitKg SearchConfigWeightUnit = "kg"
+	SearchConfigWeightUnitOz SearchConfigWeightUnit = "oz"
+	SearchConfigWeightUnitLb SearchConfigWeightUnit = "lb"
 )
 
 // Price filter for search. Values are inclusive.
