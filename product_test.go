@@ -30,10 +30,12 @@ func TestProductGetWithOptionalParams(t *testing.T) {
 		context.TODO(),
 		"product_id",
 		channel3go.ProductGetParams{
-			Country:    channel3go.ProductGetParamsCountryUs,
-			Currency:   channel3go.ProductGetParamsCurrencyUsd,
-			Language:   channel3go.ProductGetParamsLanguageEn,
-			WebsiteIDs: []string{"string"},
+			Country:             channel3go.ProductGetParamsCountryUs,
+			Currency:            channel3go.ProductGetParamsCurrencyUsd,
+			Language:            channel3go.ProductGetParamsLanguageEn,
+			PreferredLengthUnit: channel3go.ProductGetParamsPreferredLengthUnitMm,
+			PreferredWeightUnit: channel3go.ProductGetParamsPreferredWeightUnitMg,
+			WebsiteIDs:          []string{"string"},
 		},
 	)
 	if err != nil {
@@ -74,7 +76,29 @@ func TestProductBrowseWithOptionalParams(t *testing.T) {
 						Percentage: channel3go.Float(0),
 					}},
 				},
-				Condition:          channel3go.SearchFiltersConditionNew,
+				Condition: channel3go.SearchFiltersConditionNew,
+				Dimensions: channel3go.SearchFiltersDimensionsParam{
+					Height: channel3go.SearchFiltersDimensionsHeightParam{
+						Unit: "mm",
+						Max:  channel3go.Float(0),
+						Min:  channel3go.Float(0),
+					},
+					Length: channel3go.SearchFiltersDimensionsLengthParam{
+						Unit: "mm",
+						Max:  channel3go.Float(0),
+						Min:  channel3go.Float(0),
+					},
+					Weight: channel3go.SearchFiltersDimensionsWeightParam{
+						Unit: "mg",
+						Max:  channel3go.Float(0),
+						Min:  channel3go.Float(0),
+					},
+					Width: channel3go.SearchFiltersDimensionsWidthParam{
+						Unit: "mm",
+						Max:  channel3go.Float(0),
+						Min:  channel3go.Float(0),
+					},
+				},
 				ExcludeBrandIDs:    []string{"string"},
 				ExcludeCategoryIDs: []string{"string"},
 				ExcludeWebsiteIDs:  []string{"string"},
@@ -116,9 +140,11 @@ func TestProductFindSimilarWithOptionalParams(t *testing.T) {
 		SimilarProductsRequest: channel3go.SimilarProductsRequestParam{
 			ProductID: "product_id",
 			Config: channel3go.LocaleConfigParam{
-				Country:  channel3go.LocaleConfigCountryUs,
-				Currency: channel3go.LocaleConfigCurrencyUsd,
-				Language: channel3go.LocaleConfigLanguageEn,
+				Country:             channel3go.LocaleConfigCountryUs,
+				Currency:            channel3go.LocaleConfigCurrencyUsd,
+				Language:            channel3go.LocaleConfigLanguageEn,
+				PreferredLengthUnit: channel3go.LocaleConfigPreferredLengthUnitMm,
+				PreferredWeightUnit: channel3go.LocaleConfigPreferredWeightUnitMg,
 			},
 			Filters: channel3go.SearchFiltersParam{
 				Age: []string{"newborn"},
@@ -134,7 +160,29 @@ func TestProductFindSimilarWithOptionalParams(t *testing.T) {
 						Percentage: channel3go.Float(0),
 					}},
 				},
-				Condition:          channel3go.SearchFiltersConditionNew,
+				Condition: channel3go.SearchFiltersConditionNew,
+				Dimensions: channel3go.SearchFiltersDimensionsParam{
+					Height: channel3go.SearchFiltersDimensionsHeightParam{
+						Unit: "mm",
+						Max:  channel3go.Float(0),
+						Min:  channel3go.Float(0),
+					},
+					Length: channel3go.SearchFiltersDimensionsLengthParam{
+						Unit: "mm",
+						Max:  channel3go.Float(0),
+						Min:  channel3go.Float(0),
+					},
+					Weight: channel3go.SearchFiltersDimensionsWeightParam{
+						Unit: "mg",
+						Max:  channel3go.Float(0),
+						Min:  channel3go.Float(0),
+					},
+					Width: channel3go.SearchFiltersDimensionsWidthParam{
+						Unit: "mm",
+						Max:  channel3go.Float(0),
+						Min:  channel3go.Float(0),
+					},
+				},
 				ExcludeBrandIDs:    []string{"string"},
 				ExcludeCategoryIDs: []string{"string"},
 				ExcludeWebsiteIDs:  []string{"string"},
@@ -231,11 +279,13 @@ func TestProductSearchWithOptionalParams(t *testing.T) {
 		SearchRequest: channel3go.SearchRequestParam{
 			Base64Image: channel3go.String("base64_image"),
 			Config: channel3go.SearchConfigParam{
-				Country:           channel3go.SearchConfigCountryUs,
-				Currency:          channel3go.SearchConfigCurrencyUsd,
-				KeywordSearchOnly: channel3go.Bool(true),
-				Language:          channel3go.SearchConfigLanguageEn,
-				Mode:              channel3go.SearchConfigModeKeyword,
+				Country:             channel3go.SearchConfigCountryUs,
+				Currency:            channel3go.SearchConfigCurrencyUsd,
+				KeywordSearchOnly:   channel3go.Bool(true),
+				Language:            channel3go.SearchConfigLanguageEn,
+				Mode:                channel3go.SearchConfigModeKeyword,
+				PreferredLengthUnit: channel3go.SearchConfigPreferredLengthUnitMm,
+				PreferredWeightUnit: channel3go.SearchConfigPreferredWeightUnitMg,
 			},
 			Filters: channel3go.SearchFiltersParam{
 				Age: []string{"newborn"},
@@ -251,7 +301,29 @@ func TestProductSearchWithOptionalParams(t *testing.T) {
 						Percentage: channel3go.Float(0),
 					}},
 				},
-				Condition:          channel3go.SearchFiltersConditionNew,
+				Condition: channel3go.SearchFiltersConditionNew,
+				Dimensions: channel3go.SearchFiltersDimensionsParam{
+					Height: channel3go.SearchFiltersDimensionsHeightParam{
+						Unit: "mm",
+						Max:  channel3go.Float(0),
+						Min:  channel3go.Float(0),
+					},
+					Length: channel3go.SearchFiltersDimensionsLengthParam{
+						Unit: "mm",
+						Max:  channel3go.Float(0),
+						Min:  channel3go.Float(0),
+					},
+					Weight: channel3go.SearchFiltersDimensionsWeightParam{
+						Unit: "mg",
+						Max:  channel3go.Float(0),
+						Min:  channel3go.Float(0),
+					},
+					Width: channel3go.SearchFiltersDimensionsWidthParam{
+						Unit: "mm",
+						Max:  channel3go.Float(0),
+						Min:  channel3go.Float(0),
+					},
+				},
 				ExcludeBrandIDs:    []string{"string"},
 				ExcludeCategoryIDs: []string{"string"},
 				ExcludeWebsiteIDs:  []string{"string"},
@@ -295,9 +367,11 @@ func TestProductSearchByImageWithOptionalParams(t *testing.T) {
 		ImageSearchRequest: channel3go.ImageSearchRequestParam{
 			Base64Image: channel3go.String("base64_image"),
 			Config: channel3go.LocaleConfigParam{
-				Country:  channel3go.LocaleConfigCountryUs,
-				Currency: channel3go.LocaleConfigCurrencyUsd,
-				Language: channel3go.LocaleConfigLanguageEn,
+				Country:             channel3go.LocaleConfigCountryUs,
+				Currency:            channel3go.LocaleConfigCurrencyUsd,
+				Language:            channel3go.LocaleConfigLanguageEn,
+				PreferredLengthUnit: channel3go.LocaleConfigPreferredLengthUnitMm,
+				PreferredWeightUnit: channel3go.LocaleConfigPreferredWeightUnitMg,
 			},
 			Filters: channel3go.SearchFiltersParam{
 				Age: []string{"newborn"},
@@ -313,7 +387,29 @@ func TestProductSearchByImageWithOptionalParams(t *testing.T) {
 						Percentage: channel3go.Float(0),
 					}},
 				},
-				Condition:          channel3go.SearchFiltersConditionNew,
+				Condition: channel3go.SearchFiltersConditionNew,
+				Dimensions: channel3go.SearchFiltersDimensionsParam{
+					Height: channel3go.SearchFiltersDimensionsHeightParam{
+						Unit: "mm",
+						Max:  channel3go.Float(0),
+						Min:  channel3go.Float(0),
+					},
+					Length: channel3go.SearchFiltersDimensionsLengthParam{
+						Unit: "mm",
+						Max:  channel3go.Float(0),
+						Min:  channel3go.Float(0),
+					},
+					Weight: channel3go.SearchFiltersDimensionsWeightParam{
+						Unit: "mg",
+						Max:  channel3go.Float(0),
+						Min:  channel3go.Float(0),
+					},
+					Width: channel3go.SearchFiltersDimensionsWidthParam{
+						Unit: "mm",
+						Max:  channel3go.Float(0),
+						Min:  channel3go.Float(0),
+					},
+				},
 				ExcludeBrandIDs:    []string{"string"},
 				ExcludeCategoryIDs: []string{"string"},
 				ExcludeWebsiteIDs:  []string{"string"},

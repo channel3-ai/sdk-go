@@ -287,6 +287,18 @@ type LocaleConfigParam struct {
 	//
 	// Any of "en", "de", "fr", "it", "es", "nl", "sv", "fi", "pt", "cs", "el", "ro".
 	Language LocaleConfigLanguage `json:"language,omitzero"`
+	// Preferred unit for length dimensions (length/width/height) in responses. A
+	// request dimension filter's unit for the field takes precedence; when neither is
+	// set, the merchant's stated unit is returned.
+	//
+	// Any of "mm", "cm", "m", "in", "ft".
+	PreferredLengthUnit LocaleConfigPreferredLengthUnit `json:"preferred_length_unit,omitzero"`
+	// Preferred unit for weight dimensions in responses. A request dimension filter's
+	// weight unit takes precedence; when neither is set, the merchant's stated unit is
+	// returned.
+	//
+	// Any of "mg", "g", "kg", "oz", "lb".
+	PreferredWeightUnit LocaleConfigPreferredWeightUnit `json:"preferred_weight_unit,omitzero"`
 	paramObj
 }
 
@@ -356,6 +368,32 @@ const (
 	LocaleConfigLanguageCs LocaleConfigLanguage = "cs"
 	LocaleConfigLanguageEl LocaleConfigLanguage = "el"
 	LocaleConfigLanguageRo LocaleConfigLanguage = "ro"
+)
+
+// Preferred unit for length dimensions (length/width/height) in responses. A
+// request dimension filter's unit for the field takes precedence; when neither is
+// set, the merchant's stated unit is returned.
+type LocaleConfigPreferredLengthUnit string
+
+const (
+	LocaleConfigPreferredLengthUnitMm LocaleConfigPreferredLengthUnit = "mm"
+	LocaleConfigPreferredLengthUnitCm LocaleConfigPreferredLengthUnit = "cm"
+	LocaleConfigPreferredLengthUnitM  LocaleConfigPreferredLengthUnit = "m"
+	LocaleConfigPreferredLengthUnitIn LocaleConfigPreferredLengthUnit = "in"
+	LocaleConfigPreferredLengthUnitFt LocaleConfigPreferredLengthUnit = "ft"
+)
+
+// Preferred unit for weight dimensions in responses. A request dimension filter's
+// weight unit takes precedence; when neither is set, the merchant's stated unit is
+// returned.
+type LocaleConfigPreferredWeightUnit string
+
+const (
+	LocaleConfigPreferredWeightUnitMg LocaleConfigPreferredWeightUnit = "mg"
+	LocaleConfigPreferredWeightUnitG  LocaleConfigPreferredWeightUnit = "g"
+	LocaleConfigPreferredWeightUnitKg LocaleConfigPreferredWeightUnit = "kg"
+	LocaleConfigPreferredWeightUnitOz LocaleConfigPreferredWeightUnit = "oz"
+	LocaleConfigPreferredWeightUnitLb LocaleConfigPreferredWeightUnit = "lb"
 )
 
 // The property URL is required.
@@ -738,6 +776,11 @@ type ProductOffer struct {
 	//
 	// Any of "new", "refurbished", "used".
 	Condition ProductOfferCondition `json:"condition" api:"nullable"`
+	// Physical dimensions of a product offer. Members are null when unknown.
+	//
+	// Values are standardized to the supported unit set; a merchant-stated value whose
+	// unit is not one of those units is omitted rather than shown.
+	Dimensions ProductOfferDimensions `json:"dimensions" api:"nullable"`
 	// The maximum commission rate for the merchant, as a decimal fraction: 0 is no
 	// commission, 0.5 is 50% commission. 'Max' because the actual commission rate may
 	// be lower due to vendor-specific affiliate rules.
@@ -749,6 +792,7 @@ type ProductOffer struct {
 		Price             respjson.Field
 		URL               respjson.Field
 		Condition         respjson.Field
+		Dimensions        respjson.Field
 		MaxCommissionRate respjson.Field
 		ExtraFields       map[string]respjson.Field
 		raw               string
@@ -777,6 +821,128 @@ const (
 	ProductOfferConditionRefurbished ProductOfferCondition = "refurbished"
 	ProductOfferConditionUsed        ProductOfferCondition = "used"
 )
+
+// Physical dimensions of a product offer. Members are null when unknown.
+//
+// Values are standardized to the supported unit set; a merchant-stated value whose
+// unit is not one of those units is omitted rather than shown.
+type ProductOfferDimensions struct {
+	// A length measurement, in one of the supported length units.
+	Height ProductOfferDimensionsHeight `json:"height" api:"nullable"`
+	// A length measurement, in one of the supported length units.
+	Length ProductOfferDimensionsLength `json:"length" api:"nullable"`
+	// A weight measurement, in one of the supported weight units.
+	Weight ProductOfferDimensionsWeight `json:"weight" api:"nullable"`
+	// A length measurement, in one of the supported length units.
+	Width ProductOfferDimensionsWidth `json:"width" api:"nullable"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Height      respjson.Field
+		Length      respjson.Field
+		Weight      respjson.Field
+		Width       respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r ProductOfferDimensions) RawJSON() string { return r.JSON.raw }
+func (r *ProductOfferDimensions) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// A length measurement, in one of the supported length units.
+type ProductOfferDimensionsHeight struct {
+	Number float64 `json:"number" api:"required"`
+	// The unit from the request's dimension filters when one was given (the value is
+	// converted to it); otherwise the unit the merchant stated.
+	//
+	// Any of "mm", "cm", "m", "in", "ft".
+	Unit string `json:"unit" api:"required"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Number      respjson.Field
+		Unit        respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r ProductOfferDimensionsHeight) RawJSON() string { return r.JSON.raw }
+func (r *ProductOfferDimensionsHeight) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// A length measurement, in one of the supported length units.
+type ProductOfferDimensionsLength struct {
+	Number float64 `json:"number" api:"required"`
+	// The unit from the request's dimension filters when one was given (the value is
+	// converted to it); otherwise the unit the merchant stated.
+	//
+	// Any of "mm", "cm", "m", "in", "ft".
+	Unit string `json:"unit" api:"required"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Number      respjson.Field
+		Unit        respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r ProductOfferDimensionsLength) RawJSON() string { return r.JSON.raw }
+func (r *ProductOfferDimensionsLength) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// A weight measurement, in one of the supported weight units.
+type ProductOfferDimensionsWeight struct {
+	Number float64 `json:"number" api:"required"`
+	// The unit from the request's dimension filters when one was given (the value is
+	// converted to it); otherwise the unit the merchant stated.
+	//
+	// Any of "mg", "g", "kg", "oz", "lb".
+	Unit string `json:"unit" api:"required"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Number      respjson.Field
+		Unit        respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r ProductOfferDimensionsWeight) RawJSON() string { return r.JSON.raw }
+func (r *ProductOfferDimensionsWeight) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// A length measurement, in one of the supported length units.
+type ProductOfferDimensionsWidth struct {
+	Number float64 `json:"number" api:"required"`
+	// The unit from the request's dimension filters when one was given (the value is
+	// converted to it); otherwise the unit the merchant stated.
+	//
+	// Any of "mm", "cm", "m", "in", "ft".
+	Unit string `json:"unit" api:"required"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Number      respjson.Field
+		Unit        respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r ProductOfferDimensionsWidth) RawJSON() string { return r.JSON.raw }
+func (r *ProductOfferDimensionsWidth) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
 
 // Find products similar to a given product.
 //
@@ -821,6 +987,16 @@ type ProductGetParams struct {
 	//
 	// Any of "en", "de", "fr", "it", "es", "nl", "sv", "fi", "pt", "cs", "el", "ro".
 	Language ProductGetParamsLanguage `query:"language,omitzero" json:"-"`
+	// Preferred unit for length dimensions (length/width/height). When unset,
+	// dimensions are returned in the unit the merchant stated.
+	//
+	// Any of "mm", "cm", "m", "in", "ft".
+	PreferredLengthUnit ProductGetParamsPreferredLengthUnit `query:"preferred_length_unit,omitzero" json:"-"`
+	// Preferred unit for weight dimensions. When unset, weight is returned in the unit
+	// the merchant stated.
+	//
+	// Any of "mg", "g", "kg", "oz", "lb".
+	PreferredWeightUnit ProductGetParamsPreferredWeightUnit `query:"preferred_weight_unit,omitzero" json:"-"`
 	// Optional list of website IDs to constrain the buy URL to, relevant if multiple
 	// merchants exist. Accepts website IDs or domains (e.g. "nike.com").
 	WebsiteIDs []string `query:"website_ids,omitzero" json:"-"`
@@ -893,6 +1069,30 @@ const (
 	ProductGetParamsLanguageCs ProductGetParamsLanguage = "cs"
 	ProductGetParamsLanguageEl ProductGetParamsLanguage = "el"
 	ProductGetParamsLanguageRo ProductGetParamsLanguage = "ro"
+)
+
+// Preferred unit for length dimensions (length/width/height). When unset,
+// dimensions are returned in the unit the merchant stated.
+type ProductGetParamsPreferredLengthUnit string
+
+const (
+	ProductGetParamsPreferredLengthUnitMm ProductGetParamsPreferredLengthUnit = "mm"
+	ProductGetParamsPreferredLengthUnitCm ProductGetParamsPreferredLengthUnit = "cm"
+	ProductGetParamsPreferredLengthUnitM  ProductGetParamsPreferredLengthUnit = "m"
+	ProductGetParamsPreferredLengthUnitIn ProductGetParamsPreferredLengthUnit = "in"
+	ProductGetParamsPreferredLengthUnitFt ProductGetParamsPreferredLengthUnit = "ft"
+)
+
+// Preferred unit for weight dimensions. When unset, weight is returned in the unit
+// the merchant stated.
+type ProductGetParamsPreferredWeightUnit string
+
+const (
+	ProductGetParamsPreferredWeightUnitMg ProductGetParamsPreferredWeightUnit = "mg"
+	ProductGetParamsPreferredWeightUnitG  ProductGetParamsPreferredWeightUnit = "g"
+	ProductGetParamsPreferredWeightUnitKg ProductGetParamsPreferredWeightUnit = "kg"
+	ProductGetParamsPreferredWeightUnitOz ProductGetParamsPreferredWeightUnit = "oz"
+	ProductGetParamsPreferredWeightUnitLb ProductGetParamsPreferredWeightUnit = "lb"
 )
 
 type ProductBrowseParams struct {

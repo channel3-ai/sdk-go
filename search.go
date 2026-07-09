@@ -74,6 +74,18 @@ type SearchConfigParam struct {
 	//
 	// Any of "en", "de", "fr", "it", "es", "nl", "sv", "fi", "pt", "cs", "el", "ro".
 	Language SearchConfigLanguage `json:"language,omitzero"`
+	// Preferred unit for length dimensions (length/width/height) in responses. A
+	// request dimension filter's unit for the field takes precedence; when neither is
+	// set, the merchant's stated unit is returned.
+	//
+	// Any of "mm", "cm", "m", "in", "ft".
+	PreferredLengthUnit SearchConfigPreferredLengthUnit `json:"preferred_length_unit,omitzero"`
+	// Preferred unit for weight dimensions in responses. A request dimension filter's
+	// weight unit takes precedence; when neither is set, the merchant's stated unit is
+	// returned.
+	//
+	// Any of "mg", "g", "kg", "oz", "lb".
+	PreferredWeightUnit SearchConfigPreferredWeightUnit `json:"preferred_weight_unit,omitzero"`
 	// Search strategy. `default` (recommended) combines lexical + semantic search and
 	// is right for most use cases. `keyword` is lexical only — use it for real-time,
 	// low-latency needs like ad targeting. `agentic` uses an LLM to plan multiple
@@ -166,6 +178,32 @@ const (
 	SearchConfigModeAgentic SearchConfigMode = "agentic"
 )
 
+// Preferred unit for length dimensions (length/width/height) in responses. A
+// request dimension filter's unit for the field takes precedence; when neither is
+// set, the merchant's stated unit is returned.
+type SearchConfigPreferredLengthUnit string
+
+const (
+	SearchConfigPreferredLengthUnitMm SearchConfigPreferredLengthUnit = "mm"
+	SearchConfigPreferredLengthUnitCm SearchConfigPreferredLengthUnit = "cm"
+	SearchConfigPreferredLengthUnitM  SearchConfigPreferredLengthUnit = "m"
+	SearchConfigPreferredLengthUnitIn SearchConfigPreferredLengthUnit = "in"
+	SearchConfigPreferredLengthUnitFt SearchConfigPreferredLengthUnit = "ft"
+)
+
+// Preferred unit for weight dimensions in responses. A request dimension filter's
+// weight unit takes precedence; when neither is set, the merchant's stated unit is
+// returned.
+type SearchConfigPreferredWeightUnit string
+
+const (
+	SearchConfigPreferredWeightUnitMg SearchConfigPreferredWeightUnit = "mg"
+	SearchConfigPreferredWeightUnitG  SearchConfigPreferredWeightUnit = "g"
+	SearchConfigPreferredWeightUnitKg SearchConfigPreferredWeightUnit = "kg"
+	SearchConfigPreferredWeightUnitOz SearchConfigPreferredWeightUnit = "oz"
+	SearchConfigPreferredWeightUnitLb SearchConfigPreferredWeightUnit = "lb"
+)
+
 // Price filter for search. Values are inclusive.
 type SearchFilterPriceParam struct {
 	// Maximum price, in dollars and cents
@@ -212,6 +250,15 @@ type SearchFiltersParam struct {
 	//
 	// Any of "new", "refurbished", "used".
 	Condition SearchFiltersCondition `json:"condition,omitzero"`
+	// Physical-dimension range filters, matched against the same offer.
+	//
+	// Matching products have at least one offer satisfying every provided range
+	// (alongside any locale/price/availability filters). Values are compared with a
+	// small relative tolerance. An offer with no dimension data for a filtered field
+	// does not match; note that when a single merchant on a product reports a
+	// dimension it is shared across that product's offers, so a matching offer may not
+	// itself surface that dimension in the response.
+	Dimensions SearchFiltersDimensionsParam `json:"dimensions,omitzero"`
 	// If provided, products from these brands will be excluded from the results
 	ExcludeBrandIDs []string `json:"exclude_brand_ids,omitzero"`
 	// If provided, products in these categories (or their descendants) will be
@@ -290,6 +337,138 @@ const (
 	SearchFiltersConditionRefurbished SearchFiltersCondition = "refurbished"
 	SearchFiltersConditionUsed        SearchFiltersCondition = "used"
 )
+
+// Physical-dimension range filters, matched against the same offer.
+//
+// Matching products have at least one offer satisfying every provided range
+// (alongside any locale/price/availability filters). Values are compared with a
+// small relative tolerance. An offer with no dimension data for a filtered field
+// does not match; note that when a single merchant on a product reports a
+// dimension it is shared across that product's offers, so a matching offer may not
+// itself surface that dimension in the response.
+type SearchFiltersDimensionsParam struct {
+	Height SearchFiltersDimensionsHeightParam `json:"height,omitzero"`
+	Length SearchFiltersDimensionsLengthParam `json:"length,omitzero"`
+	Weight SearchFiltersDimensionsWeightParam `json:"weight,omitzero"`
+	Width  SearchFiltersDimensionsWidthParam  `json:"width,omitzero"`
+	paramObj
+}
+
+func (r SearchFiltersDimensionsParam) MarshalJSON() (data []byte, err error) {
+	type shadow SearchFiltersDimensionsParam
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SearchFiltersDimensionsParam) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// The property Unit is required.
+type SearchFiltersDimensionsHeightParam struct {
+	// Unit that min/max are expressed in
+	//
+	// Any of "mm", "cm", "m", "in", "ft".
+	Unit string `json:"unit,omitzero" api:"required"`
+	// Maximum value, in `unit`. Inclusive.
+	Max param.Opt[float64] `json:"max,omitzero"`
+	// Minimum value, in `unit`. Inclusive.
+	Min param.Opt[float64] `json:"min,omitzero"`
+	paramObj
+}
+
+func (r SearchFiltersDimensionsHeightParam) MarshalJSON() (data []byte, err error) {
+	type shadow SearchFiltersDimensionsHeightParam
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SearchFiltersDimensionsHeightParam) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func init() {
+	apijson.RegisterFieldValidator[SearchFiltersDimensionsHeightParam](
+		"unit", "mm", "cm", "m", "in", "ft",
+	)
+}
+
+// The property Unit is required.
+type SearchFiltersDimensionsLengthParam struct {
+	// Unit that min/max are expressed in
+	//
+	// Any of "mm", "cm", "m", "in", "ft".
+	Unit string `json:"unit,omitzero" api:"required"`
+	// Maximum value, in `unit`. Inclusive.
+	Max param.Opt[float64] `json:"max,omitzero"`
+	// Minimum value, in `unit`. Inclusive.
+	Min param.Opt[float64] `json:"min,omitzero"`
+	paramObj
+}
+
+func (r SearchFiltersDimensionsLengthParam) MarshalJSON() (data []byte, err error) {
+	type shadow SearchFiltersDimensionsLengthParam
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SearchFiltersDimensionsLengthParam) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func init() {
+	apijson.RegisterFieldValidator[SearchFiltersDimensionsLengthParam](
+		"unit", "mm", "cm", "m", "in", "ft",
+	)
+}
+
+// The property Unit is required.
+type SearchFiltersDimensionsWeightParam struct {
+	// Unit that min/max are expressed in
+	//
+	// Any of "mg", "g", "kg", "oz", "lb".
+	Unit string `json:"unit,omitzero" api:"required"`
+	// Maximum value, in `unit`. Inclusive.
+	Max param.Opt[float64] `json:"max,omitzero"`
+	// Minimum value, in `unit`. Inclusive.
+	Min param.Opt[float64] `json:"min,omitzero"`
+	paramObj
+}
+
+func (r SearchFiltersDimensionsWeightParam) MarshalJSON() (data []byte, err error) {
+	type shadow SearchFiltersDimensionsWeightParam
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SearchFiltersDimensionsWeightParam) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func init() {
+	apijson.RegisterFieldValidator[SearchFiltersDimensionsWeightParam](
+		"unit", "mg", "g", "kg", "oz", "lb",
+	)
+}
+
+// The property Unit is required.
+type SearchFiltersDimensionsWidthParam struct {
+	// Unit that min/max are expressed in
+	//
+	// Any of "mm", "cm", "m", "in", "ft".
+	Unit string `json:"unit,omitzero" api:"required"`
+	// Maximum value, in `unit`. Inclusive.
+	Max param.Opt[float64] `json:"max,omitzero"`
+	// Minimum value, in `unit`. Inclusive.
+	Min param.Opt[float64] `json:"min,omitzero"`
+	paramObj
+}
+
+func (r SearchFiltersDimensionsWidthParam) MarshalJSON() (data []byte, err error) {
+	type shadow SearchFiltersDimensionsWidthParam
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SearchFiltersDimensionsWidthParam) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func init() {
+	apijson.RegisterFieldValidator[SearchFiltersDimensionsWidthParam](
+		"unit", "mm", "cm", "m", "in", "ft",
+	)
+}
 
 type SearchFiltersGender string
 
