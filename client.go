@@ -33,8 +33,9 @@ type Client struct {
 }
 
 // DefaultClientOptions read from the environment (CHANNEL3_API_KEY,
-// CHANNEL3_LANGUAGE, CHANNEL3_COUNTRY, CHANNEL3_CURRENCY, CHANNEL3_BASE_URL). This
-// should be used to initialize new clients.
+// CHANNEL3_LANGUAGE, CHANNEL3_COUNTRY, CHANNEL3_CURRENCY, CHANNEL3_LENGTH_UNIT,
+// CHANNEL3_WEIGHT_UNIT, CHANNEL3_BASE_URL). This should be used to initialize new
+// clients.
 func DefaultClientOptions() []option.RequestOption {
 	defaults := []option.RequestOption{option.WithHTTPClient(defaultHTTPClient()), option.WithEnvironmentProduction()}
 	if o, ok := os.LookupEnv("CHANNEL3_BASE_URL"); ok {
@@ -52,6 +53,12 @@ func DefaultClientOptions() []option.RequestOption {
 	if o, ok := os.LookupEnv("CHANNEL3_CURRENCY"); ok {
 		defaults = append(defaults, option.WithCurrency(o))
 	}
+	if o, ok := os.LookupEnv("CHANNEL3_LENGTH_UNIT"); ok {
+		defaults = append(defaults, option.WithLengthUnit(o))
+	}
+	if o, ok := os.LookupEnv("CHANNEL3_WEIGHT_UNIT"); ok {
+		defaults = append(defaults, option.WithWeightUnit(o))
+	}
 	if o, ok := os.LookupEnv("CHANNEL3_CUSTOM_HEADERS"); ok {
 		for _, line := range strings.Split(o, "\n") {
 			colon := strings.Index(line, ":")
@@ -65,9 +72,10 @@ func DefaultClientOptions() []option.RequestOption {
 
 // NewClient generates a new client with the default option read from the
 // environment (CHANNEL3_API_KEY, CHANNEL3_LANGUAGE, CHANNEL3_COUNTRY,
-// CHANNEL3_CURRENCY, CHANNEL3_BASE_URL). The option passed in as arguments are
-// applied after these default arguments, and all option will be passed down to the
-// services and requests that this client makes.
+// CHANNEL3_CURRENCY, CHANNEL3_LENGTH_UNIT, CHANNEL3_WEIGHT_UNIT,
+// CHANNEL3_BASE_URL). The option passed in as arguments are applied after these
+// default arguments, and all option will be passed down to the services and
+// requests that this client makes.
 func NewClient(opts ...option.RequestOption) (r Client) {
 	opts = append(DefaultClientOptions(), opts...)
 

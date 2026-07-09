@@ -297,3 +297,19 @@ func WithCurrency(value string) RequestOption {
 		return r.Apply(WithHeader("X-Channel3-Currency", value))
 	})
 }
+
+// WithLengthUnit returns a RequestOption that sets the client setting "length_unit".
+func WithLengthUnit(value string) RequestOption {
+	return requestconfig.RequestOptionFunc(func(r *requestconfig.RequestConfig) error {
+		r.LengthUnit = value
+		return r.Apply(WithHeader("X-Channel3-Length-Unit", value))
+	})
+}
+
+// WithWeightUnit returns a RequestOption that sets the client setting "weight_unit".
+func WithWeightUnit(value string) RequestOption {
+	return requestconfig.RequestOptionFunc(func(r *requestconfig.RequestConfig) error {
+		r.WeightUnit = value
+		return r.Apply(WithHeader("X-Channel3-Weight-Unit", value))
+	})
+}

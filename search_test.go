@@ -30,13 +30,13 @@ func TestSearchPerformWithOptionalParams(t *testing.T) {
 		SearchRequest: channel3go.SearchRequestParam{
 			Base64Image: channel3go.String("base64_image"),
 			Config: channel3go.SearchConfigParam{
-				Country:             channel3go.SearchConfigCountryUs,
-				Currency:            channel3go.SearchConfigCurrencyUsd,
-				KeywordSearchOnly:   channel3go.Bool(true),
-				Language:            channel3go.SearchConfigLanguageEn,
-				Mode:                channel3go.SearchConfigModeKeyword,
-				PreferredLengthUnit: channel3go.SearchConfigPreferredLengthUnitMm,
-				PreferredWeightUnit: channel3go.SearchConfigPreferredWeightUnitMg,
+				Country:           channel3go.SearchConfigCountryUs,
+				Currency:          channel3go.SearchConfigCurrencyUsd,
+				KeywordSearchOnly: channel3go.Bool(true),
+				Language:          channel3go.SearchConfigLanguageEn,
+				LengthUnit:        channel3go.SearchConfigLengthUnitMm,
+				Mode:              channel3go.SearchConfigModeKeyword,
+				WeightUnit:        channel3go.SearchConfigWeightUnitMg,
 			},
 			Filters: channel3go.SearchFiltersParam{
 				Age: []string{"newborn"},

@@ -30,12 +30,12 @@ func TestProductGetWithOptionalParams(t *testing.T) {
 		context.TODO(),
 		"product_id",
 		channel3go.ProductGetParams{
-			Country:             channel3go.ProductGetParamsCountryUs,
-			Currency:            channel3go.ProductGetParamsCurrencyUsd,
-			Language:            channel3go.ProductGetParamsLanguageEn,
-			PreferredLengthUnit: channel3go.ProductGetParamsPreferredLengthUnitMm,
-			PreferredWeightUnit: channel3go.ProductGetParamsPreferredWeightUnitMg,
-			WebsiteIDs:          []string{"string"},
+			Country:    channel3go.ProductGetParamsCountryUs,
+			Currency:   channel3go.ProductGetParamsCurrencyUsd,
+			Language:   channel3go.ProductGetParamsLanguageEn,
+			LengthUnit: channel3go.ProductGetParamsLengthUnitMm,
+			WebsiteIDs: []string{"string"},
+			WeightUnit: channel3go.ProductGetParamsWeightUnitMg,
 		},
 	)
 	if err != nil {
@@ -140,11 +140,11 @@ func TestProductFindSimilarWithOptionalParams(t *testing.T) {
 		SimilarProductsRequest: channel3go.SimilarProductsRequestParam{
 			ProductID: "product_id",
 			Config: channel3go.LocaleConfigParam{
-				Country:             channel3go.LocaleConfigCountryUs,
-				Currency:            channel3go.LocaleConfigCurrencyUsd,
-				Language:            channel3go.LocaleConfigLanguageEn,
-				PreferredLengthUnit: channel3go.LocaleConfigPreferredLengthUnitMm,
-				PreferredWeightUnit: channel3go.LocaleConfigPreferredWeightUnitMg,
+				Country:    channel3go.LocaleConfigCountryUs,
+				Currency:   channel3go.LocaleConfigCurrencyUsd,
+				Language:   channel3go.LocaleConfigLanguageEn,
+				LengthUnit: channel3go.LocaleConfigLengthUnitMm,
+				WeightUnit: channel3go.LocaleConfigWeightUnitMg,
 			},
 			Filters: channel3go.SearchFiltersParam{
 				Age: []string{"newborn"},
@@ -279,13 +279,13 @@ func TestProductSearchWithOptionalParams(t *testing.T) {
 		SearchRequest: channel3go.SearchRequestParam{
 			Base64Image: channel3go.String("base64_image"),
 			Config: channel3go.SearchConfigParam{
-				Country:             channel3go.SearchConfigCountryUs,
-				Currency:            channel3go.SearchConfigCurrencyUsd,
-				KeywordSearchOnly:   channel3go.Bool(true),
-				Language:            channel3go.SearchConfigLanguageEn,
-				Mode:                channel3go.SearchConfigModeKeyword,
-				PreferredLengthUnit: channel3go.SearchConfigPreferredLengthUnitMm,
-				PreferredWeightUnit: channel3go.SearchConfigPreferredWeightUnitMg,
+				Country:           channel3go.SearchConfigCountryUs,
+				Currency:          channel3go.SearchConfigCurrencyUsd,
+				KeywordSearchOnly: channel3go.Bool(true),
+				Language:          channel3go.SearchConfigLanguageEn,
+				LengthUnit:        channel3go.SearchConfigLengthUnitMm,
+				Mode:              channel3go.SearchConfigModeKeyword,
+				WeightUnit:        channel3go.SearchConfigWeightUnitMg,
 			},
 			Filters: channel3go.SearchFiltersParam{
 				Age: []string{"newborn"},
@@ -367,11 +367,11 @@ func TestProductSearchByImageWithOptionalParams(t *testing.T) {
 		ImageSearchRequest: channel3go.ImageSearchRequestParam{
 			Base64Image: channel3go.String("base64_image"),
 			Config: channel3go.LocaleConfigParam{
-				Country:             channel3go.LocaleConfigCountryUs,
-				Currency:            channel3go.LocaleConfigCurrencyUsd,
-				Language:            channel3go.LocaleConfigLanguageEn,
-				PreferredLengthUnit: channel3go.LocaleConfigPreferredLengthUnitMm,
-				PreferredWeightUnit: channel3go.LocaleConfigPreferredWeightUnitMg,
+				Country:    channel3go.LocaleConfigCountryUs,
+				Currency:   channel3go.LocaleConfigCurrencyUsd,
+				Language:   channel3go.LocaleConfigLanguageEn,
+				LengthUnit: channel3go.LocaleConfigLengthUnitMm,
+				WeightUnit: channel3go.LocaleConfigWeightUnitMg,
 			},
 			Filters: channel3go.SearchFiltersParam{
 				Age: []string{"newborn"},
