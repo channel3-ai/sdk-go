@@ -30,11 +30,13 @@ func TestSearchPerformWithOptionalParams(t *testing.T) {
 		SearchRequest: channel3go.SearchRequestParam{
 			Base64Image: channel3go.String("base64_image"),
 			Config: channel3go.SearchConfigParam{
-				Country:           channel3go.SearchConfigCountryUs,
-				Currency:          channel3go.SearchConfigCurrencyUsd,
-				KeywordSearchOnly: channel3go.Bool(true),
-				Language:          channel3go.SearchConfigLanguageEn,
-				Mode:              channel3go.SearchConfigModeKeyword,
+				Country:             channel3go.SearchConfigCountryUs,
+				Currency:            channel3go.SearchConfigCurrencyUsd,
+				KeywordSearchOnly:   channel3go.Bool(true),
+				Language:            channel3go.SearchConfigLanguageEn,
+				Mode:                channel3go.SearchConfigModeKeyword,
+				PreferredLengthUnit: channel3go.SearchConfigPreferredLengthUnitMm,
+				PreferredWeightUnit: channel3go.SearchConfigPreferredWeightUnitMg,
 			},
 			Filters: channel3go.SearchFiltersParam{
 				Age: []string{"newborn"},
@@ -50,7 +52,29 @@ func TestSearchPerformWithOptionalParams(t *testing.T) {
 						Percentage: channel3go.Float(0),
 					}},
 				},
-				Condition:          channel3go.SearchFiltersConditionNew,
+				Condition: channel3go.SearchFiltersConditionNew,
+				Dimensions: channel3go.SearchFiltersDimensionsParam{
+					Height: channel3go.SearchFiltersDimensionsHeightParam{
+						Unit: "mm",
+						Max:  channel3go.Float(0),
+						Min:  channel3go.Float(0),
+					},
+					Length: channel3go.SearchFiltersDimensionsLengthParam{
+						Unit: "mm",
+						Max:  channel3go.Float(0),
+						Min:  channel3go.Float(0),
+					},
+					Weight: channel3go.SearchFiltersDimensionsWeightParam{
+						Unit: "mg",
+						Max:  channel3go.Float(0),
+						Min:  channel3go.Float(0),
+					},
+					Width: channel3go.SearchFiltersDimensionsWidthParam{
+						Unit: "mm",
+						Max:  channel3go.Float(0),
+						Min:  channel3go.Float(0),
+					},
+				},
 				ExcludeBrandIDs:    []string{"string"},
 				ExcludeCategoryIDs: []string{"string"},
 				ExcludeWebsiteIDs:  []string{"string"},
