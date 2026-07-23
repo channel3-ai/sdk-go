@@ -75,6 +75,7 @@ func TestProductBrowseWithOptionalParams(t *testing.T) {
 						Hex:        "hex",
 						Percentage: channel3go.Float(0),
 					}},
+					Match: "strict",
 				},
 				Condition: channel3go.SearchFiltersConditionNew,
 				Dimensions: channel3go.SearchFiltersDimensionsParam{
@@ -159,6 +160,7 @@ func TestProductFindSimilarWithOptionalParams(t *testing.T) {
 						Hex:        "hex",
 						Percentage: channel3go.Float(0),
 					}},
+					Match: "strict",
 				},
 				Condition: channel3go.SearchFiltersConditionNew,
 				Dimensions: channel3go.SearchFiltersDimensionsParam{
@@ -300,6 +302,7 @@ func TestProductSearchWithOptionalParams(t *testing.T) {
 						Hex:        "hex",
 						Percentage: channel3go.Float(0),
 					}},
+					Match: "strict",
 				},
 				Condition: channel3go.SearchFiltersConditionNew,
 				Dimensions: channel3go.SearchFiltersDimensionsParam{
@@ -386,6 +389,7 @@ func TestProductSearchByImageWithOptionalParams(t *testing.T) {
 						Hex:        "hex",
 						Percentage: channel3go.Float(0),
 					}},
+					Match: "strict",
 				},
 				Condition: channel3go.SearchFiltersConditionNew,
 				Dimensions: channel3go.SearchFiltersDimensionsParam{
