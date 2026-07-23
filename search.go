@@ -241,8 +241,7 @@ type SearchFiltersParam struct {
 	// If provided, only products from these categories will be returned. Accepts
 	// category slugs.
 	CategoryIDs []string `json:"category_ids,omitzero"`
-	// [Beta] Color filter wrapper. Holds the list of required colors today; reserved
-	// for future filter-level options (e.g. match modes, tolerance overrides).
+	// [Beta] Color filter wrapper. Holds required colors and optional match mode.
 	Colors SearchFiltersColorsParam `json:"colors,omitzero"`
 	// Filter by offer condition. Requires at least one offer matching the requested
 	// condition, locale, and any price filter. Offers without condition data are
@@ -290,13 +289,16 @@ func (r *SearchFiltersParam) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-// [Beta] Color filter wrapper. Holds the list of required colors today; reserved
-// for future filter-level options (e.g. match modes, tolerance overrides).
+// [Beta] Color filter wrapper. Holds required colors and optional match mode.
 //
 // The property Palette is required.
 type SearchFiltersColorsParam struct {
 	// Colors required in matching products. Treated as an AND condition.
 	Palette []SearchFiltersColorsPaletteParam `json:"palette,omitzero" api:"required"`
+	// How tightly colors must match: 'strict', 'standard', or 'loose'.
+	//
+	// Any of "strict", "standard", "loose".
+	Match string `json:"match,omitzero"`
 	paramObj
 }
 
@@ -306,6 +308,12 @@ func (r SearchFiltersColorsParam) MarshalJSON() (data []byte, err error) {
 }
 func (r *SearchFiltersColorsParam) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
+}
+
+func init() {
+	apijson.RegisterFieldValidator[SearchFiltersColorsParam](
+		"match", "strict", "standard", "loose",
+	)
 }
 
 // A single color requirement for the color filter.

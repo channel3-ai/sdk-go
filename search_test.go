@@ -51,6 +51,7 @@ func TestSearchPerformWithOptionalParams(t *testing.T) {
 						Hex:        "hex",
 						Percentage: channel3go.Float(0),
 					}},
+					Match: "strict",
 				},
 				Condition: channel3go.SearchFiltersConditionNew,
 				Dimensions: channel3go.SearchFiltersDimensionsParam{
