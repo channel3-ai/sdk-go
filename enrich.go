@@ -191,9 +191,10 @@ type EnrichEnrichURLResponseImage struct {
 	// Background-removed square image on Channel3 CDN when available. Use for product
 	// grids; `url` is the regular hosted shot.
 	CleanedURL string `json:"cleaned_url" api:"nullable"`
-	// True when `url` itself points to a cleaned image (no separate `cleaned_url`).
-	// When both `url` and `cleaned_url` are set, `url` is the regular shot and this is
-	// false.
+	// Deprecated: always `false`. Use `cleaned_url` for product grids when set;
+	// otherwise `url`.
+	//
+	// Deprecated: deprecated
 	IsCleanedImage bool `json:"is_cleaned_image"`
 	IsMainImage    bool `json:"is_main_image"`
 	// Photo quality classification for API responses.
