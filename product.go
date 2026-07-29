@@ -718,9 +718,12 @@ func (r *ProductDetailVariantsSelected) UnmarshalJSON(data []byte) error {
 type ProductImage struct {
 	URL     string `json:"url" api:"required"`
 	AltText string `json:"alt_text" api:"nullable"`
-	// True if this URL points to a cleaned image. A cleaned image has a square aspect
-	// ratio and a uniform, monochromatic background. Cleaned images are best displayed
-	// in a product grid.
+	// Background-removed square image on Channel3 CDN when available. Use for product
+	// grids; `url` is the regular hosted shot.
+	CleanedURL string `json:"cleaned_url" api:"nullable"`
+	// True when `url` itself points to a cleaned image (no separate `cleaned_url`).
+	// When both `url` and `cleaned_url` are set, `url` is the regular shot and this is
+	// false.
 	IsCleanedImage bool `json:"is_cleaned_image"`
 	IsMainImage    bool `json:"is_main_image"`
 	// Product image type classification for API responses.
@@ -733,6 +736,7 @@ type ProductImage struct {
 	JSON struct {
 		URL            respjson.Field
 		AltText        respjson.Field
+		CleanedURL     respjson.Field
 		IsCleanedImage respjson.Field
 		IsMainImage    respjson.Field
 		ShotType       respjson.Field
