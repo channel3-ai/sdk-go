@@ -19,6 +19,7 @@ import (
 type Client struct {
 	options       []option.RequestOption
 	Products      ProductService
+	Reporting     ReportingService
 	Brands        BrandService
 	Categories    CategoryService
 	Websites      WebsiteService
@@ -82,6 +83,7 @@ func NewClient(opts ...option.RequestOption) (r Client) {
 	r = Client{options: opts}
 
 	r.Products = NewProductService(opts...)
+	r.Reporting = NewReportingService(opts...)
 	r.Brands = NewBrandService(opts...)
 	r.Categories = NewCategoryService(opts...)
 	r.Websites = NewWebsiteService(opts...)

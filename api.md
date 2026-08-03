@@ -32,6 +32,37 @@ Methods:
 - <code title="post /v1/search">client.Products.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#ProductService.Search">Search</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>, body <a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go">channel3go</a>.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#ProductSearchParams">ProductSearchParams</a>) (\*<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go/packages/pagination">pagination</a>.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go/packages/pagination#SearchPage">SearchPage</a>[<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go">channel3go</a>.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#ProductDetail">ProductDetail</a>], <a href="https://pkg.go.dev/builtin#error">error</a>)</code>
 - <code title="post /v1/image-search">client.Products.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#ProductService.SearchByImage">SearchByImage</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>, body <a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go">channel3go</a>.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#ProductSearchByImageParams">ProductSearchByImageParams</a>) (\*<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go/packages/pagination">pagination</a>.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go/packages/pagination#SearchPage">SearchPage</a>[<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go">channel3go</a>.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#ProductDetail">ProductDetail</a>], <a href="https://pkg.go.dev/builtin#error">error</a>)</code>
 
+# Reporting
+
+Response Types:
+
+- <a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go">channel3go</a>.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#AffiliateProduct">AffiliateProduct</a>
+
+## Clicks
+
+Response Types:
+
+- <a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go">channel3go</a>.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#Click">Click</a>
+- <a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go">channel3go</a>.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#ClicksResponse">ClicksResponse</a>
+- <a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go">channel3go</a>.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#ClicksSummary">ClicksSummary</a>
+
+Methods:
+
+- <code title="get /v1/reporting/clicks">client.Reporting.Clicks.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#ReportingClickService.List">List</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>, query <a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go">channel3go</a>.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#ReportingClickListParams">ReportingClickListParams</a>) (\*<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go/packages/pagination">pagination</a>.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go/packages/pagination#AnalyticsPage">AnalyticsPage</a>[<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go">channel3go</a>.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#Click">Click</a>], <a href="https://pkg.go.dev/builtin#error">error</a>)</code>
+
+## Transactions
+
+Response Types:
+
+- <a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go">channel3go</a>.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#PublicTransactionStatus">PublicTransactionStatus</a>
+- <a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go">channel3go</a>.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#Transaction">Transaction</a>
+- <a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go">channel3go</a>.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#TransactionsResponse">TransactionsResponse</a>
+- <a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go">channel3go</a>.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#TransactionsSummary">TransactionsSummary</a>
+
+Methods:
+
+- <code title="get /v1/reporting/transactions">client.Reporting.Transactions.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#ReportingTransactionService.List">List</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>, query <a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go">channel3go</a>.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#ReportingTransactionListParams">ReportingTransactionListParams</a>) (\*<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go/packages/pagination">pagination</a>.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go/packages/pagination#AnalyticsPage">AnalyticsPage</a>[<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go">channel3go</a>.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#Transaction">Transaction</a>], <a href="https://pkg.go.dev/builtin#error">error</a>)</code>
+
 # Brands
 
 Response Types:

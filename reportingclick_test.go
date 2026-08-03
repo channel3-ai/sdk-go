@@ -1,0 +1,43 @@
+// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+
+package channel3go_test
+
+import (
+	"context"
+	"errors"
+	"os"
+	"testing"
+	"time"
+
+	"github.com/channel3-ai/sdk-go"
+	"github.com/channel3-ai/sdk-go/internal/testutil"
+	"github.com/channel3-ai/sdk-go/option"
+)
+
+func TestReportingClickListWithOptionalParams(t *testing.T) {
+	t.Skip("Mock server tests are disabled")
+	baseURL := "http://localhost:4010"
+	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
+		baseURL = envURL
+	}
+	if !testutil.CheckTestServer(t, baseURL) {
+		return
+	}
+	client := channel3go.NewClient(
+		option.WithBaseURL(baseURL),
+		option.WithAPIKey("My API Key"),
+	)
+	_, err := client.Reporting.Clicks.List(context.TODO(), channel3go.ReportingClickListParams{
+		EndDate:   channel3go.Time(time.Now()),
+		Limit:     channel3go.Int(1),
+		Page:      channel3go.Int(1),
+		StartDate: channel3go.Time(time.Now()),
+	})
+	if err != nil {
+		var apierr *channel3go.Error
+		if errors.As(err, &apierr) {
+			t.Log(string(apierr.DumpRequest(true)))
+		}
+		t.Fatalf("err should be nil: %s", err.Error())
+	}
+}
