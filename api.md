@@ -36,7 +36,7 @@ Methods:
 
 Response Types:
 
-- <a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go">channel3go</a>.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#AffiliateProduct">AffiliateProduct</a>
+- <a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go">channel3go</a>.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#ReportingProduct">ReportingProduct</a>
 
 ## Clicks
 

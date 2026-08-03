@@ -37,7 +37,7 @@ func NewReportingClickService(opts ...option.RequestOption) (r ReportingClickSer
 	return
 }
 
-// List affiliate clicks for your account over a datetime window.
+// List clicks for your account over a datetime window.
 //
 // Defaults to the last 30 days ending now. Maximum window is 90 days. Pass an
 // offset-aware ISO datetime to express local time (e.g. last 6 hours). Returns a
@@ -59,7 +59,7 @@ func (r *ReportingClickService) List(ctx context.Context, query ReportingClickLi
 	return res, nil
 }
 
-// List affiliate clicks for your account over a datetime window.
+// List clicks for your account over a datetime window.
 //
 // Defaults to the last 30 days ending now. Maximum window is 90 days. Pass an
 // offset-aware ISO datetime to express local time (e.g. last 6 hours). Returns a
@@ -68,7 +68,7 @@ func (r *ReportingClickService) ListAutoPaging(ctx context.Context, query Report
 	return pagination.NewAnalyticsPageAutoPager(r.List(ctx, query, opts...))
 }
 
-// A single affiliate click event.
+// A single click event.
 type Click struct {
 	// Click event ID.
 	ID string `json:"id" api:"required"`
@@ -79,7 +79,7 @@ type Click struct {
 	// Click country, if available.
 	Country string `json:"country" api:"nullable"`
 	// Compact product reference on click/transaction items.
-	Product AffiliateProduct `json:"product" api:"nullable"`
+	Product ReportingProduct `json:"product" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		ID          respjson.Field

@@ -37,7 +37,7 @@ func NewReportingTransactionService(opts ...option.RequestOption) (r ReportingTr
 	return
 }
 
-// List affiliate transactions for your account over a datetime window.
+// List transactions for your account over a datetime window.
 //
 // Defaults to the last 30 days ending now. Maximum window is 90 days. Pass an
 // offset-aware ISO datetime to express local time (e.g. last 6 hours). Returns a
@@ -61,7 +61,7 @@ func (r *ReportingTransactionService) List(ctx context.Context, query ReportingT
 	return res, nil
 }
 
-// List affiliate transactions for your account over a datetime window.
+// List transactions for your account over a datetime window.
 //
 // Defaults to the last 30 days ending now. Maximum window is 90 days. Pass an
 // offset-aware ISO datetime to express local time (e.g. last 6 hours). Returns a
@@ -80,7 +80,7 @@ const (
 	PublicTransactionStatusPaid    PublicTransactionStatus = "paid"
 )
 
-// A single affiliate CPA transaction.
+// A single CPA transaction.
 type Transaction struct {
 	// Transaction ID.
 	ID string `json:"id" api:"required"`
@@ -101,7 +101,7 @@ type Transaction struct {
 	// Purchase country, if available.
 	Country string `json:"country" api:"nullable"`
 	// Compact product reference on click/transaction items.
-	Product AffiliateProduct `json:"product" api:"nullable"`
+	Product ReportingProduct `json:"product" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		ID               respjson.Field

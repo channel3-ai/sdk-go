@@ -32,7 +32,7 @@ func NewReportingService(opts ...option.RequestOption) (r ReportingService) {
 }
 
 // Compact product reference on click/transaction items.
-type AffiliateProduct struct {
+type ReportingProduct struct {
 	// Canonical product ID.
 	ID string `json:"id" api:"required"`
 	// Product image URL.
@@ -50,7 +50,7 @@ type AffiliateProduct struct {
 }
 
 // Returns the unmodified JSON received from the API
-func (r AffiliateProduct) RawJSON() string { return r.JSON.raw }
-func (r *AffiliateProduct) UnmarshalJSON(data []byte) error {
+func (r ReportingProduct) RawJSON() string { return r.JSON.raw }
+func (r *ReportingProduct) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
