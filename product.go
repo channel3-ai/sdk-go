@@ -40,14 +40,17 @@ func NewProductService(opts ...option.RequestOption) (r ProductService) {
 }
 
 // Get detailed information about a specific product by its ID.
-func (r *ProductService) Get(ctx context.Context, productID string, query ProductGetParams, opts ...option.RequestOption) (res *ProductDetail, err error) {
+func (r *ProductService) Get(ctx context.Context, productID string, params ProductGetParams, opts ...option.RequestOption) (res *ProductDetail, err error) {
+	if !param.IsOmitted(params.XUserID) {
+		opts = append(opts, option.WithHeader("x-user-id", fmt.Sprintf("%v", params.XUserID.Value)))
+	}
 	opts = slices.Concat(r.options, opts)
 	if productID == "" {
 		err = errors.New("missing required product_id parameter")
 		return nil, err
 	}
 	path := fmt.Sprintf("v1/products/%s", url.PathEscape(productID))
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, query, &res, opts...)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, params, &res, opts...)
 	return res, err
 }
 
@@ -57,15 +60,15 @@ func (r *ProductService) Get(ctx context.Context, productID string, query Produc
 //
 // At least one of `filters.brand_ids`, `filters.category_ids`, or
 // `filters.website_ids` must be provided.
-//
-// Access to this endpoint is restricted. If you think your use-case requires it,
-// please contact us.
-func (r *ProductService) Browse(ctx context.Context, body ProductBrowseParams, opts ...option.RequestOption) (res *pagination.SearchPage[ProductDetail], err error) {
+func (r *ProductService) Browse(ctx context.Context, params ProductBrowseParams, opts ...option.RequestOption) (res *pagination.SearchPage[ProductDetail], err error) {
 	var raw *http.Response
+	if !param.IsOmitted(params.XUserID) {
+		opts = append(opts, option.WithHeader("x-user-id", fmt.Sprintf("%v", params.XUserID.Value)))
+	}
 	opts = slices.Concat(r.options, opts)
 	opts = append([]option.RequestOption{option.WithResponseInto(&raw)}, opts...)
 	path := "v1/browse"
-	cfg, err := requestconfig.NewRequestConfig(ctx, http.MethodPost, path, body, &res, opts...)
+	cfg, err := requestconfig.NewRequestConfig(ctx, http.MethodPost, path, params, &res, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -83,11 +86,8 @@ func (r *ProductService) Browse(ctx context.Context, body ProductBrowseParams, o
 //
 // At least one of `filters.brand_ids`, `filters.category_ids`, or
 // `filters.website_ids` must be provided.
-//
-// Access to this endpoint is restricted. If you think your use-case requires it,
-// please contact us.
-func (r *ProductService) BrowseAutoPaging(ctx context.Context, body ProductBrowseParams, opts ...option.RequestOption) *pagination.SearchPageAutoPager[ProductDetail] {
-	return pagination.NewSearchPageAutoPager(r.Browse(ctx, body, opts...))
+func (r *ProductService) BrowseAutoPaging(ctx context.Context, params ProductBrowseParams, opts ...option.RequestOption) *pagination.SearchPageAutoPager[ProductDetail] {
+	return pagination.NewSearchPageAutoPager(r.Browse(ctx, params, opts...))
 }
 
 // Find products similar to a given product.
@@ -95,12 +95,15 @@ func (r *ProductService) BrowseAutoPaging(ctx context.Context, body ProductBrows
 // Consider setting `filters` to narrow results to the same gender, brand,
 // category, price range, etc. when you only want similar items within a specific
 // slice of the catalog.
-func (r *ProductService) FindSimilar(ctx context.Context, body ProductFindSimilarParams, opts ...option.RequestOption) (res *pagination.SearchPage[ProductDetail], err error) {
+func (r *ProductService) FindSimilar(ctx context.Context, params ProductFindSimilarParams, opts ...option.RequestOption) (res *pagination.SearchPage[ProductDetail], err error) {
 	var raw *http.Response
+	if !param.IsOmitted(params.XUserID) {
+		opts = append(opts, option.WithHeader("x-user-id", fmt.Sprintf("%v", params.XUserID.Value)))
+	}
 	opts = slices.Concat(r.options, opts)
 	opts = append([]option.RequestOption{option.WithResponseInto(&raw)}, opts...)
 	path := "v1/similar"
-	cfg, err := requestconfig.NewRequestConfig(ctx, http.MethodPost, path, body, &res, opts...)
+	cfg, err := requestconfig.NewRequestConfig(ctx, http.MethodPost, path, params, &res, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -117,18 +120,21 @@ func (r *ProductService) FindSimilar(ctx context.Context, body ProductFindSimila
 // Consider setting `filters` to narrow results to the same gender, brand,
 // category, price range, etc. when you only want similar items within a specific
 // slice of the catalog.
-func (r *ProductService) FindSimilarAutoPaging(ctx context.Context, body ProductFindSimilarParams, opts ...option.RequestOption) *pagination.SearchPageAutoPager[ProductDetail] {
-	return pagination.NewSearchPageAutoPager(r.FindSimilar(ctx, body, opts...))
+func (r *ProductService) FindSimilarAutoPaging(ctx context.Context, params ProductFindSimilarParams, opts ...option.RequestOption) *pagination.SearchPageAutoPager[ProductDetail] {
+	return pagination.NewSearchPageAutoPager(r.FindSimilar(ctx, params, opts...))
 }
 
 // Retrieve product information for any supported product URL.
 //
 // Returns the same Product model as GET /v1/products/{product_id}. The product_id
 // in the response can be used with the Product Detail endpoint.
-func (r *ProductService) Lookup(ctx context.Context, body ProductLookupParams, opts ...option.RequestOption) (res *LookupResponse, err error) {
+func (r *ProductService) Lookup(ctx context.Context, params ProductLookupParams, opts ...option.RequestOption) (res *LookupResponse, err error) {
+	if !param.IsOmitted(params.XUserID) {
+		opts = append(opts, option.WithHeader("x-user-id", fmt.Sprintf("%v", params.XUserID.Value)))
+	}
 	opts = slices.Concat(r.options, opts)
 	path := "v1/lookup"
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, body, &res, opts...)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, params, &res, opts...)
 	return res, err
 }
 
@@ -137,10 +143,13 @@ func (r *ProductService) Lookup(ctx context.Context, body ProductLookupParams, o
 // Access to this endpoint is restricted. If you think your use-case requires it,
 // please contact us. Usually, developers actually want search. This is helpful for
 // migrating to Channel3.
-func (r *ProductService) Monetize(ctx context.Context, body ProductMonetizeParams, opts ...option.RequestOption) (res *MonetizeResponse, err error) {
+func (r *ProductService) Monetize(ctx context.Context, params ProductMonetizeParams, opts ...option.RequestOption) (res *MonetizeResponse, err error) {
+	if !param.IsOmitted(params.XUserID) {
+		opts = append(opts, option.WithHeader("x-user-id", fmt.Sprintf("%v", params.XUserID.Value)))
+	}
 	opts = slices.Concat(r.options, opts)
 	path := "v1/monetize"
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, body, &res, opts...)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, params, &res, opts...)
 	return res, err
 }
 
@@ -148,12 +157,15 @@ func (r *ProductService) Monetize(ctx context.Context, body ProductMonetizeParam
 //
 // At least one of `query`, `image_url`, `base64_image`, or `page_token` must be
 // provided; requests with none of these will return 422.
-func (r *ProductService) Search(ctx context.Context, body ProductSearchParams, opts ...option.RequestOption) (res *pagination.SearchPage[ProductDetail], err error) {
+func (r *ProductService) Search(ctx context.Context, params ProductSearchParams, opts ...option.RequestOption) (res *pagination.SearchPage[ProductDetail], err error) {
 	var raw *http.Response
+	if !param.IsOmitted(params.XUserID) {
+		opts = append(opts, option.WithHeader("x-user-id", fmt.Sprintf("%v", params.XUserID.Value)))
+	}
 	opts = slices.Concat(r.options, opts)
 	opts = append([]option.RequestOption{option.WithResponseInto(&raw)}, opts...)
 	path := "v1/search"
-	cfg, err := requestconfig.NewRequestConfig(ctx, http.MethodPost, path, body, &res, opts...)
+	cfg, err := requestconfig.NewRequestConfig(ctx, http.MethodPost, path, params, &res, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -169,20 +181,23 @@ func (r *ProductService) Search(ctx context.Context, body ProductSearchParams, o
 //
 // At least one of `query`, `image_url`, `base64_image`, or `page_token` must be
 // provided; requests with none of these will return 422.
-func (r *ProductService) SearchAutoPaging(ctx context.Context, body ProductSearchParams, opts ...option.RequestOption) *pagination.SearchPageAutoPager[ProductDetail] {
-	return pagination.NewSearchPageAutoPager(r.Search(ctx, body, opts...))
+func (r *ProductService) SearchAutoPaging(ctx context.Context, params ProductSearchParams, opts ...option.RequestOption) *pagination.SearchPageAutoPager[ProductDetail] {
+	return pagination.NewSearchPageAutoPager(r.Search(ctx, params, opts...))
 }
 
 // Search the catalog by image (URL or base64), with pagination support.
 //
 // Provide exactly one of `image_url` or `base64_image`. For text or text+image
 // search, use `POST /v1/search`.
-func (r *ProductService) SearchByImage(ctx context.Context, body ProductSearchByImageParams, opts ...option.RequestOption) (res *pagination.SearchPage[ProductDetail], err error) {
+func (r *ProductService) SearchByImage(ctx context.Context, params ProductSearchByImageParams, opts ...option.RequestOption) (res *pagination.SearchPage[ProductDetail], err error) {
 	var raw *http.Response
+	if !param.IsOmitted(params.XUserID) {
+		opts = append(opts, option.WithHeader("x-user-id", fmt.Sprintf("%v", params.XUserID.Value)))
+	}
 	opts = slices.Concat(r.options, opts)
 	opts = append([]option.RequestOption{option.WithResponseInto(&raw)}, opts...)
 	path := "v1/image-search"
-	cfg, err := requestconfig.NewRequestConfig(ctx, http.MethodPost, path, body, &res, opts...)
+	cfg, err := requestconfig.NewRequestConfig(ctx, http.MethodPost, path, params, &res, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -198,8 +213,8 @@ func (r *ProductService) SearchByImage(ctx context.Context, body ProductSearchBy
 //
 // Provide exactly one of `image_url` or `base64_image`. For text or text+image
 // search, use `POST /v1/search`.
-func (r *ProductService) SearchByImageAutoPaging(ctx context.Context, body ProductSearchByImageParams, opts ...option.RequestOption) *pagination.SearchPageAutoPager[ProductDetail] {
-	return pagination.NewSearchPageAutoPager(r.SearchByImage(ctx, body, opts...))
+func (r *ProductService) SearchByImageAutoPaging(ctx context.Context, params ProductSearchByImageParams, opts ...option.RequestOption) *pagination.SearchPageAutoPager[ProductDetail] {
+	return pagination.NewSearchPageAutoPager(r.SearchByImage(ctx, params, opts...))
 }
 
 type AvailabilityStatus string
@@ -976,6 +991,9 @@ func (r *SimilarProductsRequestParam) UnmarshalJSON(data []byte) error {
 }
 
 type ProductGetParams struct {
+	// Optional user identifier to attribute clicks and sales to a user in your system.
+	// Channel3 appends it to buy URLs in the response.
+	XUserID param.Opt[string] `header:"x-user-id,omitzero" json:"-"`
 	// ISO 3166-1 alpha-2 country code. Matches any country when unset; defaults to
 	// 'US' only when language and currency are also unset.
 	//
@@ -1103,6 +1121,9 @@ const (
 type ProductBrowseParams struct {
 	// Filter-driven product listing with pagination (no free-text query).
 	BrowseRequest BrowseRequestParam
+	// Optional user identifier to attribute clicks and sales to a user in your system.
+	// Channel3 appends it to buy URLs in the response.
+	XUserID param.Opt[string] `header:"x-user-id,omitzero" json:"-"`
 	paramObj
 }
 
@@ -1116,6 +1137,9 @@ func (r *ProductBrowseParams) UnmarshalJSON(data []byte) error {
 type ProductFindSimilarParams struct {
 	// Find products similar to a given product.
 	SimilarProductsRequest SimilarProductsRequestParam
+	// Optional user identifier to attribute clicks and sales to a user in your system.
+	// Channel3 appends it to buy URLs in the response.
+	XUserID param.Opt[string] `header:"x-user-id,omitzero" json:"-"`
 	paramObj
 }
 
@@ -1128,6 +1152,9 @@ func (r *ProductFindSimilarParams) UnmarshalJSON(data []byte) error {
 
 type ProductLookupParams struct {
 	LookupRequest LookupRequestParam
+	// Optional user identifier to attribute clicks and sales to a user in your system.
+	// Channel3 appends it to buy URLs in the response.
+	XUserID param.Opt[string] `header:"x-user-id,omitzero" json:"-"`
 	paramObj
 }
 
@@ -1140,6 +1167,9 @@ func (r *ProductLookupParams) UnmarshalJSON(data []byte) error {
 
 type ProductMonetizeParams struct {
 	MonetizeRequest MonetizeRequestParam
+	// Optional user identifier to attribute clicks and sales to a user in your system.
+	// Channel3 appends it to buy URLs in the response.
+	XUserID param.Opt[string] `header:"x-user-id,omitzero" json:"-"`
 	paramObj
 }
 
@@ -1153,6 +1183,9 @@ func (r *ProductMonetizeParams) UnmarshalJSON(data []byte) error {
 type ProductSearchParams struct {
 	// Search request with pagination support.
 	SearchRequest SearchRequestParam
+	// Optional user identifier to attribute clicks and sales to a user in your system.
+	// Channel3 appends it to buy URLs in the response.
+	XUserID param.Opt[string] `header:"x-user-id,omitzero" json:"-"`
 	paramObj
 }
 
@@ -1166,6 +1199,9 @@ func (r *ProductSearchParams) UnmarshalJSON(data []byte) error {
 type ProductSearchByImageParams struct {
 	// Image-only search request.
 	ImageSearchRequest ImageSearchRequestParam
+	// Optional user identifier to attribute clicks and sales to a user in your system.
+	// Channel3 appends it to buy URLs in the response.
+	XUserID param.Opt[string] `header:"x-user-id,omitzero" json:"-"`
 	paramObj
 }
 

@@ -4,6 +4,7 @@ package channel3go
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"slices"
 
@@ -45,10 +46,13 @@ func NewSearchService(opts ...option.RequestOption) (r SearchService) {
 //
 // Deprecated: use `products.search` instead, which auto-paginates; will be removed
 // in the next major version
-func (r *SearchService) Perform(ctx context.Context, body SearchPerformParams, opts ...option.RequestOption) (res *SearchResponse, err error) {
+func (r *SearchService) Perform(ctx context.Context, params SearchPerformParams, opts ...option.RequestOption) (res *SearchResponse, err error) {
+	if !param.IsOmitted(params.XUserID) {
+		opts = append(opts, option.WithHeader("x-user-id", fmt.Sprintf("%v", params.XUserID.Value)))
+	}
 	opts = slices.Concat(r.options, opts)
 	path := "v1/search"
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, body, &res, opts...)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, params, &res, opts...)
 	return res, err
 }
 
@@ -243,12 +247,16 @@ type SearchFiltersParam struct {
 	CategoryIDs []string `json:"category_ids,omitzero"`
 	// [Beta] Color filter wrapper. Holds required colors and optional match mode.
 	Colors SearchFiltersColorsParam `json:"colors,omitzero"`
-	// Filter by offer condition. Requires at least one offer matching the requested
-	// condition, locale, and any price filter. Offers without condition data are
-	// indexed as new.
+	// Filter by a single offer condition. Prefer `conditions` when multiple values
+	// should match (OR).
 	//
 	// Any of "new", "refurbished", "used".
 	Condition SearchFiltersCondition `json:"condition,omitzero"`
+	// Filter by any of these offer conditions (OR). Takes precedence over `condition`
+	// when set.
+	//
+	// Any of "new", "refurbished", "used".
+	Conditions []string `json:"conditions,omitzero"`
 	// Physical-dimension range filters, matched against the same offer.
 	//
 	// Matching products have at least one offer satisfying every provided range
@@ -335,9 +343,8 @@ func (r *SearchFiltersColorsPaletteParam) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-// Filter by offer condition. Requires at least one offer matching the requested
-// condition, locale, and any price filter. Offers without condition data are
-// indexed as new.
+// Filter by a single offer condition. Prefer `conditions` when multiple values
+// should match (OR).
 type SearchFiltersCondition string
 
 const (
@@ -547,6 +554,9 @@ func (r *SearchResponse) UnmarshalJSON(data []byte) error {
 type SearchPerformParams struct {
 	// Search request with pagination support.
 	SearchRequest SearchRequestParam
+	// Optional user identifier to attribute clicks and sales to a user in your system.
+	// Channel3 appends it to buy URLs in the response.
+	XUserID param.Opt[string] `header:"x-user-id,omitzero" json:"-"`
 	paramObj
 }
 

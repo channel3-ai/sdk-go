@@ -80,6 +80,8 @@ type Click struct {
 	Country string `json:"country" api:"nullable"`
 	// Compact product reference on click/transaction items.
 	Product ReportingProduct `json:"product" api:"nullable"`
+	// Partner-supplied user identifier from the buy URL, if provided.
+	UserID string `json:"user_id" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		ID          respjson.Field
@@ -87,6 +89,7 @@ type Click struct {
 		City        respjson.Field
 		Country     respjson.Field
 		Product     respjson.Field
+		UserID      respjson.Field
 		ExtraFields map[string]respjson.Field
 		raw         string
 	} `json:"-"`
@@ -163,6 +166,8 @@ type ReportingClickListParams struct {
 	// 2026-08-01T00:00:00-04:00). Offset-aware values are converted to UTC; naive
 	// values are treated as UTC.
 	StartDate param.Opt[time.Time] `query:"start_date,omitzero" format:"date-time" json:"-"`
+	// Filter results to clicks or transactions for this user.
+	UserID param.Opt[string] `query:"user_id,omitzero" json:"-"`
 	// Items per page (max 100).
 	Limit param.Opt[int64] `query:"limit,omitzero" json:"-"`
 	// Page number (1-indexed).

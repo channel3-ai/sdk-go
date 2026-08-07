@@ -53,7 +53,8 @@ func TestSearchPerformWithOptionalParams(t *testing.T) {
 					}},
 					Match: "strict",
 				},
-				Condition: channel3go.SearchFiltersConditionNew,
+				Condition:  channel3go.SearchFiltersConditionNew,
+				Conditions: []string{"new"},
 				Dimensions: channel3go.SearchFiltersDimensionsParam{
 					Height: channel3go.SearchFiltersDimensionsHeightParam{
 						Unit: "mm",
@@ -92,6 +93,7 @@ func TestSearchPerformWithOptionalParams(t *testing.T) {
 			PageToken: channel3go.String("page_token"),
 			Query:     channel3go.String("query"),
 		},
+		XUserID: channel3go.String("x-user-id"),
 	})
 	if err != nil {
 		var apierr *channel3go.Error
