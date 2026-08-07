@@ -36,6 +36,7 @@ func TestProductGetWithOptionalParams(t *testing.T) {
 			LengthUnit: channel3go.ProductGetParamsLengthUnitMm,
 			WebsiteIDs: []string{"string"},
 			WeightUnit: channel3go.ProductGetParamsWeightUnitMg,
+			XUserID:    channel3go.String("x-user-id"),
 		},
 	)
 	if err != nil {
@@ -77,7 +78,8 @@ func TestProductBrowseWithOptionalParams(t *testing.T) {
 					}},
 					Match: "strict",
 				},
-				Condition: channel3go.SearchFiltersConditionNew,
+				Condition:  channel3go.SearchFiltersConditionNew,
+				Conditions: []string{"new"},
 				Dimensions: channel3go.SearchFiltersDimensionsParam{
 					Height: channel3go.SearchFiltersDimensionsHeightParam{
 						Unit: "mm",
@@ -114,6 +116,7 @@ func TestProductBrowseWithOptionalParams(t *testing.T) {
 			Limit:     channel3go.Int(1),
 			PageToken: channel3go.String("page_token"),
 		},
+		XUserID: channel3go.String("x-user-id"),
 	})
 	if err != nil {
 		var apierr *channel3go.Error
@@ -162,7 +165,8 @@ func TestProductFindSimilarWithOptionalParams(t *testing.T) {
 					}},
 					Match: "strict",
 				},
-				Condition: channel3go.SearchFiltersConditionNew,
+				Condition:  channel3go.SearchFiltersConditionNew,
+				Conditions: []string{"new"},
 				Dimensions: channel3go.SearchFiltersDimensionsParam{
 					Height: channel3go.SearchFiltersDimensionsHeightParam{
 						Unit: "mm",
@@ -199,6 +203,7 @@ func TestProductFindSimilarWithOptionalParams(t *testing.T) {
 			Limit:     channel3go.Int(1),
 			PageToken: channel3go.String("page_token"),
 		},
+		XUserID: channel3go.String("x-user-id"),
 	})
 	if err != nil {
 		var apierr *channel3go.Error
@@ -227,6 +232,7 @@ func TestProductLookupWithOptionalParams(t *testing.T) {
 			URL:               "url",
 			MaxStalenessHours: channel3go.Int(1),
 		},
+		XUserID: channel3go.String("x-user-id"),
 	})
 	if err != nil {
 		var apierr *channel3go.Error
@@ -237,7 +243,7 @@ func TestProductLookupWithOptionalParams(t *testing.T) {
 	}
 }
 
-func TestProductMonetize(t *testing.T) {
+func TestProductMonetizeWithOptionalParams(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
@@ -254,6 +260,7 @@ func TestProductMonetize(t *testing.T) {
 		MonetizeRequest: channel3go.MonetizeRequestParam{
 			URL: "url",
 		},
+		XUserID: channel3go.String("x-user-id"),
 	})
 	if err != nil {
 		var apierr *channel3go.Error
@@ -304,7 +311,8 @@ func TestProductSearchWithOptionalParams(t *testing.T) {
 					}},
 					Match: "strict",
 				},
-				Condition: channel3go.SearchFiltersConditionNew,
+				Condition:  channel3go.SearchFiltersConditionNew,
+				Conditions: []string{"new"},
 				Dimensions: channel3go.SearchFiltersDimensionsParam{
 					Height: channel3go.SearchFiltersDimensionsHeightParam{
 						Unit: "mm",
@@ -343,6 +351,7 @@ func TestProductSearchWithOptionalParams(t *testing.T) {
 			PageToken: channel3go.String("page_token"),
 			Query:     channel3go.String("query"),
 		},
+		XUserID: channel3go.String("x-user-id"),
 	})
 	if err != nil {
 		var apierr *channel3go.Error
@@ -391,7 +400,8 @@ func TestProductSearchByImageWithOptionalParams(t *testing.T) {
 					}},
 					Match: "strict",
 				},
-				Condition: channel3go.SearchFiltersConditionNew,
+				Condition:  channel3go.SearchFiltersConditionNew,
+				Conditions: []string{"new"},
 				Dimensions: channel3go.SearchFiltersDimensionsParam{
 					Height: channel3go.SearchFiltersDimensionsHeightParam{
 						Unit: "mm",
@@ -430,6 +440,7 @@ func TestProductSearchByImageWithOptionalParams(t *testing.T) {
 			PageToken: channel3go.String("page_token"),
 			Segment:   channel3go.String("segment"),
 		},
+		XUserID: channel3go.String("x-user-id"),
 	})
 	if err != nil {
 		var apierr *channel3go.Error

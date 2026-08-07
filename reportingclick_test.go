@@ -32,6 +32,7 @@ func TestReportingClickListWithOptionalParams(t *testing.T) {
 		Limit:     channel3go.Int(1),
 		Page:      channel3go.Int(1),
 		StartDate: channel3go.Time(time.Now()),
+		UserID:    channel3go.String("user_id"),
 	})
 	if err != nil {
 		var apierr *channel3go.Error
