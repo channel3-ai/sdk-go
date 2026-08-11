@@ -58,23 +58,16 @@ func (r *SearchService) Perform(ctx context.Context, params SearchPerformParams,
 
 // Search and locale options for a search request.
 type SearchConfigParam struct {
-	// Deprecated: use `mode`. `true` is equivalent to `mode=keyword`.
-	//
-	// Deprecated: deprecated
-	KeywordSearchOnly param.Opt[bool] `json:"keyword_search_only,omitzero"`
-	// ISO 3166-1 alpha-2 country code. May stay unset for pan-region storefronts (e.g.
-	// `currency=EUR` with no specific country).
+	// ISO 3166-1 alpha-2 country code (plus the pan-region `EU`).
 	//
 	// Any of "US", "GB", "EU", "AU", "CA", "IE", "DE", "AT", "FR", "BE", "IT", "ES",
 	// "NL", "SE", "FI", "PT", "CZ", "GR", "RO".
 	Country SearchConfigCountry `json:"country,omitzero"`
-	// ISO 4217 currency code. When unset, inferred from `country` (e.g. `GB` → `GBP`),
-	// defaulting to `USD`.
+	// ISO 4217 currency code.
 	//
 	// Any of "USD", "CAD", "AUD", "GBP", "EUR", "SEK", "CZK", "RON".
 	Currency SearchConfigCurrency `json:"currency,omitzero"`
-	// ISO 639-1 language code. When unset, inferred from `country` (preferred) then
-	// `currency`, defaulting to `en`.
+	// ISO 639-1 language code.
 	//
 	// Any of "en", "de", "fr", "it", "es", "nl", "sv", "fi", "pt", "cs", "el", "ro".
 	Language SearchConfigLanguage `json:"language,omitzero"`
@@ -109,8 +102,7 @@ func (r *SearchConfigParam) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-// ISO 3166-1 alpha-2 country code. May stay unset for pan-region storefronts (e.g.
-// `currency=EUR` with no specific country).
+// ISO 3166-1 alpha-2 country code (plus the pan-region `EU`).
 type SearchConfigCountry string
 
 const (
@@ -135,8 +127,7 @@ const (
 	SearchConfigCountryRo SearchConfigCountry = "RO"
 )
 
-// ISO 4217 currency code. When unset, inferred from `country` (e.g. `GB` → `GBP`),
-// defaulting to `USD`.
+// ISO 4217 currency code.
 type SearchConfigCurrency string
 
 const (
@@ -150,8 +141,7 @@ const (
 	SearchConfigCurrencyRon SearchConfigCurrency = "RON"
 )
 
-// ISO 639-1 language code. When unset, inferred from `country` (preferred) then
-// `currency`, defaulting to `en`.
+// ISO 639-1 language code.
 type SearchConfigLanguage string
 
 const (
@@ -238,8 +228,6 @@ type SearchFiltersParam struct {
 	// attributes of at least one of the requested categories. See
 	// `Category.attributes` for the valid keys/values per category.
 	Attributes map[string][]string `json:"attributes,omitzero"`
-	// If provided, only products with these availability statuses will be returned
-	Availability []AvailabilityStatus `json:"availability,omitzero"`
 	// If provided, only products from these brands will be returned
 	BrandIDs []string `json:"brand_ids,omitzero"`
 	// If provided, only products from these categories will be returned. Accepts
@@ -247,16 +235,6 @@ type SearchFiltersParam struct {
 	CategoryIDs []string `json:"category_ids,omitzero"`
 	// [Beta] Color filter wrapper. Holds required colors and optional match mode.
 	Colors SearchFiltersColorsParam `json:"colors,omitzero"`
-	// Filter by a single offer condition. Prefer `conditions` when multiple values
-	// should match (OR).
-	//
-	// Any of "new", "refurbished", "used".
-	Condition SearchFiltersCondition `json:"condition,omitzero"`
-	// Filter by any of these offer conditions (OR). Takes precedence over `condition`
-	// when set.
-	//
-	// Any of "new", "refurbished", "used".
-	Conditions []string `json:"conditions,omitzero"`
 	// Physical-dimension range filters, matched against the same offer.
 	//
 	// Matching products have at least one offer satisfying every provided range
@@ -274,6 +252,8 @@ type SearchFiltersParam struct {
 	// If provided, products from these websites will be excluded from the results.
 	// Accepts website IDs or domains (e.g. "nike.com").
 	ExcludeWebsiteIDs []string `json:"exclude_website_ids,omitzero"`
+	// Product gender. 'unisex' is deprecated: coerced to None on input, never emitted.
+	//
 	// Any of "male", "female".
 	Gender SearchFiltersGender `json:"gender,omitzero"`
 	// If 'on_sale', only products with at least one on-sale offer (priced below its
@@ -284,6 +264,17 @@ type SearchFiltersParam struct {
 	// If provided, only products from these websites will be returned. Accepts website
 	// IDs or domains (e.g. "nike.com").
 	WebsiteIDs []string `json:"website_ids,omitzero"`
+	// Offer availability statuses to match (OR). Defaults to ['InStock']. An offer
+	// with no availability data counts as 'InStock'. Pass every value to disable
+	// availability filtering.
+	//
+	// Any of "InStock", "OutOfStock".
+	Availability []string `json:"availability,omitzero"`
+	// Offer conditions to match (OR). Defaults to ['new'], which also matches offers
+	// whose condition is unknown. Pass every value to disable condition filtering.
+	//
+	// Any of "new", "used".
+	Conditions []string `json:"conditions,omitzero"`
 	// Price filter for search. Values are inclusive.
 	Price SearchFilterPriceParam `json:"price,omitzero"`
 	paramObj
@@ -342,16 +333,6 @@ func (r SearchFiltersColorsPaletteParam) MarshalJSON() (data []byte, err error) 
 func (r *SearchFiltersColorsPaletteParam) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
-
-// Filter by a single offer condition. Prefer `conditions` when multiple values
-// should match (OR).
-type SearchFiltersCondition string
-
-const (
-	SearchFiltersConditionNew         SearchFiltersCondition = "new"
-	SearchFiltersConditionRefurbished SearchFiltersCondition = "refurbished"
-	SearchFiltersConditionUsed        SearchFiltersCondition = "used"
-)
 
 // Physical-dimension range filters, matched against the same offer.
 //
@@ -485,6 +466,7 @@ func init() {
 	)
 }
 
+// Product gender. 'unisex' is deprecated: coerced to None on input, never emitted.
 type SearchFiltersGender string
 
 const (
