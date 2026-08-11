@@ -73,17 +73,6 @@ func (r *BrandService) ListAutoPaging(ctx context.Context, query BrandListParams
 	return pagination.NewCursorPageAutoPager(r.List(ctx, query, opts...))
 }
 
-// Find a brand by name.
-//
-// Deprecated: use `search` (returns a list) instead; will be removed in the next
-// major version
-func (r *BrandService) Find(ctx context.Context, query BrandFindParams, opts ...option.RequestOption) (res *Brand, err error) {
-	opts = slices.Concat(r.options, opts)
-	path := "v0/brands"
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, query, &res, opts...)
-	return res, err
-}
-
 // Search brands by free-text query.
 func (r *BrandService) Search(ctx context.Context, query BrandSearchParams, opts ...option.RequestOption) (res *SearchBrandsResponse, err error) {
 	opts = slices.Concat(r.options, opts)
@@ -226,19 +215,6 @@ const (
 	BrandListParamsCountryGr BrandListParamsCountry = "GR"
 	BrandListParamsCountryRo BrandListParamsCountry = "RO"
 )
-
-type BrandFindParams struct {
-	Query string `query:"query" api:"required" json:"-"`
-	paramObj
-}
-
-// URLQuery serializes [BrandFindParams]'s query parameters as `url.Values`.
-func (r BrandFindParams) URLQuery() (v url.Values, err error) {
-	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
-		ArrayFormat:  apiquery.ArrayQueryFormatComma,
-		NestedFormat: apiquery.NestedQueryFormatBrackets,
-	})
-}
 
 type BrandSearchParams struct {
 	// Free-text query (e.g. 'Nike', 'lululemon').

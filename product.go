@@ -217,19 +217,6 @@ func (r *ProductService) SearchByImageAutoPaging(ctx context.Context, params Pro
 	return pagination.NewSearchPageAutoPager(r.SearchByImage(ctx, params, opts...))
 }
 
-type AvailabilityStatus string
-
-const (
-	AvailabilityStatusInStock             AvailabilityStatus = "InStock"
-	AvailabilityStatusLimitedAvailability AvailabilityStatus = "LimitedAvailability"
-	AvailabilityStatusPreOrder            AvailabilityStatus = "PreOrder"
-	AvailabilityStatusBackOrder           AvailabilityStatus = "BackOrder"
-	AvailabilityStatusSoldOut             AvailabilityStatus = "SoldOut"
-	AvailabilityStatusOutOfStock          AvailabilityStatus = "OutOfStock"
-	AvailabilityStatusDiscontinued        AvailabilityStatus = "Discontinued"
-	AvailabilityStatusUnknown             AvailabilityStatus = "Unknown"
-)
-
 // Filter-driven product listing with pagination (no free-text query).
 type BrowseRequestParam struct {
 	// Optional limit on the number of results. Default is 20, max is 30.
@@ -286,19 +273,16 @@ func (r *ImageSearchRequestParam) UnmarshalJSON(data []byte) error {
 // Locale fields are optional; the server infers missing values. Details are on
 // `language`, `country`, and `currency` below.
 type LocaleConfigParam struct {
-	// ISO 3166-1 alpha-2 country code. May stay unset for pan-region storefronts (e.g.
-	// `currency=EUR` with no specific country).
+	// ISO 3166-1 alpha-2 country code (plus the pan-region `EU`).
 	//
 	// Any of "US", "GB", "EU", "AU", "CA", "IE", "DE", "AT", "FR", "BE", "IT", "ES",
 	// "NL", "SE", "FI", "PT", "CZ", "GR", "RO".
 	Country LocaleConfigCountry `json:"country,omitzero"`
-	// ISO 4217 currency code. When unset, inferred from `country` (e.g. `GB` → `GBP`),
-	// defaulting to `USD`.
+	// ISO 4217 currency code.
 	//
 	// Any of "USD", "CAD", "AUD", "GBP", "EUR", "SEK", "CZK", "RON".
 	Currency LocaleConfigCurrency `json:"currency,omitzero"`
-	// ISO 639-1 language code. When unset, inferred from `country` (preferred) then
-	// `currency`, defaulting to `en`.
+	// ISO 639-1 language code.
 	//
 	// Any of "en", "de", "fr", "it", "es", "nl", "sv", "fi", "pt", "cs", "el", "ro".
 	Language LocaleConfigLanguage `json:"language,omitzero"`
@@ -325,8 +309,7 @@ func (r *LocaleConfigParam) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-// ISO 3166-1 alpha-2 country code. May stay unset for pan-region storefronts (e.g.
-// `currency=EUR` with no specific country).
+// ISO 3166-1 alpha-2 country code (plus the pan-region `EU`).
 type LocaleConfigCountry string
 
 const (
@@ -351,8 +334,7 @@ const (
 	LocaleConfigCountryRo LocaleConfigCountry = "RO"
 )
 
-// ISO 4217 currency code. When unset, inferred from `country` (e.g. `GB` → `GBP`),
-// defaulting to `USD`.
+// ISO 4217 currency code.
 type LocaleConfigCurrency string
 
 const (
@@ -366,8 +348,7 @@ const (
 	LocaleConfigCurrencyRon LocaleConfigCurrency = "RON"
 )
 
-// ISO 639-1 language code. When unset, inferred from `country` (preferred) then
-// `currency`, defaulting to `en`.
+// ISO 639-1 language code.
 type LocaleConfigLanguage string
 
 const (
@@ -556,12 +537,12 @@ type ProductDetail struct {
 	Age ProductDetailAge `json:"age" api:"nullable"`
 	// Ordered list of brands.
 	Brands []ProductBrand `json:"brands"`
-	// Deprecated: deprecated
-	Categories []string `json:"categories"`
 	// Lean category representation used in search hits and list rows.
 	Category    CategorySummary `json:"category" api:"nullable"`
 	Description string          `json:"description" api:"nullable"`
-	// Any of "male", "female", "unisex".
+	// Product gender. 'unisex' is deprecated: coerced to None on input, never emitted.
+	//
+	// Any of "male", "female".
 	Gender      ProductDetailGender `json:"gender" api:"nullable"`
 	Images      []ProductImage      `json:"images"`
 	KeyFeatures []string            `json:"key_features" api:"nullable"`
@@ -584,7 +565,6 @@ type ProductDetail struct {
 		Title                respjson.Field
 		Age                  respjson.Field
 		Brands               respjson.Field
-		Categories           respjson.Field
 		Category             respjson.Field
 		Description          respjson.Field
 		Gender               respjson.Field
@@ -616,12 +596,12 @@ const (
 	ProductDetailAgeAdult   ProductDetailAge = "adult"
 )
 
+// Product gender. 'unisex' is deprecated: coerced to None on input, never emitted.
 type ProductDetailGender string
 
 const (
 	ProductDetailGenderMale   ProductDetailGender = "male"
 	ProductDetailGenderFemale ProductDetailGender = "female"
-	ProductDetailGenderUnisex ProductDetailGender = "unisex"
 )
 
 // Wrapper for variant-interaction state on a Product.
@@ -676,12 +656,13 @@ type ProductDetailVariantsOptionValue struct {
 	Exists bool `json:"exists" api:"required"`
 	// The display value of the option value (e.g. 'Blue')
 	Label string `json:"label" api:"required"`
-	// The availability status of the option value. None when returned on search
-	// results, hydrated only on get product detail requests.
+	// The two availability values the public API emits on offers.
 	//
-	// Any of "InStock", "LimitedAvailability", "PreOrder", "BackOrder", "SoldOut",
-	// "OutOfStock", "Discontinued", "Unknown".
-	Available AvailabilityStatus `json:"available" api:"nullable"`
+	// Internal `AvailabilityStatus` values are collapsed to these via
+	// `AvailabilityStatus.to_api()`.
+	//
+	// Any of "InStock", "OutOfStock".
+	Available string `json:"available" api:"nullable"`
 	// The product id that represents this value. Variants that point to different
 	// products will have this field set, as well as thumbnail_url for displaying
 	// selector icons.
@@ -735,13 +716,8 @@ type ProductImage struct {
 	AltText string `json:"alt_text" api:"nullable"`
 	// Background-removed square image on Channel3 CDN when available. Use for product
 	// grids; `url` is the regular hosted shot.
-	CleanedURL string `json:"cleaned_url" api:"nullable"`
-	// Deprecated: always `false`. Use `cleaned_url` for product grids when set;
-	// otherwise `url`.
-	//
-	// Deprecated: deprecated
-	IsCleanedImage bool `json:"is_cleaned_image"`
-	IsMainImage    bool `json:"is_main_image"`
+	CleanedURL  string `json:"cleaned_url" api:"nullable"`
+	IsMainImage bool   `json:"is_main_image"`
 	// Product image type classification for API responses.
 	//
 	// Any of "hero", "lifestyle", "on_model", "detail", "scale_reference",
@@ -750,14 +726,13 @@ type ProductImage struct {
 	ShotType ProductImageShotType `json:"shot_type" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
-		URL            respjson.Field
-		AltText        respjson.Field
-		CleanedURL     respjson.Field
-		IsCleanedImage respjson.Field
-		IsMainImage    respjson.Field
-		ShotType       respjson.Field
-		ExtraFields    map[string]respjson.Field
-		raw            string
+		URL         respjson.Field
+		AltText     respjson.Field
+		CleanedURL  respjson.Field
+		IsMainImage respjson.Field
+		ShotType    respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
 	} `json:"-"`
 }
 
@@ -786,15 +761,20 @@ const (
 )
 
 type ProductOffer struct {
+	// The two availability values the public API emits on offers.
+	//
+	// Internal `AvailabilityStatus` values are collapsed to these via
+	// `AvailabilityStatus.to_api()`.
+	//
 	// Any of "InStock", "OutOfStock".
 	Availability ProductOfferAvailability `json:"availability" api:"required"`
 	Domain       string                   `json:"domain" api:"required"`
 	Price        Price                    `json:"price" api:"required"`
 	URL          string                   `json:"url" api:"required"`
-	// Condition of this merchant offer (new, used, or refurbished). Null when
-	// condition is unknown.
+	// Offer condition. 'refurbished' is deprecated: rejected as a filter value,
+	// coerced to None on responses.
 	//
-	// Any of "new", "refurbished", "used".
+	// Any of "new", "used".
 	Condition ProductOfferCondition `json:"condition" api:"nullable"`
 	// Physical dimensions of a product offer. Members are null when unknown.
 	//
@@ -825,6 +805,10 @@ func (r *ProductOffer) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
+// The two availability values the public API emits on offers.
+//
+// Internal `AvailabilityStatus` values are collapsed to these via
+// `AvailabilityStatus.to_api()`.
 type ProductOfferAvailability string
 
 const (
@@ -832,14 +816,13 @@ const (
 	ProductOfferAvailabilityOutOfStock ProductOfferAvailability = "OutOfStock"
 )
 
-// Condition of this merchant offer (new, used, or refurbished). Null when
-// condition is unknown.
+// Offer condition. 'refurbished' is deprecated: rejected as a filter value,
+// coerced to None on responses.
 type ProductOfferCondition string
 
 const (
-	ProductOfferConditionNew         ProductOfferCondition = "new"
-	ProductOfferConditionRefurbished ProductOfferCondition = "refurbished"
-	ProductOfferConditionUsed        ProductOfferCondition = "used"
+	ProductOfferConditionNew  ProductOfferCondition = "new"
+	ProductOfferConditionUsed ProductOfferCondition = "used"
 )
 
 // Physical dimensions of a product offer. Members are null when unknown.

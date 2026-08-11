@@ -2,7 +2,6 @@
 
 Params Types:
 
-- <a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go">channel3go</a>.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#AvailabilityStatus">AvailabilityStatus</a>
 - <a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go">channel3go</a>.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#BrowseRequestParam">BrowseRequestParam</a>
 - <a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go">channel3go</a>.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#ImageSearchRequestParam">ImageSearchRequestParam</a>
 - <a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go">channel3go</a>.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#LocaleConfigParam">LocaleConfigParam</a>
@@ -12,7 +11,6 @@ Params Types:
 
 Response Types:
 
-- <a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go">channel3go</a>.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#AvailabilityStatus">AvailabilityStatus</a>
 - <a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go">channel3go</a>.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#LookupResponse">LookupResponse</a>
 - <a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go">channel3go</a>.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#MonetizeOffer">MonetizeOffer</a>
 - <a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go">channel3go</a>.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#MonetizeResponse">MonetizeResponse</a>
@@ -74,7 +72,6 @@ Methods:
 
 - <code title="get /v1/brands/{brand_id}">client.Brands.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#BrandService.Get">Get</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>, brandID <a href="https://pkg.go.dev/builtin#string">string</a>, query <a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go">channel3go</a>.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#BrandGetParams">BrandGetParams</a>) (\*<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go">channel3go</a>.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#Brand">Brand</a>, <a href="https://pkg.go.dev/builtin#error">error</a>)</code>
 - <code title="get /v1/brands">client.Brands.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#BrandService.List">List</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>, query <a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go">channel3go</a>.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#BrandListParams">BrandListParams</a>) (\*<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go/packages/pagination">pagination</a>.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go/packages/pagination#CursorPage">CursorPage</a>[<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go">channel3go</a>.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#Brand">Brand</a>], <a href="https://pkg.go.dev/builtin#error">error</a>)</code>
-- <code title="get /v0/brands">client.Brands.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#BrandService.Find">Find</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>, query <a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go">channel3go</a>.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#BrandFindParams">BrandFindParams</a>) (\*<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go">channel3go</a>.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#Brand">Brand</a>, <a href="https://pkg.go.dev/builtin#error">error</a>)</code>
 - <code title="get /v1/brands/search">client.Brands.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#BrandService.Search">Search</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>, query <a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go">channel3go</a>.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#BrandSearchParams">BrandSearchParams</a>) (\*<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go">channel3go</a>.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#SearchBrandsResponse">SearchBrandsResponse</a>, <a href="https://pkg.go.dev/builtin#error">error</a>)</code>
 
 # Categories
@@ -176,15 +173,3 @@ Methods:
 - <code title="post /v1/search">client.Search.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#SearchService.Perform">Perform</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>, params <a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go">channel3go</a>.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#SearchPerformParams">SearchPerformParams</a>) (\*<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go">channel3go</a>.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#SearchResponse">SearchResponse</a>, <a href="https://pkg.go.dev/builtin#error">error</a>)</code>
 
 # Enrich
-
-Params Types:
-
-- <a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go">channel3go</a>.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#EnrichRequestParam">EnrichRequestParam</a>
-
-Response Types:
-
-- <a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go">channel3go</a>.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#EnrichEnrichURLResponse">EnrichEnrichURLResponse</a>
-
-Methods:
-
-- <code title="post /v0/enrich">client.Enrich.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#EnrichService.EnrichURL">EnrichURL</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>, body <a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go">channel3go</a>.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#EnrichEnrichURLParams">EnrichEnrichURLParams</a>) (\*<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go">channel3go</a>.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#EnrichEnrichURLResponse">EnrichEnrichURLResponse</a>, <a href="https://pkg.go.dev/builtin#error">error</a>)</code>

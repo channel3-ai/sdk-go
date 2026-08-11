@@ -30,20 +30,19 @@ func TestSearchPerformWithOptionalParams(t *testing.T) {
 		SearchRequest: channel3go.SearchRequestParam{
 			Base64Image: channel3go.String("base64_image"),
 			Config: channel3go.SearchConfigParam{
-				Country:           channel3go.SearchConfigCountryUs,
-				Currency:          channel3go.SearchConfigCurrencyUsd,
-				KeywordSearchOnly: channel3go.Bool(true),
-				Language:          channel3go.SearchConfigLanguageEn,
-				LengthUnit:        channel3go.SearchConfigLengthUnitMm,
-				Mode:              channel3go.SearchConfigModeKeyword,
-				WeightUnit:        channel3go.SearchConfigWeightUnitMg,
+				Country:    channel3go.SearchConfigCountryUs,
+				Currency:   channel3go.SearchConfigCurrencyUsd,
+				Language:   channel3go.SearchConfigLanguageEn,
+				LengthUnit: channel3go.SearchConfigLengthUnitMm,
+				Mode:       channel3go.SearchConfigModeKeyword,
+				WeightUnit: channel3go.SearchConfigWeightUnitMg,
 			},
 			Filters: channel3go.SearchFiltersParam{
 				Age: []string{"newborn"},
 				Attributes: map[string][]string{
 					"foo": {"string"},
 				},
-				Availability: []channel3go.AvailabilityStatus{channel3go.AvailabilityStatusInStock},
+				Availability: []string{"InStock"},
 				BrandIDs:     []string{"string"},
 				CategoryIDs:  []string{"string"},
 				Colors: channel3go.SearchFiltersColorsParam{
@@ -53,7 +52,6 @@ func TestSearchPerformWithOptionalParams(t *testing.T) {
 					}},
 					Match: "strict",
 				},
-				Condition:  channel3go.SearchFiltersConditionNew,
 				Conditions: []string{"new"},
 				Dimensions: channel3go.SearchFiltersDimensionsParam{
 					Height: channel3go.SearchFiltersDimensionsHeightParam{
