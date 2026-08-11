@@ -24,6 +24,8 @@ type Client struct {
 	Categories    CategoryService
 	Websites      WebsiteService
 	PriceTracking PriceTrackingService
+	Responses     ResponseService
+	Conversations ConversationService
 	// Deprecated: use `products.search` (or `products.search_by_image` /
 	// `products.find_similar`) instead; this resource will be removed in the next
 	// major version
@@ -88,6 +90,8 @@ func NewClient(opts ...option.RequestOption) (r Client) {
 	r.Categories = NewCategoryService(opts...)
 	r.Websites = NewWebsiteService(opts...)
 	r.PriceTracking = NewPriceTrackingService(opts...)
+	r.Responses = NewResponseService(opts...)
+	r.Conversations = NewConversationService(opts...)
 	r.Search = NewSearchService(opts...)
 	r.Enrich = NewEnrichService(opts...)
 

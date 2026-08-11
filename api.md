@@ -126,6 +126,38 @@ Methods:
 - <code title="post /v0/price-tracking/start">client.PriceTracking.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#PriceTrackingService.Start">Start</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>, body <a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go">channel3go</a>.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#PriceTrackingStartParams">PriceTrackingStartParams</a>) (\*<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go">channel3go</a>.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#Subscription">Subscription</a>, <a href="https://pkg.go.dev/builtin#error">error</a>)</code>
 - <code title="post /v0/price-tracking/stop">client.PriceTracking.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#PriceTrackingService.Stop">Stop</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>, body <a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go">channel3go</a>.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#PriceTrackingStopParams">PriceTrackingStopParams</a>) (\*<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go">channel3go</a>.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#Subscription">Subscription</a>, <a href="https://pkg.go.dev/builtin#error">error</a>)</code>
 
+# Responses
+
+Params Types:
+
+- <a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go">channel3go</a>.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#ChatRequestParam">ChatRequestParam</a>
+
+Methods:
+
+- <code title="post /v1/responses">client.Responses.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#ResponseService.New">New</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>, params <a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go">channel3go</a>.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#ResponseNewParams">ResponseNewParams</a>) (\*<a href="https://pkg.go.dev/builtin#string">string</a>, <a href="https://pkg.go.dev/builtin#error">error</a>)</code>
+
+# Conversations
+
+Params Types:
+
+- <a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go">channel3go</a>.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#ConversationContextParam">ConversationContextParam</a>
+
+Response Types:
+
+- <a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go">channel3go</a>.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#Conversation">Conversation</a>
+- <a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go">channel3go</a>.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#ConversationContext">ConversationContext</a>
+- <a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go">channel3go</a>.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#ConversationItemsResponse">ConversationItemsResponse</a>
+
+Methods:
+
+- <code title="get /v1/conversations/{conversation_id}">client.Conversations.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#ConversationService.Get">Get</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>, conversationID <a href="https://pkg.go.dev/builtin#string">string</a>) (\*<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go">channel3go</a>.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#Conversation">Conversation</a>, <a href="https://pkg.go.dev/builtin#error">error</a>)</code>
+
+## Items
+
+Methods:
+
+- <code title="get /v1/conversations/{conversation_id}/items">client.Conversations.Items.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#ConversationItemService.List">List</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>, conversationID <a href="https://pkg.go.dev/builtin#string">string</a>) (\*<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go">channel3go</a>.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#ConversationItemsResponse">ConversationItemsResponse</a>, <a href="https://pkg.go.dev/builtin#error">error</a>)</code>
+
 # Search
 
 Params Types:
