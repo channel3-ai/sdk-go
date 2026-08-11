@@ -58,7 +58,9 @@ type ChatRequestParam struct {
 	Image          ChatRequestImageParam        `json:"image,omitzero"`
 	Message        ChatRequestMessageParam      `json:"message,omitzero"`
 	// Partner-supplied context pinned to the top of a conversation thread.
-	Context  ConversationContextParam  `json:"context,omitzero"`
+	Context ConversationContextParam `json:"context,omitzero"`
+	// Search filters for the search API.
+	Filters  SearchFiltersParam        `json:"filters,omitzero"`
 	Messages []ChatRequestMessageParam `json:"messages,omitzero"`
 	paramObj
 }
