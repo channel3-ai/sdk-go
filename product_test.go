@@ -68,7 +68,7 @@ func TestProductBrowseWithOptionalParams(t *testing.T) {
 				Attributes: map[string][]string{
 					"foo": {"string"},
 				},
-				Availability: []string{"InStock"},
+				Availability: []channel3go.AvailabilityStatus{channel3go.AvailabilityStatusInStock},
 				BrandIDs:     []string{"string"},
 				CategoryIDs:  []string{"string"},
 				Colors: channel3go.SearchFiltersColorsParam{
@@ -154,7 +154,7 @@ func TestProductFindSimilarWithOptionalParams(t *testing.T) {
 				Attributes: map[string][]string{
 					"foo": {"string"},
 				},
-				Availability: []string{"InStock"},
+				Availability: []channel3go.AvailabilityStatus{channel3go.AvailabilityStatusInStock},
 				BrandIDs:     []string{"string"},
 				CategoryIDs:  []string{"string"},
 				Colors: channel3go.SearchFiltersColorsParam{
@@ -298,7 +298,7 @@ func TestProductSearchWithOptionalParams(t *testing.T) {
 				Attributes: map[string][]string{
 					"foo": {"string"},
 				},
-				Availability: []string{"InStock"},
+				Availability: []channel3go.AvailabilityStatus{channel3go.AvailabilityStatusInStock},
 				BrandIDs:     []string{"string"},
 				CategoryIDs:  []string{"string"},
 				Colors: channel3go.SearchFiltersColorsParam{
@@ -386,7 +386,7 @@ func TestProductSearchByImageWithOptionalParams(t *testing.T) {
 				Attributes: map[string][]string{
 					"foo": {"string"},
 				},
-				Availability: []string{"InStock"},
+				Availability: []channel3go.AvailabilityStatus{channel3go.AvailabilityStatusInStock},
 				BrandIDs:     []string{"string"},
 				CategoryIDs:  []string{"string"},
 				Colors: channel3go.SearchFiltersColorsParam{

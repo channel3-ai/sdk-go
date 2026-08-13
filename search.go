@@ -267,9 +267,7 @@ type SearchFiltersParam struct {
 	// Offer availability statuses to match (OR). Defaults to ['InStock']. An offer
 	// with no availability data counts as 'InStock'. Pass every value to disable
 	// availability filtering.
-	//
-	// Any of "InStock", "OutOfStock".
-	Availability []string `json:"availability,omitzero"`
+	Availability []AvailabilityStatus `json:"availability,omitzero"`
 	// Offer conditions to match (OR). Defaults to ['new'], which also matches offers
 	// whose condition is unknown. Pass every value to disable condition filtering.
 	//

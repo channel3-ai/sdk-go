@@ -27,7 +27,8 @@ import (
 // automatically. You should not instantiate this service directly, and instead use
 // the [NewConversationService] method instead.
 type ConversationService struct {
-	options []option.RequestOption
+	options      []option.RequestOption
+	ClientTokens ConversationClientTokenService
 }
 
 // NewConversationService generates a new service that applies the given options to
@@ -36,6 +37,7 @@ type ConversationService struct {
 func NewConversationService(opts ...option.RequestOption) (r ConversationService) {
 	r = ConversationService{}
 	r.options = opts
+	r.ClientTokens = NewConversationClientTokenService(opts...)
 	return
 }
 
@@ -380,7 +382,8 @@ func (r *ConversationDetailItemUnionParts) UnmarshalJSON(data []byte) error {
 // The property Message is required.
 type CreateTurnRequestParam struct {
 	Message UserMessageParam `json:"message,omitzero" api:"required"`
-	// Existing thread to continue; when omitted, a new thread is created.
+	// Existing thread to continue. When omitted, a new thread is created and its id
+	// returned.
 	ConversationID param.Opt[string] `json:"conversation_id,omitzero"`
 	// Stream turn events over SSE (default) or return the assembled turn as JSON.
 	Stream param.Opt[bool] `json:"stream,omitzero"`
@@ -540,7 +543,7 @@ type ToolPart struct {
 	ToolName   string             `json:"tool_name" api:"required"`
 	Input      ToolPartInputUnion `json:"input"`
 	// Client-facing catalog tool result shown on the stream and on `ToolPart`.
-	Output ToolPartOutputUnion `json:"output"`
+	Output ToolPartOutputUnion `json:"output" api:"nullable"`
 	// Any of "tool".
 	Type ToolPartType `json:"type"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].

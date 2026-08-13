@@ -42,7 +42,7 @@ func TestSearchPerformWithOptionalParams(t *testing.T) {
 				Attributes: map[string][]string{
 					"foo": {"string"},
 				},
-				Availability: []string{"InStock"},
+				Availability: []channel3go.AvailabilityStatus{channel3go.AvailabilityStatusInStock},
 				BrandIDs:     []string{"string"},
 				CategoryIDs:  []string{"string"},
 				Colors: channel3go.SearchFiltersColorsParam{
