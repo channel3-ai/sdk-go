@@ -28,8 +28,7 @@ func TestConversationClientTokenNewWithOptionalParams(t *testing.T) {
 	)
 	_, err := client.Conversations.ClientTokens.New(context.TODO(), channel3go.ConversationClientTokenNewParams{
 		CreateClientTokenRequest: channel3go.CreateClientTokenRequestParam{
-			ConversationID: channel3go.String("conversation_id"),
-			SessionID:      channel3go.String("session_id"),
+			ConversationID: channel3go.String("x"),
 			TtlSeconds:     channel3go.Int(60),
 		},
 	})

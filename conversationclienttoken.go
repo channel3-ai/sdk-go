@@ -34,10 +34,9 @@ func NewConversationClientTokenService(opts ...option.RequestOption) (r Conversa
 	return
 }
 
-// Mint a short-lived, browser-safe client token for the conversations API. Pass
-// `session_id` for a session token that can create and continue conversations for
-// that session, or `conversation_id` for a token bound to one existing
-// conversation.
+// Mint a short-lived, browser-safe token. With `conversation_id` the token
+// continues and reads that thread; without it, the token's first turn creates the
+// thread and binds the token to it.
 func (r *ConversationClientTokenService) New(ctx context.Context, body ConversationClientTokenNewParams, opts ...option.RequestOption) (res *ClientTokenResponse, err error) {
 	opts = slices.Concat(r.options, opts)
 	path := "v1/conversations/client_tokens"
@@ -58,12 +57,14 @@ func (r *ConversationClientTokenService) Revoke(ctx context.Context, body Conver
 type ClientTokenResponse struct {
 	Token     string `json:"token" api:"required"`
 	ExpiresAt int64  `json:"expires_at" api:"required"`
+	TokenID   string `json:"token_id" api:"required"`
 	// Any of "Bearer".
 	TokenType ClientTokenResponseTokenType `json:"token_type"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Token       respjson.Field
 		ExpiresAt   respjson.Field
+		TokenID     respjson.Field
 		TokenType   respjson.Field
 		ExtraFields map[string]respjson.Field
 		raw         string
@@ -84,7 +85,6 @@ const (
 
 type CreateClientTokenRequestParam struct {
 	ConversationID param.Opt[string] `json:"conversation_id,omitzero"`
-	SessionID      param.Opt[string] `json:"session_id,omitzero"`
 	TtlSeconds     param.Opt[int64]  `json:"ttl_seconds,omitzero"`
 	paramObj
 }
