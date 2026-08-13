@@ -192,7 +192,7 @@ func (r *CatalogDisplayPayload) UnmarshalJSON(data []byte) error {
 type CatalogToolError struct {
 	Error string `json:"error" api:"required"`
 	// Any of true.
-	IsError  bool            `json:"isError"`
+	IsError  bool            `json:"is_error"`
 	Products []ProductDetail `json:"products"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
@@ -608,7 +608,7 @@ type ToolPartOutputUnion struct {
 	// This field is from variant [CatalogToolError].
 	Error string `json:"error"`
 	// This field is from variant [CatalogToolError].
-	IsError bool `json:"isError"`
+	IsError bool `json:"is_error"`
 	JSON    struct {
 		NextPageToken respjson.Field
 		Products      respjson.Field
