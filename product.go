@@ -217,6 +217,17 @@ func (r *ProductService) SearchByImageAutoPaging(ctx context.Context, params Pro
 	return pagination.NewSearchPageAutoPager(r.SearchByImage(ctx, params, opts...))
 }
 
+// The two availability values the public API emits on offers.
+//
+// Internal `AvailabilityStatus` values are collapsed to these via
+// `AvailabilityStatus.to_api()`.
+type AvailabilityStatus string
+
+const (
+	AvailabilityStatusInStock    AvailabilityStatus = "InStock"
+	AvailabilityStatusOutOfStock AvailabilityStatus = "OutOfStock"
+)
+
 // Filter-driven product listing with pagination (no free-text query).
 type BrowseRequestParam struct {
 	// Optional limit on the number of results. Default is 20, max is 30.
@@ -662,7 +673,7 @@ type ProductDetailVariantsOptionValue struct {
 	// `AvailabilityStatus.to_api()`.
 	//
 	// Any of "InStock", "OutOfStock".
-	Available string `json:"available" api:"nullable"`
+	Available AvailabilityStatus `json:"available" api:"nullable"`
 	// The product id that represents this value. Variants that point to different
 	// products will have this field set, as well as thumbnail_url for displaying
 	// selector icons.
@@ -767,10 +778,10 @@ type ProductOffer struct {
 	// `AvailabilityStatus.to_api()`.
 	//
 	// Any of "InStock", "OutOfStock".
-	Availability ProductOfferAvailability `json:"availability" api:"required"`
-	Domain       string                   `json:"domain" api:"required"`
-	Price        Price                    `json:"price" api:"required"`
-	URL          string                   `json:"url" api:"required"`
+	Availability AvailabilityStatus `json:"availability" api:"required"`
+	Domain       string             `json:"domain" api:"required"`
+	Price        Price              `json:"price" api:"required"`
+	URL          string             `json:"url" api:"required"`
 	// Offer condition. 'refurbished' is deprecated: rejected as a filter value,
 	// coerced to None on responses.
 	//
@@ -804,17 +815,6 @@ func (r ProductOffer) RawJSON() string { return r.JSON.raw }
 func (r *ProductOffer) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
-
-// The two availability values the public API emits on offers.
-//
-// Internal `AvailabilityStatus` values are collapsed to these via
-// `AvailabilityStatus.to_api()`.
-type ProductOfferAvailability string
-
-const (
-	ProductOfferAvailabilityInStock    ProductOfferAvailability = "InStock"
-	ProductOfferAvailabilityOutOfStock ProductOfferAvailability = "OutOfStock"
-)
 
 // Offer condition. 'refurbished' is deprecated: rejected as a filter value,
 // coerced to None on responses.

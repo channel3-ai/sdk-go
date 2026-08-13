@@ -2,6 +2,7 @@
 
 Params Types:
 
+- <a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go">channel3go</a>.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#AvailabilityStatus">AvailabilityStatus</a>
 - <a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go">channel3go</a>.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#BrowseRequestParam">BrowseRequestParam</a>
 - <a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go">channel3go</a>.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#ImageSearchRequestParam">ImageSearchRequestParam</a>
 - <a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go">channel3go</a>.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#LocaleConfigParam">LocaleConfigParam</a>
@@ -11,6 +12,7 @@ Params Types:
 
 Response Types:
 
+- <a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go">channel3go</a>.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#AvailabilityStatus">AvailabilityStatus</a>
 - <a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go">channel3go</a>.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#LookupResponse">LookupResponse</a>
 - <a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go">channel3go</a>.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#MonetizeOffer">MonetizeOffer</a>
 - <a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go">channel3go</a>.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#MonetizeResponse">MonetizeResponse</a>
@@ -153,6 +155,22 @@ Methods:
 
 - <code title="post /v1/conversations">client.Conversations.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#ConversationService.New">New</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>, params <a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go">channel3go</a>.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#ConversationNewParams">ConversationNewParams</a>) (\*<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go">channel3go</a>.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#TurnResult">TurnResult</a>, <a href="https://pkg.go.dev/builtin#error">error</a>)</code>
 - <code title="get /v1/conversations/{conversation_id}">client.Conversations.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#ConversationService.Get">Get</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>, conversationID <a href="https://pkg.go.dev/builtin#string">string</a>, query <a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go">channel3go</a>.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#ConversationGetParams">ConversationGetParams</a>) (\*<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go">channel3go</a>.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#ConversationDetail">ConversationDetail</a>, <a href="https://pkg.go.dev/builtin#error">error</a>)</code>
+
+## ClientTokens
+
+Params Types:
+
+- <a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go">channel3go</a>.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#CreateClientTokenRequestParam">CreateClientTokenRequestParam</a>
+- <a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go">channel3go</a>.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#RevokeClientTokenRequestParam">RevokeClientTokenRequestParam</a>
+
+Response Types:
+
+- <a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go">channel3go</a>.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#ClientTokenResponse">ClientTokenResponse</a>
+
+Methods:
+
+- <code title="post /v1/conversations/client_tokens">client.Conversations.ClientTokens.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#ConversationClientTokenService.New">New</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>, body <a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go">channel3go</a>.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#ConversationClientTokenNewParams">ConversationClientTokenNewParams</a>) (\*<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go">channel3go</a>.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#ClientTokenResponse">ClientTokenResponse</a>, <a href="https://pkg.go.dev/builtin#error">error</a>)</code>
+- <code title="post /v1/conversations/client_tokens/revoke">client.Conversations.ClientTokens.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#ConversationClientTokenService.Revoke">Revoke</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>, body <a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go">channel3go</a>.<a href="https://pkg.go.dev/github.com/channel3-ai/sdk-go#ConversationClientTokenRevokeParams">ConversationClientTokenRevokeParams</a>) <a href="https://pkg.go.dev/builtin#error">error</a></code>
 
 # Search
 
