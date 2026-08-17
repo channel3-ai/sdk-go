@@ -221,12 +221,12 @@ type SearchFiltersParam struct {
 	//
 	// Any of "newborn", "infant", "toddler", "kids", "adult".
 	Age []string `json:"age,omitzero"`
-	// If provided, only products whose extracted attributes match these key/value
-	// constraints will be returned. Keys are attribute handles (e.g. 'color',
-	// 'material') and values are lists of allowed values (OR within a key, AND across
-	// keys). When a category filter is also supplied, all keys must be valid
-	// attributes of at least one of the requested categories. See
-	// `Category.attributes` for the valid keys/values per category.
+	// If provided, only products matching these key/value constraints will be
+	// returned. Keys are attribute handles (e.g. 'color', 'material') and values are
+	// lists of allowed values (OR within a key, AND across keys). When a category
+	// filter is also supplied, all keys must be valid attributes of at least one of
+	// the requested categories. See `Category.attributes` for the valid keys and
+	// values per category.
 	Attributes map[string][]string `json:"attributes,omitzero"`
 	// If provided, only products from these brands will be returned
 	BrandIDs []string `json:"brand_ids,omitzero"`
