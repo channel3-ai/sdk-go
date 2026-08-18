@@ -90,7 +90,9 @@ type Category struct {
 	// Human-readable category title
 	Title string `json:"title" api:"required"`
 	// Structured attributes applicable to this category, with their allowed values.
-	// Usable as keys in `SearchFilters.attributes`.
+	// Usable as keys in `SearchFilters.attributes`. Includes the variant axes
+	// ('color', 'size', 'shoe-size') where the category defines them; those match
+	// against each offer's variant options.
 	Attributes []CategoryAttribute `json:"attributes"`
 	// Direct subcategories only (one level)
 	Children []CategoryRef `json:"children"`

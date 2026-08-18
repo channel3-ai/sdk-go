@@ -40,15 +40,54 @@ func NewProductService(opts ...option.RequestOption) (r ProductService) {
 }
 
 // Get detailed information about a specific product by its ID.
-func (r *ProductService) Get(ctx context.Context, productID string, query ProductGetParams, opts ...option.RequestOption) (res *ProductDetail, err error) {
+func (r *ProductService) Get(ctx context.Context, productID string, params ProductGetParams, opts ...option.RequestOption) (res *ProductDetail, err error) {
+	if !param.IsOmitted(params.XUserID) {
+		opts = append(opts, option.WithHeader("x-user-id", fmt.Sprintf("%v", params.XUserID.Value)))
+	}
 	opts = slices.Concat(r.options, opts)
 	if productID == "" {
 		err = errors.New("missing required product_id parameter")
 		return nil, err
 	}
 	path := fmt.Sprintf("v1/products/%s", url.PathEscape(productID))
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, query, &res, opts...)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, params, &res, opts...)
 	return res, err
+}
+
+// List and page through products for a set of filters.
+//
+// Useful for a static, grid view of products for a brand, website, or category.
+//
+// At least one of `filters.brand_ids`, `filters.category_ids`, or
+// `filters.website_ids` must be provided.
+func (r *ProductService) Browse(ctx context.Context, params ProductBrowseParams, opts ...option.RequestOption) (res *pagination.SearchPage[ProductDetail], err error) {
+	var raw *http.Response
+	if !param.IsOmitted(params.XUserID) {
+		opts = append(opts, option.WithHeader("x-user-id", fmt.Sprintf("%v", params.XUserID.Value)))
+	}
+	opts = slices.Concat(r.options, opts)
+	opts = append([]option.RequestOption{option.WithResponseInto(&raw)}, opts...)
+	path := "v1/browse"
+	cfg, err := requestconfig.NewRequestConfig(ctx, http.MethodPost, path, params, &res, opts...)
+	if err != nil {
+		return nil, err
+	}
+	err = cfg.Execute()
+	if err != nil {
+		return nil, err
+	}
+	res.SetPageConfig(cfg, raw)
+	return res, nil
+}
+
+// List and page through products for a set of filters.
+//
+// Useful for a static, grid view of products for a brand, website, or category.
+//
+// At least one of `filters.brand_ids`, `filters.category_ids`, or
+// `filters.website_ids` must be provided.
+func (r *ProductService) BrowseAutoPaging(ctx context.Context, params ProductBrowseParams, opts ...option.RequestOption) *pagination.SearchPageAutoPager[ProductDetail] {
+	return pagination.NewSearchPageAutoPager(r.Browse(ctx, params, opts...))
 }
 
 // Find products similar to a given product.
@@ -56,12 +95,15 @@ func (r *ProductService) Get(ctx context.Context, productID string, query Produc
 // Consider setting `filters` to narrow results to the same gender, brand,
 // category, price range, etc. when you only want similar items within a specific
 // slice of the catalog.
-func (r *ProductService) FindSimilar(ctx context.Context, body ProductFindSimilarParams, opts ...option.RequestOption) (res *pagination.SearchPage[ProductDetail], err error) {
+func (r *ProductService) FindSimilar(ctx context.Context, params ProductFindSimilarParams, opts ...option.RequestOption) (res *pagination.SearchPage[ProductDetail], err error) {
 	var raw *http.Response
+	if !param.IsOmitted(params.XUserID) {
+		opts = append(opts, option.WithHeader("x-user-id", fmt.Sprintf("%v", params.XUserID.Value)))
+	}
 	opts = slices.Concat(r.options, opts)
 	opts = append([]option.RequestOption{option.WithResponseInto(&raw)}, opts...)
 	path := "v1/similar"
-	cfg, err := requestconfig.NewRequestConfig(ctx, http.MethodPost, path, body, &res, opts...)
+	cfg, err := requestconfig.NewRequestConfig(ctx, http.MethodPost, path, params, &res, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -78,31 +120,52 @@ func (r *ProductService) FindSimilar(ctx context.Context, body ProductFindSimila
 // Consider setting `filters` to narrow results to the same gender, brand,
 // category, price range, etc. when you only want similar items within a specific
 // slice of the catalog.
-func (r *ProductService) FindSimilarAutoPaging(ctx context.Context, body ProductFindSimilarParams, opts ...option.RequestOption) *pagination.SearchPageAutoPager[ProductDetail] {
-	return pagination.NewSearchPageAutoPager(r.FindSimilar(ctx, body, opts...))
+func (r *ProductService) FindSimilarAutoPaging(ctx context.Context, params ProductFindSimilarParams, opts ...option.RequestOption) *pagination.SearchPageAutoPager[ProductDetail] {
+	return pagination.NewSearchPageAutoPager(r.FindSimilar(ctx, params, opts...))
 }
 
 // Retrieve product information for any supported product URL.
 //
 // Returns the same Product model as GET /v1/products/{product_id}. The product_id
 // in the response can be used with the Product Detail endpoint.
-func (r *ProductService) Lookup(ctx context.Context, body ProductLookupParams, opts ...option.RequestOption) (res *LookupResponse, err error) {
+func (r *ProductService) Lookup(ctx context.Context, params ProductLookupParams, opts ...option.RequestOption) (res *LookupResponse, err error) {
+	if !param.IsOmitted(params.XUserID) {
+		opts = append(opts, option.WithHeader("x-user-id", fmt.Sprintf("%v", params.XUserID.Value)))
+	}
 	opts = slices.Concat(r.options, opts)
 	path := "v1/lookup"
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, body, &res, opts...)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, params, &res, opts...)
+	return res, err
+}
+
+// Return monetizable offers (with max commission rate) for a product URL.
+//
+// Access to this endpoint is restricted. If you think your use-case requires it,
+// please contact us. Usually, developers actually want search. This is helpful for
+// migrating to Channel3.
+func (r *ProductService) Monetize(ctx context.Context, params ProductMonetizeParams, opts ...option.RequestOption) (res *MonetizeResponse, err error) {
+	if !param.IsOmitted(params.XUserID) {
+		opts = append(opts, option.WithHeader("x-user-id", fmt.Sprintf("%v", params.XUserID.Value)))
+	}
+	opts = slices.Concat(r.options, opts)
+	path := "v1/monetize"
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, params, &res, opts...)
 	return res, err
 }
 
 // Search for products with pagination support.
 //
-// At least one of `query`, `image_url`, or `base64_image` must be provided;
-// requests with none of these will return 422.
-func (r *ProductService) Search(ctx context.Context, body ProductSearchParams, opts ...option.RequestOption) (res *pagination.SearchPage[ProductDetail], err error) {
+// At least one of `query`, `image_url`, `base64_image`, or `page_token` must be
+// provided; requests with none of these will return 422.
+func (r *ProductService) Search(ctx context.Context, params ProductSearchParams, opts ...option.RequestOption) (res *pagination.SearchPage[ProductDetail], err error) {
 	var raw *http.Response
+	if !param.IsOmitted(params.XUserID) {
+		opts = append(opts, option.WithHeader("x-user-id", fmt.Sprintf("%v", params.XUserID.Value)))
+	}
 	opts = slices.Concat(r.options, opts)
 	opts = append([]option.RequestOption{option.WithResponseInto(&raw)}, opts...)
 	path := "v1/search"
-	cfg, err := requestconfig.NewRequestConfig(ctx, http.MethodPost, path, body, &res, opts...)
+	cfg, err := requestconfig.NewRequestConfig(ctx, http.MethodPost, path, params, &res, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -116,22 +179,25 @@ func (r *ProductService) Search(ctx context.Context, body ProductSearchParams, o
 
 // Search for products with pagination support.
 //
-// At least one of `query`, `image_url`, or `base64_image` must be provided;
-// requests with none of these will return 422.
-func (r *ProductService) SearchAutoPaging(ctx context.Context, body ProductSearchParams, opts ...option.RequestOption) *pagination.SearchPageAutoPager[ProductDetail] {
-	return pagination.NewSearchPageAutoPager(r.Search(ctx, body, opts...))
+// At least one of `query`, `image_url`, `base64_image`, or `page_token` must be
+// provided; requests with none of these will return 422.
+func (r *ProductService) SearchAutoPaging(ctx context.Context, params ProductSearchParams, opts ...option.RequestOption) *pagination.SearchPageAutoPager[ProductDetail] {
+	return pagination.NewSearchPageAutoPager(r.Search(ctx, params, opts...))
 }
 
 // Search the catalog by image (URL or base64), with pagination support.
 //
 // Provide exactly one of `image_url` or `base64_image`. For text or text+image
 // search, use `POST /v1/search`.
-func (r *ProductService) SearchByImage(ctx context.Context, body ProductSearchByImageParams, opts ...option.RequestOption) (res *pagination.SearchPage[ProductDetail], err error) {
+func (r *ProductService) SearchByImage(ctx context.Context, params ProductSearchByImageParams, opts ...option.RequestOption) (res *pagination.SearchPage[ProductDetail], err error) {
 	var raw *http.Response
+	if !param.IsOmitted(params.XUserID) {
+		opts = append(opts, option.WithHeader("x-user-id", fmt.Sprintf("%v", params.XUserID.Value)))
+	}
 	opts = slices.Concat(r.options, opts)
 	opts = append([]option.RequestOption{option.WithResponseInto(&raw)}, opts...)
 	path := "v1/image-search"
-	cfg, err := requestconfig.NewRequestConfig(ctx, http.MethodPost, path, body, &res, opts...)
+	cfg, err := requestconfig.NewRequestConfig(ctx, http.MethodPost, path, params, &res, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -147,22 +213,40 @@ func (r *ProductService) SearchByImage(ctx context.Context, body ProductSearchBy
 //
 // Provide exactly one of `image_url` or `base64_image`. For text or text+image
 // search, use `POST /v1/search`.
-func (r *ProductService) SearchByImageAutoPaging(ctx context.Context, body ProductSearchByImageParams, opts ...option.RequestOption) *pagination.SearchPageAutoPager[ProductDetail] {
-	return pagination.NewSearchPageAutoPager(r.SearchByImage(ctx, body, opts...))
+func (r *ProductService) SearchByImageAutoPaging(ctx context.Context, params ProductSearchByImageParams, opts ...option.RequestOption) *pagination.SearchPageAutoPager[ProductDetail] {
+	return pagination.NewSearchPageAutoPager(r.SearchByImage(ctx, params, opts...))
 }
 
+// The two availability values the public API emits on offers.
+//
+// Internal `AvailabilityStatus` values are collapsed to these via
+// `AvailabilityStatus.to_api()`.
 type AvailabilityStatus string
 
 const (
-	AvailabilityStatusInStock             AvailabilityStatus = "InStock"
-	AvailabilityStatusLimitedAvailability AvailabilityStatus = "LimitedAvailability"
-	AvailabilityStatusPreOrder            AvailabilityStatus = "PreOrder"
-	AvailabilityStatusBackOrder           AvailabilityStatus = "BackOrder"
-	AvailabilityStatusSoldOut             AvailabilityStatus = "SoldOut"
-	AvailabilityStatusOutOfStock          AvailabilityStatus = "OutOfStock"
-	AvailabilityStatusDiscontinued        AvailabilityStatus = "Discontinued"
-	AvailabilityStatusUnknown             AvailabilityStatus = "Unknown"
+	AvailabilityStatusInStock    AvailabilityStatus = "InStock"
+	AvailabilityStatusOutOfStock AvailabilityStatus = "OutOfStock"
 )
+
+// Filter-driven product listing with pagination (no free-text query).
+type BrowseRequestParam struct {
+	// Optional limit on the number of results. Default is 20, max is 30.
+	Limit param.Opt[int64] `json:"limit,omitzero"`
+	// Opaque token from a previous browse response to fetch the next page.
+	PageToken param.Opt[string] `json:"page_token,omitzero"`
+	// Filters to browse by. At least one of `brand_ids`, `category_ids`, or
+	// `website_ids` must be provided.
+	Filters SearchFiltersParam `json:"filters,omitzero"`
+	paramObj
+}
+
+func (r BrowseRequestParam) MarshalJSON() (data []byte, err error) {
+	type shadow BrowseRequestParam
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *BrowseRequestParam) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
 
 // Image-only search request.
 type ImageSearchRequestParam struct {
@@ -175,6 +259,10 @@ type ImageSearchRequestParam struct {
 	// Opaque token from a previous image-search response to fetch the next page of
 	// results.
 	PageToken param.Opt[string] `json:"page_token,omitzero"`
+	// Image segmentation mode. None (default) disables segmentation. "AUTO" segments
+	// and crops the main product automatically. A custom string (e.g. "shoe", "mug")
+	// segments the specified object.
+	Segment param.Opt[string] `json:"segment,omitzero"`
 	// Optional locale configuration.
 	Config LocaleConfigParam `json:"config,omitzero"`
 	// Optional filters. Search will only consider products that match all of the
@@ -196,22 +284,31 @@ func (r *ImageSearchRequestParam) UnmarshalJSON(data []byte) error {
 // Locale fields are optional; the server infers missing values. Details are on
 // `language`, `country`, and `currency` below.
 type LocaleConfigParam struct {
-	// ISO 3166-1 alpha-2 country code. May stay unset for pan-region storefronts (e.g.
-	// `currency=EUR` with no specific country).
+	// ISO 3166-1 alpha-2 country code (plus the pan-region `EU`).
 	//
 	// Any of "US", "GB", "EU", "AU", "CA", "IE", "DE", "AT", "FR", "BE", "IT", "ES",
 	// "NL", "SE", "FI", "PT", "CZ", "GR", "RO".
 	Country LocaleConfigCountry `json:"country,omitzero"`
-	// ISO 4217 currency code. When unset, inferred from `country` (e.g. `GB` → `GBP`),
-	// defaulting to `USD`.
+	// ISO 4217 currency code.
 	//
 	// Any of "USD", "CAD", "AUD", "GBP", "EUR", "SEK", "CZK", "RON".
 	Currency LocaleConfigCurrency `json:"currency,omitzero"`
-	// ISO 639-1 language code. When unset, inferred from `country` (preferred) then
-	// `currency`, defaulting to `en`.
+	// ISO 639-1 language code.
 	//
 	// Any of "en", "de", "fr", "it", "es", "nl", "sv", "fi", "pt", "cs", "el", "ro".
 	Language LocaleConfigLanguage `json:"language,omitzero"`
+	// Preferred unit for length dimensions (length/width/height) in responses. A
+	// request dimension filter's unit for the field takes precedence; when neither is
+	// set, the merchant's stated unit is returned.
+	//
+	// Any of "mm", "cm", "m", "in", "ft".
+	LengthUnit LocaleConfigLengthUnit `json:"length_unit,omitzero"`
+	// Preferred unit for weight dimensions in responses. A request dimension filter's
+	// weight unit takes precedence; when neither is set, the merchant's stated unit is
+	// returned.
+	//
+	// Any of "mg", "g", "kg", "oz", "lb".
+	WeightUnit LocaleConfigWeightUnit `json:"weight_unit,omitzero"`
 	paramObj
 }
 
@@ -223,8 +320,7 @@ func (r *LocaleConfigParam) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-// ISO 3166-1 alpha-2 country code. May stay unset for pan-region storefronts (e.g.
-// `currency=EUR` with no specific country).
+// ISO 3166-1 alpha-2 country code (plus the pan-region `EU`).
 type LocaleConfigCountry string
 
 const (
@@ -249,8 +345,7 @@ const (
 	LocaleConfigCountryRo LocaleConfigCountry = "RO"
 )
 
-// ISO 4217 currency code. When unset, inferred from `country` (e.g. `GB` → `GBP`),
-// defaulting to `USD`.
+// ISO 4217 currency code.
 type LocaleConfigCurrency string
 
 const (
@@ -264,8 +359,7 @@ const (
 	LocaleConfigCurrencyRon LocaleConfigCurrency = "RON"
 )
 
-// ISO 639-1 language code. When unset, inferred from `country` (preferred) then
-// `currency`, defaulting to `en`.
+// ISO 639-1 language code.
 type LocaleConfigLanguage string
 
 const (
@@ -281,6 +375,32 @@ const (
 	LocaleConfigLanguageCs LocaleConfigLanguage = "cs"
 	LocaleConfigLanguageEl LocaleConfigLanguage = "el"
 	LocaleConfigLanguageRo LocaleConfigLanguage = "ro"
+)
+
+// Preferred unit for length dimensions (length/width/height) in responses. A
+// request dimension filter's unit for the field takes precedence; when neither is
+// set, the merchant's stated unit is returned.
+type LocaleConfigLengthUnit string
+
+const (
+	LocaleConfigLengthUnitMm LocaleConfigLengthUnit = "mm"
+	LocaleConfigLengthUnitCm LocaleConfigLengthUnit = "cm"
+	LocaleConfigLengthUnitM  LocaleConfigLengthUnit = "m"
+	LocaleConfigLengthUnitIn LocaleConfigLengthUnit = "in"
+	LocaleConfigLengthUnitFt LocaleConfigLengthUnit = "ft"
+)
+
+// Preferred unit for weight dimensions in responses. A request dimension filter's
+// weight unit takes precedence; when neither is set, the merchant's stated unit is
+// returned.
+type LocaleConfigWeightUnit string
+
+const (
+	LocaleConfigWeightUnitMg LocaleConfigWeightUnit = "mg"
+	LocaleConfigWeightUnitG  LocaleConfigWeightUnit = "g"
+	LocaleConfigWeightUnitKg LocaleConfigWeightUnit = "kg"
+	LocaleConfigWeightUnitOz LocaleConfigWeightUnit = "oz"
+	LocaleConfigWeightUnitLb LocaleConfigWeightUnit = "lb"
 )
 
 // The property URL is required.
@@ -316,6 +436,64 @@ type LookupResponse struct {
 // Returns the unmodified JSON received from the API
 func (r LookupResponse) RawJSON() string { return r.JSON.raw }
 func (r *LookupResponse) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+type MonetizeOffer struct {
+	// Merchant domain, e.g. nordstrom.com
+	Domain string `json:"domain" api:"required"`
+	// buy.trychannel3.com deeplink. Clicks are tracked and routed through the
+	// highest-paying affiliate network for the merchant.
+	URL string `json:"url" api:"required"`
+	// Maximum post-take-rate commission for the merchant, as a decimal (0.05 = 5%).
+	// 'Max' because the realized rate may be lower.
+	MaxCommissionRate float64 `json:"max_commission_rate"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Domain            respjson.Field
+		URL               respjson.Field
+		MaxCommissionRate respjson.Field
+		ExtraFields       map[string]respjson.Field
+		raw               string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r MonetizeOffer) RawJSON() string { return r.JSON.raw }
+func (r *MonetizeOffer) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// The property URL is required.
+type MonetizeRequestParam struct {
+	// The URL of the product to monetize
+	URL string `json:"url" api:"required"`
+	paramObj
+}
+
+func (r MonetizeRequestParam) MarshalJSON() (data []byte, err error) {
+	type shadow MonetizeRequestParam
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *MonetizeRequestParam) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Response from the /v1/monetize endpoint — just the list of offers.
+type MonetizeResponse struct {
+	// Monetizable offers, sorted by max_commission_rate descending.
+	Offers []MonetizeOffer `json:"offers"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Offers      respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r MonetizeResponse) RawJSON() string { return r.JSON.raw }
+func (r *MonetizeResponse) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
@@ -370,12 +548,12 @@ type ProductDetail struct {
 	Age ProductDetailAge `json:"age" api:"nullable"`
 	// Ordered list of brands.
 	Brands []ProductBrand `json:"brands"`
-	// Deprecated: deprecated
-	Categories []string `json:"categories"`
 	// Lean category representation used in search hits and list rows.
 	Category    CategorySummary `json:"category" api:"nullable"`
 	Description string          `json:"description" api:"nullable"`
-	// Any of "male", "female", "unisex".
+	// Product gender. 'unisex' is deprecated: coerced to None on input, never emitted.
+	//
+	// Any of "male", "female".
 	Gender      ProductDetailGender `json:"gender" api:"nullable"`
 	Images      []ProductImage      `json:"images"`
 	KeyFeatures []string            `json:"key_features" api:"nullable"`
@@ -398,7 +576,6 @@ type ProductDetail struct {
 		Title                respjson.Field
 		Age                  respjson.Field
 		Brands               respjson.Field
-		Categories           respjson.Field
 		Category             respjson.Field
 		Description          respjson.Field
 		Gender               respjson.Field
@@ -430,12 +607,12 @@ const (
 	ProductDetailAgeAdult   ProductDetailAge = "adult"
 )
 
+// Product gender. 'unisex' is deprecated: coerced to None on input, never emitted.
 type ProductDetailGender string
 
 const (
 	ProductDetailGenderMale   ProductDetailGender = "male"
 	ProductDetailGenderFemale ProductDetailGender = "female"
-	ProductDetailGenderUnisex ProductDetailGender = "unisex"
 )
 
 // Wrapper for variant-interaction state on a Product.
@@ -490,11 +667,12 @@ type ProductDetailVariantsOptionValue struct {
 	Exists bool `json:"exists" api:"required"`
 	// The display value of the option value (e.g. 'Blue')
 	Label string `json:"label" api:"required"`
-	// The availability status of the option value. None when returned on search
-	// results, hydrated only on get product detail requests.
+	// The two availability values the public API emits on offers.
 	//
-	// Any of "InStock", "LimitedAvailability", "PreOrder", "BackOrder", "SoldOut",
-	// "OutOfStock", "Discontinued", "Unknown".
+	// Internal `AvailabilityStatus` values are collapsed to these via
+	// `AvailabilityStatus.to_api()`.
+	//
+	// Any of "InStock", "OutOfStock".
 	Available AvailabilityStatus `json:"available" api:"nullable"`
 	// The product id that represents this value. Variants that point to different
 	// products will have this field set, as well as thumbnail_url for displaying
@@ -547,11 +725,10 @@ func (r *ProductDetailVariantsSelected) UnmarshalJSON(data []byte) error {
 type ProductImage struct {
 	URL     string `json:"url" api:"required"`
 	AltText string `json:"alt_text" api:"nullable"`
-	// True if this URL points to a cleaned image. A cleaned image has a square aspect
-	// ratio and a uniform, monochromatic background. Cleaned images are best displayed
-	// in a product grid.
-	IsCleanedImage bool `json:"is_cleaned_image"`
-	IsMainImage    bool `json:"is_main_image"`
+	// Background-removed square image on Channel3 CDN when available. Use for product
+	// grids; `url` is the regular hosted shot.
+	CleanedURL  string `json:"cleaned_url" api:"nullable"`
+	IsMainImage bool   `json:"is_main_image"`
 	// Product image type classification for API responses.
 	//
 	// Any of "hero", "lifestyle", "on_model", "detail", "scale_reference",
@@ -560,13 +737,13 @@ type ProductImage struct {
 	ShotType ProductImageShotType `json:"shot_type" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
-		URL            respjson.Field
-		AltText        respjson.Field
-		IsCleanedImage respjson.Field
-		IsMainImage    respjson.Field
-		ShotType       respjson.Field
-		ExtraFields    map[string]respjson.Field
-		raw            string
+		URL         respjson.Field
+		AltText     respjson.Field
+		CleanedURL  respjson.Field
+		IsMainImage respjson.Field
+		ShotType    respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
 	} `json:"-"`
 }
 
@@ -595,13 +772,28 @@ const (
 )
 
 type ProductOffer struct {
+	// The two availability values the public API emits on offers.
+	//
+	// Internal `AvailabilityStatus` values are collapsed to these via
+	// `AvailabilityStatus.to_api()`.
+	//
 	// Any of "InStock", "OutOfStock".
-	Availability ProductOfferAvailability `json:"availability" api:"required"`
-	Domain       string                   `json:"domain" api:"required"`
-	Price        Price                    `json:"price" api:"required"`
-	URL          string                   `json:"url" api:"required"`
-	// The maximum commission rate for the merchant, as a percentage. 0 is no
-	// commission. 0.5 is 50% commission. 'Max' because the actual commission rate may
+	Availability AvailabilityStatus `json:"availability" api:"required"`
+	Domain       string             `json:"domain" api:"required"`
+	Price        Price              `json:"price" api:"required"`
+	URL          string             `json:"url" api:"required"`
+	// Offer condition. 'refurbished' is deprecated: rejected as a filter value,
+	// coerced to None on responses.
+	//
+	// Any of "new", "used".
+	Condition ProductOfferCondition `json:"condition" api:"nullable"`
+	// Physical dimensions of a product offer. Members are null when unknown.
+	//
+	// Values are standardized to the supported unit set; a merchant-stated value whose
+	// unit is not one of those units is omitted rather than shown.
+	Dimensions ProductOfferDimensions `json:"dimensions" api:"nullable"`
+	// The maximum commission rate for the merchant, as a decimal fraction: 0 is no
+	// commission, 0.5 is 50% commission. 'Max' because the actual commission rate may
 	// be lower due to vendor-specific affiliate rules.
 	MaxCommissionRate float64 `json:"max_commission_rate"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
@@ -610,6 +802,8 @@ type ProductOffer struct {
 		Domain            respjson.Field
 		Price             respjson.Field
 		URL               respjson.Field
+		Condition         respjson.Field
+		Dimensions        respjson.Field
 		MaxCommissionRate respjson.Field
 		ExtraFields       map[string]respjson.Field
 		raw               string
@@ -622,12 +816,136 @@ func (r *ProductOffer) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-type ProductOfferAvailability string
+// Offer condition. 'refurbished' is deprecated: rejected as a filter value,
+// coerced to None on responses.
+type ProductOfferCondition string
 
 const (
-	ProductOfferAvailabilityInStock    ProductOfferAvailability = "InStock"
-	ProductOfferAvailabilityOutOfStock ProductOfferAvailability = "OutOfStock"
+	ProductOfferConditionNew  ProductOfferCondition = "new"
+	ProductOfferConditionUsed ProductOfferCondition = "used"
 )
+
+// Physical dimensions of a product offer. Members are null when unknown.
+//
+// Values are standardized to the supported unit set; a merchant-stated value whose
+// unit is not one of those units is omitted rather than shown.
+type ProductOfferDimensions struct {
+	// A length measurement, in one of the supported length units.
+	Height ProductOfferDimensionsHeight `json:"height" api:"nullable"`
+	// A length measurement, in one of the supported length units.
+	Length ProductOfferDimensionsLength `json:"length" api:"nullable"`
+	// A weight measurement, in one of the supported weight units.
+	Weight ProductOfferDimensionsWeight `json:"weight" api:"nullable"`
+	// A length measurement, in one of the supported length units.
+	Width ProductOfferDimensionsWidth `json:"width" api:"nullable"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Height      respjson.Field
+		Length      respjson.Field
+		Weight      respjson.Field
+		Width       respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r ProductOfferDimensions) RawJSON() string { return r.JSON.raw }
+func (r *ProductOfferDimensions) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// A length measurement, in one of the supported length units.
+type ProductOfferDimensionsHeight struct {
+	Number float64 `json:"number" api:"required"`
+	// The unit from the request's dimension filters when one was given (the value is
+	// converted to it); otherwise the unit the merchant stated.
+	//
+	// Any of "mm", "cm", "m", "in", "ft".
+	Unit string `json:"unit" api:"required"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Number      respjson.Field
+		Unit        respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r ProductOfferDimensionsHeight) RawJSON() string { return r.JSON.raw }
+func (r *ProductOfferDimensionsHeight) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// A length measurement, in one of the supported length units.
+type ProductOfferDimensionsLength struct {
+	Number float64 `json:"number" api:"required"`
+	// The unit from the request's dimension filters when one was given (the value is
+	// converted to it); otherwise the unit the merchant stated.
+	//
+	// Any of "mm", "cm", "m", "in", "ft".
+	Unit string `json:"unit" api:"required"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Number      respjson.Field
+		Unit        respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r ProductOfferDimensionsLength) RawJSON() string { return r.JSON.raw }
+func (r *ProductOfferDimensionsLength) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// A weight measurement, in one of the supported weight units.
+type ProductOfferDimensionsWeight struct {
+	Number float64 `json:"number" api:"required"`
+	// The unit from the request's dimension filters when one was given (the value is
+	// converted to it); otherwise the unit the merchant stated.
+	//
+	// Any of "mg", "g", "kg", "oz", "lb".
+	Unit string `json:"unit" api:"required"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Number      respjson.Field
+		Unit        respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r ProductOfferDimensionsWeight) RawJSON() string { return r.JSON.raw }
+func (r *ProductOfferDimensionsWeight) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// A length measurement, in one of the supported length units.
+type ProductOfferDimensionsWidth struct {
+	Number float64 `json:"number" api:"required"`
+	// The unit from the request's dimension filters when one was given (the value is
+	// converted to it); otherwise the unit the merchant stated.
+	//
+	// Any of "mm", "cm", "m", "in", "ft".
+	Unit string `json:"unit" api:"required"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Number      respjson.Field
+		Unit        respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r ProductOfferDimensionsWidth) RawJSON() string { return r.JSON.raw }
+func (r *ProductOfferDimensionsWidth) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
 
 // Find products similar to a given product.
 //
@@ -656,6 +974,9 @@ func (r *SimilarProductsRequestParam) UnmarshalJSON(data []byte) error {
 }
 
 type ProductGetParams struct {
+	// Optional user identifier to attribute clicks and sales to a user in your system.
+	// Channel3 appends it to buy URLs in the response.
+	XUserID param.Opt[string] `header:"x-user-id,omitzero" json:"-"`
 	// ISO 3166-1 alpha-2 country code. Matches any country when unset; defaults to
 	// 'US' only when language and currency are also unset.
 	//
@@ -672,9 +993,19 @@ type ProductGetParams struct {
 	//
 	// Any of "en", "de", "fr", "it", "es", "nl", "sv", "fi", "pt", "cs", "el", "ro".
 	Language ProductGetParamsLanguage `query:"language,omitzero" json:"-"`
+	// Preferred unit for length dimensions (length/width/height). When unset,
+	// dimensions are returned in the unit the merchant stated.
+	//
+	// Any of "mm", "cm", "m", "in", "ft".
+	LengthUnit ProductGetParamsLengthUnit `query:"length_unit,omitzero" json:"-"`
 	// Optional list of website IDs to constrain the buy URL to, relevant if multiple
 	// merchants exist. Accepts website IDs or domains (e.g. "nike.com").
 	WebsiteIDs []string `query:"website_ids,omitzero" json:"-"`
+	// Preferred unit for weight dimensions. When unset, weight is returned in the unit
+	// the merchant stated.
+	//
+	// Any of "mg", "g", "kg", "oz", "lb".
+	WeightUnit ProductGetParamsWeightUnit `query:"weight_unit,omitzero" json:"-"`
 	paramObj
 }
 
@@ -746,9 +1077,52 @@ const (
 	ProductGetParamsLanguageRo ProductGetParamsLanguage = "ro"
 )
 
+// Preferred unit for length dimensions (length/width/height). When unset,
+// dimensions are returned in the unit the merchant stated.
+type ProductGetParamsLengthUnit string
+
+const (
+	ProductGetParamsLengthUnitMm ProductGetParamsLengthUnit = "mm"
+	ProductGetParamsLengthUnitCm ProductGetParamsLengthUnit = "cm"
+	ProductGetParamsLengthUnitM  ProductGetParamsLengthUnit = "m"
+	ProductGetParamsLengthUnitIn ProductGetParamsLengthUnit = "in"
+	ProductGetParamsLengthUnitFt ProductGetParamsLengthUnit = "ft"
+)
+
+// Preferred unit for weight dimensions. When unset, weight is returned in the unit
+// the merchant stated.
+type ProductGetParamsWeightUnit string
+
+const (
+	ProductGetParamsWeightUnitMg ProductGetParamsWeightUnit = "mg"
+	ProductGetParamsWeightUnitG  ProductGetParamsWeightUnit = "g"
+	ProductGetParamsWeightUnitKg ProductGetParamsWeightUnit = "kg"
+	ProductGetParamsWeightUnitOz ProductGetParamsWeightUnit = "oz"
+	ProductGetParamsWeightUnitLb ProductGetParamsWeightUnit = "lb"
+)
+
+type ProductBrowseParams struct {
+	// Filter-driven product listing with pagination (no free-text query).
+	BrowseRequest BrowseRequestParam
+	// Optional user identifier to attribute clicks and sales to a user in your system.
+	// Channel3 appends it to buy URLs in the response.
+	XUserID param.Opt[string] `header:"x-user-id,omitzero" json:"-"`
+	paramObj
+}
+
+func (r ProductBrowseParams) MarshalJSON() (data []byte, err error) {
+	return shimjson.Marshal(r.BrowseRequest)
+}
+func (r *ProductBrowseParams) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
 type ProductFindSimilarParams struct {
 	// Find products similar to a given product.
 	SimilarProductsRequest SimilarProductsRequestParam
+	// Optional user identifier to attribute clicks and sales to a user in your system.
+	// Channel3 appends it to buy URLs in the response.
+	XUserID param.Opt[string] `header:"x-user-id,omitzero" json:"-"`
 	paramObj
 }
 
@@ -761,6 +1135,9 @@ func (r *ProductFindSimilarParams) UnmarshalJSON(data []byte) error {
 
 type ProductLookupParams struct {
 	LookupRequest LookupRequestParam
+	// Optional user identifier to attribute clicks and sales to a user in your system.
+	// Channel3 appends it to buy URLs in the response.
+	XUserID param.Opt[string] `header:"x-user-id,omitzero" json:"-"`
 	paramObj
 }
 
@@ -771,9 +1148,27 @@ func (r *ProductLookupParams) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
+type ProductMonetizeParams struct {
+	MonetizeRequest MonetizeRequestParam
+	// Optional user identifier to attribute clicks and sales to a user in your system.
+	// Channel3 appends it to buy URLs in the response.
+	XUserID param.Opt[string] `header:"x-user-id,omitzero" json:"-"`
+	paramObj
+}
+
+func (r ProductMonetizeParams) MarshalJSON() (data []byte, err error) {
+	return shimjson.Marshal(r.MonetizeRequest)
+}
+func (r *ProductMonetizeParams) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
 type ProductSearchParams struct {
 	// Search request with pagination support.
 	SearchRequest SearchRequestParam
+	// Optional user identifier to attribute clicks and sales to a user in your system.
+	// Channel3 appends it to buy URLs in the response.
+	XUserID param.Opt[string] `header:"x-user-id,omitzero" json:"-"`
 	paramObj
 }
 
@@ -787,6 +1182,9 @@ func (r *ProductSearchParams) UnmarshalJSON(data []byte) error {
 type ProductSearchByImageParams struct {
 	// Image-only search request.
 	ImageSearchRequest ImageSearchRequestParam
+	// Optional user identifier to attribute clicks and sales to a user in your system.
+	// Channel3 appends it to buy URLs in the response.
+	XUserID param.Opt[string] `header:"x-user-id,omitzero" json:"-"`
 	paramObj
 }
 

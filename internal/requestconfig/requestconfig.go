@@ -222,6 +222,8 @@ type RequestConfig struct {
 	Language       string
 	Country        string
 	Currency       string
+	LengthUnit     string
+	WeightUnit     string
 	// If ResponseBodyInto not nil, then we will attempt to deserialize into
 	// ResponseBodyInto. If Destination is a []byte, then it will return the body as
 	// is.
@@ -599,6 +601,8 @@ func (cfg *RequestConfig) Clone(ctx context.Context) *RequestConfig {
 		Language:       cfg.Language,
 		Country:        cfg.Country,
 		Currency:       cfg.Currency,
+		LengthUnit:     cfg.LengthUnit,
+		WeightUnit:     cfg.WeightUnit,
 	}
 
 	return new

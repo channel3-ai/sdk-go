@@ -7,13 +7,14 @@ import (
 	"errors"
 	"os"
 	"testing"
+	"time"
 
 	"github.com/channel3-ai/sdk-go"
 	"github.com/channel3-ai/sdk-go/internal/testutil"
 	"github.com/channel3-ai/sdk-go/option"
 )
 
-func TestEnrichEnrichURL(t *testing.T) {
+func TestReportingTransactionListWithOptionalParams(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
@@ -26,10 +27,12 @@ func TestEnrichEnrichURL(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Enrich.EnrichURL(context.TODO(), channel3go.EnrichEnrichURLParams{
-		EnrichRequest: channel3go.EnrichRequestParam{
-			URL: "url",
-		},
+	_, err := client.Reporting.Transactions.List(context.TODO(), channel3go.ReportingTransactionListParams{
+		EndDate:   channel3go.Time(time.Now()),
+		Limit:     channel3go.Int(1),
+		Page:      channel3go.Int(1),
+		StartDate: channel3go.Time(time.Now()),
+		UserID:    channel3go.String("user_id"),
 	})
 	if err != nil {
 		var apierr *channel3go.Error

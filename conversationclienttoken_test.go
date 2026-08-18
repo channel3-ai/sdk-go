@@ -13,7 +13,7 @@ import (
 	"github.com/channel3-ai/sdk-go/option"
 )
 
-func TestWebsiteGetWithOptionalParams(t *testing.T) {
+func TestConversationClientTokenNewWithOptionalParams(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
@@ -26,9 +26,11 @@ func TestWebsiteGetWithOptionalParams(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Websites.Get(context.TODO(), channel3go.WebsiteGetParams{
-		Query:   "query",
-		Country: channel3go.WebsiteGetParamsCountryUs,
+	_, err := client.Conversations.ClientTokens.New(context.TODO(), channel3go.ConversationClientTokenNewParams{
+		CreateClientTokenRequest: channel3go.CreateClientTokenRequestParam{
+			ConversationID: channel3go.String("x"),
+			TtlSeconds:     channel3go.Int(60),
+		},
 	})
 	if err != nil {
 		var apierr *channel3go.Error
@@ -39,7 +41,7 @@ func TestWebsiteGetWithOptionalParams(t *testing.T) {
 	}
 }
 
-func TestWebsiteFindWithOptionalParams(t *testing.T) {
+func TestConversationClientTokenRevoke(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
@@ -52,9 +54,10 @@ func TestWebsiteFindWithOptionalParams(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Websites.Find(context.TODO(), channel3go.WebsiteFindParams{
-		Query:   "query",
-		Country: channel3go.WebsiteFindParamsCountryUs,
+	err := client.Conversations.ClientTokens.Revoke(context.TODO(), channel3go.ConversationClientTokenRevokeParams{
+		RevokeClientTokenRequest: channel3go.RevokeClientTokenRequestParam{
+			Token: "token",
+		},
 	})
 	if err != nil {
 		var apierr *channel3go.Error
